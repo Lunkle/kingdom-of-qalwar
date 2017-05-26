@@ -15,6 +15,11 @@ def getLandPolygonXYLength():
     polygonLandYLength = int(((data.tileSize * data.yTiles) * 2 ** 0.5)/4)
     return polygonLandXLength, polygonLandYLength
 
+def getTileXYLength():
+    tileXLength = int(((data.tileSize) * 2 ** 0.5)/3)
+    tileYLength = int(((data.tileSize) * 2 ** 0.5)/4)
+    return tileXLength, tileYLength
+
 def fixPan():
     #TODO
     pass
@@ -117,14 +122,16 @@ def mouseReleaseDetector(event):
 
 def mouseWheelHandler(event):
     oldPolygonLandXLength, oldPolygonLandYLength = getLandPolygonXYLength()
+    
     if event.num == 5 or event.delta == -120:
         data.tileSize *= 0.90
     if event.num == 4 or event.delta == 120:
         data.tileSize *= 1.11
-    if data.tileSize > 10.0:
-        data.tileSize = 10.0
-    elif data.tileSize < 0.8:
-        data.tileSize = 0.8
+    if data.tileSize > data.maxTileSize:
+        data.tileSize = data.maxTileSize
+    elif data.tileSize < data.minTileSize:
+        data.tileSize = data.minTileSize
+
     newPolygonLandXLength, newPolygonLandYLength = getLandPolygonXYLength()
 
     xDifferencePolygonLandLength = newPolygonLandXLength - oldPolygonLandXLength
@@ -155,24 +162,43 @@ def showStartPage():
 
 def updateLand():
     data.s.delete(data.landPolygon)
+    for i in range(len(data.Building.buildings)):
+        data.s.delete(data.Building.buildings[i])
+        print("deleted")
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-    
-    landShapeX1 = -data.currentX
+    tileXLength, tileYLength = getTileXYLength()
+
+    landShapeX1 = -data.currentX #Right boundary
     landShapeY1 = polygonLandYLength / 2 - data.currentY
     
-    landShapeX2 = polygonLandXLength / 2 - data.currentX
-    landShapeY2 = -data.currentY
+    landShapeX2 = landShapeX1 + polygonLandXLength / 2
+    landShapeY2 = -data.currentY #Top boundary
     
-    landShapeX3 = polygonLandXLength - data.currentX
-    landShapeY3 = polygonLandYLength / 2 - data.currentY
+    landShapeX3 = landShapeX1 + polygonLandXLength
+    landShapeY3 = landShapeY1
     
-    landShapeX4 = polygonLandXLength / 2 - data.currentX
-    landShapeY4 = polygonLandYLength - data.currentY
+    landShapeX4 = landShapeX2
+    landShapeY4 = landShapeY2 + polygonLandYLength
     
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
 
-    for building in range(len(data.Building.buildings)):
-        print(building)
+    for i in range(len(data.Building.buildings)):
+        x = data.Building.buildingsX[i]
+        y = data.Building.buildingsY[i]
+        
+        buildingX1 = landShapeX2 + ((x - y) / 2) * tileXLength
+        buildingY1 = landShapeY2 + ((x + y) / 2) * tileYLength
+        buildingX2 = buildingX1 + tileXLength / 2
+        buildingY2 = buildingY1 + tileYLength / 2
+        buildingX3 = buildingX1
+        buildingY3 = buildingY2 + tileYLength / 2
+        buildingX4 = buildingX1 - tileXLength / 2
+        buildingY4 = buildingY2
+        
+        data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
+        print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245))
+##        delete this crap
+##        data.Building.buildings[i] = data.s.create_rectangle(10, 10, 20, 20, fill = "black")
 
     #Only for testing
 ##  data.s.create_polygon(landShapeX1/100 + 200, landShapeY1/100 + 200, landShapeX2/100 + 200, landShapeY2/100 + 200, landShapeX3/100 + 200, landShapeY3/100 + 200, landShapeX4/100 + 200, landShapeY4/100 + 200, fill = "pink", width = 0)

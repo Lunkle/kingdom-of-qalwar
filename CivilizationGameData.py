@@ -9,13 +9,16 @@ landColour = "#56b000"
 cWidth = 500
 cHeight = 500
 
-xTiles = 500
-yTiles = 500
-
-startingTileSize = 5.0
+xTiles = 40
+yTiles = 40
 
 panLimitFactor = 1.05
 panLimitSpeed = 0.5
+
+minTileSize = 15
+maxTileSize = 250
+
+startingTileSize = (minTileSize + maxTileSize) /2
 
 #Lame Variables
 gameStarted = False
@@ -60,6 +63,7 @@ s.master.title("Civilization Game") #To Change
 #Coolest stuff
 class Building():
     buildings = []
+    buildingTypes = []
     buildingsX = []
     buildingsY = []
     
@@ -70,13 +74,13 @@ class Building():
         self.number = len(Building.buildings)
 
     def add(self):
-        Building.buildings.append(self.type)
+        Building.buildings.append(0)
+        Building.buildingTypes.append(self.type)
         Building.buildingsX.append(self.x)
         Building.buildingsY.append(self.y)
         
     def destroy(self):
         del Building.buildings[self.number]
+        del Building.buildingTypes[self.number]
         del Building.buildingsX[self.number]
         del Building.buildingsY[self.number]
-
-

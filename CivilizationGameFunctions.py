@@ -9,6 +9,8 @@ from time import sleep
 def init():
     newBuilding = data.Building(0, 0, data.RESIDENCE)
     newBuilding.add()
+    newBuilding = data.Building(1, 15, data.RESIDENCE)
+    newBuilding.add()
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/3)

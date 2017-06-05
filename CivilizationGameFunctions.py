@@ -2,9 +2,11 @@ from Tkinter import *
 from random import randint
 import random
 import colorsys
+import PIL
+from PIL import Image
+from time import sleep
 from math import sin, sqrt
 import CivilizationGameData as data
-from time import sleep
 
 def init():
     newBuilding = data.Building(0, 0, data.RESIDENCE)
@@ -22,9 +24,10 @@ def getTileXYLength():
     tileYLength = ((data.tileSize) * 2 ** 0.5)/4
     return tileXLength, tileYLength
 
-def returnResizedImage(image, basewidth):
-    wpercent = basewidth/float(img.size[0])
-    hsize = int((float(img.size[1])*wpercent))
+def returnResizedImage(image, width):
+    basewidth = int(width)
+    wpercent = basewidth/float(image.size[0])
+    hsize = int((float(image.size[1])*wpercent))
     image = image.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
     return image
 
@@ -167,8 +170,9 @@ def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):
         data.s.delete(data.Building.buildings[i])
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
+        data.s.delete(data.Building.buildingImages[i])
+##        for j in range(len(data.Building.buildingImages[i])):
+##            data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
@@ -200,11 +204,12 @@ def updateLand():
         buildingY3 = buildingY2 + tileYLength / 2
         buildingX4 = buildingX1 - tileXLength / 2
         buildingY4 = buildingY2
-        
+
+        img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
         data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
-        bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
-        data.Building.buildingImages[i] = makeBitmap(buildingX4, buildingY3, tileXLength/len(bitmapImage[0]), bitmapImage, data.s)
-##        print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)
+        data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
+        
+        ##        print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)
 
 
 

@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 from random import randint
 import random
 import colorsys
@@ -186,13 +186,14 @@ def updateLand():
             buildingY3 = buildingY2 + tileYLength / 2
             buildingX4 = buildingX1 - tileXLength / 2
             buildingY4 = buildingY2
-            
-    ##        img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
-    ##        data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
-            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
             bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
+
+            
+    ##        img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
+    ##        data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
+            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = data.landColour, width = 0)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
       
     ##      print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)

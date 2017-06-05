@@ -21,6 +21,7 @@ frame = 0
 ##    pass
 
 init()
+
 while data.gameOver == False:
 ##for i in range(100):
     updateLand()

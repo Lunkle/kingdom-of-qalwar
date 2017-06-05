@@ -26,6 +26,7 @@ while data.gameOver == False:
 ##for i in range(100):
     updateLand()
     data.s.update()
-    sleep(0.01)
+    print data.currentX, data.currentY
+    sleep(0.001)
     
 mainloop()

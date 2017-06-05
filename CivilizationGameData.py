@@ -20,7 +20,7 @@ maxTileSize = 250
 
 startingTileSize = (minTileSize + maxTileSize) /2
 
-loadBuffer = 5 #In tiles
+loadBuffer = 2 #In tiles
 
 #Lame Variables
 gameStarted = False

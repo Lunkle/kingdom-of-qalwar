@@ -11,7 +11,9 @@ import CivilizationGameData as data
 def init():
 ##    newBuilding = data.Building(0, 0, data.RESIDENCE)
 ##    newBuilding.add()
-    newBuilding = data.Building(1, 20, data.RESIDENCE)
+    newBuilding = data.Building(1, 25, data.RESIDENCE)
+    newBuilding.add()
+    newBuilding = data.Building(1, 26, data.RESIDENCE)
     newBuilding.add()
 
 def getLandPolygonXYLength():
@@ -127,12 +129,8 @@ def mouseWheelHandler(event):
 
     newPolygonLandXLength, newPolygonLandYLength = getLandPolygonXYLength()
 
-    xDifferencePolygonLandLength = newPolygonLandXLength - oldPolygonLandXLength
-    yDifferencePolygonLandLength = newPolygonLandYLength - oldPolygonLandYLength
-
-    data.currentX += xDifferencePolygonLandLength/2
-    data.currentY += yDifferencePolygonLandLength/2
-
+    data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
+    data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
 def makeBitmap(x, y, squareSize, bitmap, screen):
     squaresPixelsArray = []
@@ -150,11 +148,11 @@ def showStartPage():
 
 def updateLand():
     data.s.delete(data.landPolygon)
-    for i in range(len(data.Building.buildings)):
-        data.s.delete(data.Building.buildings[i])
-        data.s.delete(data.Building.buildingImages[i])
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
+##    for i in range(len(data.Building.buildings)):
+##        data.s.delete(data.Building.buildings[i])
+##        data.s.delete(data.Building.buildingImages[i])
+##        for j in range(len(data.Building.buildingImages[i])):
+##            data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
@@ -193,7 +191,7 @@ def updateLand():
             
     ##        img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
     ##        data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
-            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = data.landColour, width = 0)
+            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
       
     ##      print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)

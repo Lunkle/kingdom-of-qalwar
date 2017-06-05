@@ -2,8 +2,6 @@ from Tkinter import *
 from random import randint
 import random
 import colorsys
-##import PIL
-##from PIL import Image
 from time import sleep
 from math import sin, sqrt
 import CivilizationGameData as data
@@ -15,6 +13,8 @@ def init():
     newBuilding.add()
     newBuilding = data.Building(1, 26, data.RESIDENCE)
     newBuilding.add()
+    newBuilding = data.Building(1, 27, data.RESIDENCE)
+    newBuilding.add()
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)
@@ -25,13 +25,6 @@ def getTileXYLength():
     tileXLength = ((data.tileSize) * 2 ** 0.5)/1
     tileYLength = ((data.tileSize) * 2 ** 0.5)/2
     return tileXLength, tileYLength
-
-##def returnResizedImage(image, width):
-##    basewidth = int(width)
-##    wpercent = basewidth/float(image.size[0])
-##    hsize = int((float(image.size[1])*wpercent))
-##    image = image.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
-##    return image
 
 def fixPan():
     #TODO
@@ -89,7 +82,6 @@ def mousePressedDetector(event):
     data.previousCurrentY = data.currentY
 
 def mouseDragDetector(event):
-##    print data.currentX, data.currentY
     rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
     rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
@@ -148,16 +140,16 @@ def showStartPage():
 
 def updateLand():
     data.s.delete(data.landPolygon)
-##    for i in range(len(data.Building.buildings)):
-##        data.s.delete(data.Building.buildings[i])
-##        data.s.delete(data.Building.buildingImages[i])
-##        for j in range(len(data.Building.buildingImages[i])):
-##            data.s.delete(data.Building.buildingImages[i][j])
+    for i in range(len(data.Building.buildings)):
+        data.s.delete(data.Building.buildings[i])
+        data.s.delete(data.Building.buildingImages[i])
+        for j in range(len(data.Building.buildingImages[i])):
+            data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
-    landShapeX1 = -data.currentX #Right boundary
-    landShapeY1 = polygonLandYLength / 2 - data.currentY
+    landShapeX1 = -data.currentX #Left boundary
+    landShapeY1 = polygonLandYLength / 2 - data.currentY #Middle of shape
     
     landShapeX2 = landShapeX1 + polygonLandXLength / 2
     landShapeY2 = -data.currentY #Top boundary
@@ -175,8 +167,8 @@ def updateLand():
     for i in range(len(data.Building.buildings)):
         x = data.Building.buildingsX[i]
         y = data.Building.buildingsY[i]
-        buildingX1 = landShapeX2 + ((x - y) / 2) * tileXLength # Top corner of
-        buildingY1 = landShapeY2 + ((x + y) / 2) * tileYLength # quadrilateral
+        buildingX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength # Top corner of
+        buildingY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength # quadrilateral
         if buildingX1 > -tileXLength * data.loadBuffer and buildingX1 < data.cWidth + tileXLength * data.loadBuffer and buildingY1 > -tileYLength * data.loadBuffer and buildingY1 < data.cHeight + tileYLength * data.loadBuffer:
             buildingX2 = buildingX1 + tileXLength / 2
             buildingY2 = buildingY1 + tileYLength / 2
@@ -188,11 +180,5 @@ def updateLand():
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
-            
-    ##        img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
-    ##        data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
-      
-    ##      print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)
-            

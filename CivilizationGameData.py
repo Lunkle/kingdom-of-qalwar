@@ -1,6 +1,4 @@
 from Tkinter import *
-##import PIL
-##from PIL import Image
 
 #Changeable Colours:
 landColour = "#56b000"
@@ -167,7 +165,6 @@ residence = [
 ##residence = [
 ##    ["#f7e9d1", "#ff0000"]
 ##]
-##residence = Image.open("Resources/Residence.png")
 
 buildingTypeImages = {
     RESIDENCE:residence

@@ -18,9 +18,15 @@ def getLandPolygonXYLength():
     return polygonLandXLength, polygonLandYLength
 
 def getTileXYLength():
-    tileXLength = int(((data.tileSize) * 2 ** 0.5)/3)
-    tileYLength = int(((data.tileSize) * 2 ** 0.5)/4)
+    tileXLength = ((data.tileSize) * 2 ** 0.5)/3
+    tileYLength = ((data.tileSize) * 2 ** 0.5)/4
     return tileXLength, tileYLength
+
+def returnResizedImage(image, basewidth):
+    wpercent = basewidth/float(img.size[0])
+    hsize = int((float(img.size[1])*wpercent))
+    image = image.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
+    return image
 
 def fixPan():
     #TODO
@@ -197,7 +203,6 @@ def updateLand():
         
         data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
         bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
-        len(bitmapImage)
         data.Building.buildingImages[i] = makeBitmap(buildingX4, buildingY3, tileXLength/len(bitmapImage[0]), bitmapImage, data.s)
 ##        print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)
 

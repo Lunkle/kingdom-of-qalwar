@@ -148,13 +148,8 @@ def makeBitmap(x, y, squareSize, bitmap, screen):
     for i in range(len(bitmap)):
         for j in range(len(bitmap[i])):
             colourCode = bitmap[i][j]
-            if colourCode != 0:
-                if colourCode == 1:
-                    colour = "#62d6e0"
-                elif colourCode == 2:
-                    colour = "#000000"
-                elif colourCode == 3:
-                    colour = "#ffffff"
+            if colourCode != "#ffffff":
+                colour = colourCode
                 squaresPixelsArray.append(screen.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
     return squaresPixelsArray
 
@@ -166,6 +161,8 @@ def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):
         data.s.delete(data.Building.buildings[i])
+        for j in range(len(data.Building.buildingImages[i])):
+            s.delete(data.Building.buildingImages[i][j])
         print("deleted")
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
@@ -188,8 +185,8 @@ def updateLand():
         x = data.Building.buildingsX[i]
         y = data.Building.buildingsY[i]
         
-        buildingX1 = landShapeX2 + ((x - y) / 2) * tileXLength
-        buildingY1 = landShapeY2 + ((x + y) / 2) * tileYLength
+        buildingX1 = landShapeX2 + ((x - y) / 2) * tileXLength # Top corner of
+        buildingY1 = landShapeY2 + ((x + y) / 2) * tileYLength # quadrilateral
         buildingX2 = buildingX1 + tileXLength / 2
         buildingY2 = buildingY1 + tileYLength / 2
         buildingX3 = buildingX1
@@ -198,10 +195,10 @@ def updateLand():
         buildingY4 = buildingY2
         
         data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
-        print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245))
-##        delete this crap
-##        data.Building.buildings[i] = data.s.create_rectangle(10, 10, 20, 20, fill = "black")
-
+        bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
+        data.Building.buildingImages[i] = makeBitmap(buildingX4, buildingY3, 1, bitmapImage, data.s)
+##        print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245))
+        
     #Only for testing
 ##  data.s.create_polygon(landShapeX1/100 + 200, landShapeY1/100 + 200, landShapeX2/100 + 200, landShapeY2/100 + 200, landShapeX3/100 + 200, landShapeY3/100 + 200, landShapeX4/100 + 200, landShapeY4/100 + 200, fill = "pink", width = 0)
 

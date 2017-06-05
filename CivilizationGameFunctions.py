@@ -206,6 +206,7 @@ def updateLand():
         buildingY4 = buildingY2
 
         img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
+##        img.save("alive_parrot.png")
         data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
         data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
         

@@ -26,5 +26,4 @@ while data.gameOver == False:
     updateLand()
     data.s.update()
     sleep(0.01)
-    
 mainloop()

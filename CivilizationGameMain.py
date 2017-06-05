@@ -17,8 +17,11 @@ data.s.pack()
 data.s.update()
 
 frame = 0
-##while data.gameStarted == False:
-##    pass
+
+showStartScreen()
+
+while data.gameStarted == False:
+    pass
 
 init()
 

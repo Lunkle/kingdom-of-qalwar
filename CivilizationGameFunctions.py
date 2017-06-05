@@ -38,6 +38,11 @@ def getRandomColour():
     r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
     return "#%02x%02x%02x" % (r, g, b)
 
+def showStartScreen():
+    startButton = data.s.create_rectangle(50, 50, 100, 100, fill = "blue", width = 5)
+    data.s.update()
+##    data.gameStarted = True
+
 def keyPressDetector(event):
     #To update
     k = event.keysym
@@ -82,12 +87,13 @@ def mousePressedDetector(event):
     data.previousCurrentY = data.currentY
 
 def mouseDragDetector(event):
-    rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
-    rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
-    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-    fixPan()
-    data.currentX = rawCurrentX
-    data.currentY = rawCurrentY
+    if data.gameStarted == True:
+        rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
+        rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
+        polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+        fixPan()
+        data.currentX = rawCurrentX
+        data.currentY = rawCurrentY
     
 
 def mouseReleaseDetector(event):
@@ -142,9 +148,8 @@ def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):
         data.s.delete(data.Building.buildings[i])
-        data.s.delete(data.Building.buildingImages[i])
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
+##        for j in range(len(data.Building.buildingImages[i])):
+##            data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
@@ -181,4 +186,4 @@ def updateLand():
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
-            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
+##            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)

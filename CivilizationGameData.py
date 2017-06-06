@@ -61,6 +61,15 @@ s.master.title("Civilization Game") #To Change
 
 
 #Coolest stuff
+class Button():
+    buttons = {}
+    def __init__(self, screen, buttonX, buttonY, text):
+        self.x = buttonX
+        self.y = buttonY
+        self.text = text
+        buttonObject = s.create_rectangle
+
+
 class Building():
     buildings = []
     buildingImages = []

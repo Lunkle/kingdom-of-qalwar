@@ -7,13 +7,13 @@ from math import sin, sqrt
 import CivilizationGameData as data
 
 def init():
-    townHallTop = data.Building(0, 0, data.TOWN_HALL_TOP)
+    townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
-    townHallLeft = data.Building(0, 1, data.TOWN_HALL_LEFT)
+    townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
     townHallLeft.add()
-    townHallRight = data.Building(1, 0, data.TOWN_HALL_RIGHT)
+    townHallRight = data.Building(data.townHallStartingX + 1, data.townHallStartingY, data.TOWN_HALL_RIGHT)
     townHallRight.add()
-    townHallBottom = data.Building(1, 1, data.TOWN_HALL_BOTTOM)
+    townHallBottom = data.Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM)
     townHallBottom.add()
     newBuilding = data.Building(1, 20, data.RESIDENCE)
     newBuilding.add()
@@ -98,7 +98,7 @@ def mouseDragDetector(event):
     fixPan()
     data.currentX = rawCurrentX
     data.currentY = rawCurrentY
-    
+    display()
 
 def mouseReleaseDetector(event):
     currentXLess = False
@@ -136,6 +136,7 @@ def mouseWheelHandler(event):
 
     data.currentX += xDifferencePolygonLandLength/2
     data.currentY += yDifferencePolygonLandLength/2
+    display()
 
 
 def makeBitmap(x, y, squareSize, bitmap, screen):
@@ -200,3 +201,7 @@ def updateLand():
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
       
     ##      print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)
+
+def display():
+    updateLand()
+    data.s.update()

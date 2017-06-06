@@ -7,13 +7,15 @@ from math import sin, sqrt
 import CivilizationGameData as data
 
 def init():
-##    newBuilding = data.Building(0, 0, data.RESIDENCE)
-##    newBuilding.add()
-    newBuilding = data.Building(1, 25, data.RESIDENCE)
-    newBuilding.add()
-    newBuilding = data.Building(1, 26, data.RESIDENCE)
-    newBuilding.add()
-    newBuilding = data.Building(1, 27, data.RESIDENCE)
+    townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
+    townHallTop.add()
+    townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
+    townHallLeft.add()
+    townHallRight = data.Building(data.townHallStartingX + 1, data.townHallStartingY, data.TOWN_HALL_RIGHT)
+    townHallRight.add()
+    townHallBottom = data.Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM)
+    townHallBottom.add()
+    newBuilding = data.Building(1, 20, data.RESIDENCE)
     newBuilding.add()
 
 def getLandPolygonXYLength():
@@ -186,4 +188,12 @@ def updateLand():
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
+<<<<<<< HEAD
 ##            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
+=======
+            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
+
+def display():
+    updateLand()
+    data.s.update()
+>>>>>>> d0074d0e535510154bc16099c34a1cf3fa1fa135

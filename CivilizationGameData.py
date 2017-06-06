@@ -16,11 +16,15 @@ panLimitSpeed = 0.5
 minTileSize = 15
 maxTileSize = 250
 
-startingTileSize = (minTileSize + maxTileSize) /2
+startingTileSize = (minTileSize + maxTileSize) / 4
+
+#Recommended-to-not-Change Variables:
+townHallStartingX = xTiles/2 - 1
+townHallStartingY = yTiles/2 - 1
 
 loadBuffer = 2 #In tiles
 
-#Lame Variables
+#Lame Variables:
 gameStarted = False
 gameOver = False
 
@@ -28,8 +32,8 @@ landPolygon = 0
 
 tileSize = startingTileSize
 
-currentX = (tileSize * xTiles * 2 ** 0.5 )/6 - cWidth/2
-currentY = (tileSize * yTiles * 2 ** 0.5 )/8 - cHeight/2
+currentX = (tileSize * xTiles * 2 ** 0.5 )/2 - cWidth/2
+currentY = (tileSize * yTiles * 2 ** 0.5 )/4 - cHeight/2
 
 previousCurrentX = currentX
 previousCurrentY = currentY
@@ -52,6 +56,10 @@ yMouseReleasedAt = currentY
 panSlipX = 0 ## Maybe delete this
 panSlipY = 0 ## Maybe delete this as well
 
+TOWN_HALL_TOP = "TownHallTop"
+TOWN_HALL_LEFT = "TownHallLeft"
+TOWN_HALL_RIGHT = "TownHallRight"
+TOWN_HALL_BOTTOM = "TownHallBotttom"
 RESIDENCE = "Residence"
 
 myInterface = Tk()
@@ -166,11 +174,33 @@ residence = [
 ##    ["#f7e9d1", "#ff0000"]
 ##]
 
+townHallTop = [
+    ["#40ff65", "#a829ff"]
+]
+townHallLeft = [
+    ["#40df65", "#a829df"]
+]
+townHallRight = [
+    ["#40cf65", "#a829cf"]
+]
+townHallBottom = [
+    ["#40af65", "#a829af"]
+]
+
 buildingTypeImages = {
+    TOWN_HALL_TOP:townHallTop,
+    TOWN_HALL_LEFT:townHallLeft,
+    TOWN_HALL_RIGHT:townHallRight,
+    TOWN_HALL_BOTTOM:townHallBottom,
     RESIDENCE:residence
 }
 
 #buildingTypeSizes should always be less than 1 unless special situations occur
+#This is for cosmetics only -- does not affect gameplay
 buildingTypeSizes = {
+    TOWN_HALL_TOP:1,
+    TOWN_HALL_LEFT:1,
+    TOWN_HALL_RIGHT:1,
+    TOWN_HALL_BOTTOM:1,
     RESIDENCE:0.8
 }

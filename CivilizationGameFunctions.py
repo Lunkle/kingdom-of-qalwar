@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 from random import randint
 import random
 import colorsys
@@ -28,13 +28,6 @@ def getTileXYLength():
     tileYLength = ((data.tileSize) * 2 ** 0.5)/2
     return tileXLength, tileYLength
 
-##def returnResizedImage(image, width):
-##    basewidth = int(width)
-##    wpercent = basewidth/float(image.size[0])
-##    hsize = int((float(image.size[1])*wpercent))
-##    image = image.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
-##    return image
-
 def fixPan():
     #TODO
     pass
@@ -46,6 +39,11 @@ def getRandomColour():
     l = 0.4 + random.random()/5.0   #between 0.4 and 0.6
     r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
     return "#%02x%02x%02x" % (r, g, b)
+
+def showStartScreen():
+    startButton = data.s.create_rectangle(50, 50, 100, 100, fill = "blue", width = 5)
+    data.s.update()
+##    data.gameStarted = True
 
 def keyPressDetector(event):
     #To update
@@ -91,14 +89,14 @@ def mousePressedDetector(event):
     data.previousCurrentY = data.currentY
 
 def mouseDragDetector(event):
-##    print data.currentX, data.currentY
-    rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
-    rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
-    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-    fixPan()
-    data.currentX = rawCurrentX
-    data.currentY = rawCurrentY
-    display()
+    if data.gameStarted == True:
+        rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
+        rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
+        polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+        fixPan()
+        data.currentX = rawCurrentX
+        data.currentY = rawCurrentY
+    
 
 def mouseReleaseDetector(event):
     currentXLess = False
@@ -131,13 +129,8 @@ def mouseWheelHandler(event):
 
     newPolygonLandXLength, newPolygonLandYLength = getLandPolygonXYLength()
 
-    xDifferencePolygonLandLength = newPolygonLandXLength - oldPolygonLandXLength
-    yDifferencePolygonLandLength = newPolygonLandYLength - oldPolygonLandYLength
-
-    data.currentX += xDifferencePolygonLandLength/2
-    data.currentY += yDifferencePolygonLandLength/2
-    display()
-
+    data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
+    data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
 def makeBitmap(x, y, squareSize, bitmap, screen):
     squaresPixelsArray = []
@@ -157,14 +150,13 @@ def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):
         data.s.delete(data.Building.buildings[i])
-        data.s.delete(data.Building.buildingImages[i])
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
+##        for j in range(len(data.Building.buildingImages[i])):
+##            data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
-    landShapeX1 = -data.currentX #Right boundary
-    landShapeY1 = polygonLandYLength / 2 - data.currentY
+    landShapeX1 = -data.currentX #Left boundary
+    landShapeY1 = polygonLandYLength / 2 - data.currentY #Middle of shape
     
     landShapeX2 = landShapeX1 + polygonLandXLength / 2
     landShapeY2 = -data.currentY #Top boundary
@@ -182,8 +174,8 @@ def updateLand():
     for i in range(len(data.Building.buildings)):
         x = data.Building.buildingsX[i]
         y = data.Building.buildingsY[i]
-        buildingX1 = landShapeX2 + ((x - y) / 2) * tileXLength # Top corner of
-        buildingY1 = landShapeY2 + ((x + y) / 2) * tileYLength # quadrilateral
+        buildingX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength # Top corner of
+        buildingY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength # quadrilateral
         if buildingX1 > -tileXLength * data.loadBuffer and buildingX1 < data.cWidth + tileXLength * data.loadBuffer and buildingY1 > -tileYLength * data.loadBuffer and buildingY1 < data.cHeight + tileYLength * data.loadBuffer:
             buildingX2 = buildingX1 + tileXLength / 2
             buildingY2 = buildingY1 + tileYLength / 2
@@ -191,16 +183,12 @@ def updateLand():
             buildingY3 = buildingY2 + tileYLength / 2
             buildingX4 = buildingX1 - tileXLength / 2
             buildingY4 = buildingY2
-            
-    ##        img = returnResizedImage(data.buildingTypeImages[data.Building.buildingTypes[i]], tileXLength)
-    ##        data.Building.buildingImages[i] = data.s.create_image(buildingX4, buildingY3, image = img)
-            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, fill = "black", width = 0)
             bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
+
+            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
-      
-    ##      print(int(buildingX1 - 245), int(buildingY1 - 245), int(buildingX2 - 245), int(buildingY2 - 245), int(buildingX3 - 245), int(buildingY3 - 245), int(buildingX4 - 245), int(buildingY4 - 245)
 
 def display():
     updateLand()

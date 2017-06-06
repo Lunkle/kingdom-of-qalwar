@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 
 #Changeable Colours:
 landColour = "#56b000"
@@ -18,7 +18,7 @@ maxTileSize = 250
 
 startingTileSize = (minTileSize + maxTileSize) /2
 
-loadBuffer = 2 #In tiles
+loadBuffer = 5 #In tiles
 
 #Lame Variables
 gameStarted = False
@@ -52,6 +52,10 @@ yMouseReleasedAt = currentY
 panSlipX = 0 ## Maybe delete this
 panSlipY = 0 ## Maybe delete this as well
 
+TOWN_HALL_TOP = "TownHallTop"
+TOWN_HALL_LEFT = "TownHallLeft"
+TOWN_HALL_RIGHT = "TownHallRight"
+TOWN_HALL_BOTTOM = "TownHallBotttom"
 RESIDENCE = "Residence"
 
 myInterface = Tk()
@@ -162,15 +166,37 @@ residence = [
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#512900', '#512900', '#ddb588', '#835b2e', '#512900', '#512900', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff'],
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#512900', '#512900', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff']
 ]
-##residence = [
-##    ["#f7e9d1", "#ff0000"]
-##]
+residence = [
+    ["#f7e9d1", "#ff0000"]
+]
+
+townHallTop = [
+    ["#40ff65", "#a829ff"]
+]
+townHallLeft = [
+    ["#40df65", "#a829df"]
+]
+townHallRight = [
+    ["#40cf65", "#a829cf"]
+]
+townHallBottom = [
+    ["#40af65", "#a829af"]
+]
 
 buildingTypeImages = {
+    TOWN_HALL_TOP:townHallTop,
+    TOWN_HALL_LEFT:townHallLeft,
+    TOWN_HALL_RIGHT:townHallRight,
+    TOWN_HALL_BOTTOM:townHallBottom,
     RESIDENCE:residence
 }
 
 #buildingTypeSizes should always be less than 1 unless special situations occur
+#This is for cosmetics only -- does not affect gameplay
 buildingTypeSizes = {
+    TOWN_HALL_TOP:1,
+    TOWN_HALL_LEFT:1,
+    TOWN_HALL_RIGHT:1,
+    TOWN_HALL_BOTTOM:1,
     RESIDENCE:0.8
 }

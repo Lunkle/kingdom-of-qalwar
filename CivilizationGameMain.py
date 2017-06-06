@@ -1,3 +1,4 @@
+from tkinter import *
 from time import sleep
 from random import randint
 import random
@@ -13,7 +14,6 @@ data.s.bind("<B1-Motion>", mouseDragDetector)
 data.s.bind("<ButtonRelease-1>", mouseReleaseDetector)
 data.s.bind("<MouseWheel>", mouseWheelHandler)
 data.s.pack()
-
 data.s.update()
 
 frame = 0
@@ -26,7 +26,6 @@ while data.gameOver == False:
 ##for i in range(100):
     updateLand()
     data.s.update()
-    print data.currentX, data.currentY
-    sleep(0.001)
+    sleep(0.01)
     
 mainloop()

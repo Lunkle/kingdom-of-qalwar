@@ -18,10 +18,10 @@ data.s.update()
 
 frame = 0
 
-showStartScreen()
+##showStartScreen()
 
-while data.gameStarted == False:
-    pass
+##while data.gameStarted == False:
+##    pass
 
 init()
 

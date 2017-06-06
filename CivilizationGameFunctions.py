@@ -7,6 +7,7 @@ from math import sin, sqrt
 import CivilizationGameData as data
 
 def init():
+    data.gameStarted = True
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
     townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
@@ -150,8 +151,8 @@ def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):
         data.s.delete(data.Building.buildings[i])
-##        for j in range(len(data.Building.buildingImages[i])):
-##            data.s.delete(data.Building.buildingImages[i][j])
+        for j in range(len(data.Building.buildingImages[i])):
+            data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
@@ -167,9 +168,7 @@ def updateLand():
     landShapeX4 = landShapeX2
     landShapeY4 = landShapeY2 + polygonLandYLength
     
-    data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2,
- landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill =
- data.landColour, width = 0)
+    data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
  
     for i in range(len(data.Building.buildings)):
         x = data.Building.buildingsX[i]
@@ -188,12 +187,8 @@ def updateLand():
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
-<<<<<<< HEAD
-##            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
-=======
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
 
 def display():
     updateLand()
     data.s.update()
->>>>>>> d0074d0e535510154bc16099c34a1cf3fa1fa135

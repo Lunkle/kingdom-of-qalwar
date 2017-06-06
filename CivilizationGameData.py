@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 
 #Changeable Colours:
 landColour = "#56b000"
@@ -18,11 +18,11 @@ maxTileSize = 250
 
 startingTileSize = (minTileSize + maxTileSize) / 4
 
-loadBuffer = 5 #In tiles
-
 #Recommended-to-not-Change Variables:
 townHallStartingX = xTiles/2 - 1
 townHallStartingY = yTiles/2 - 1
+
+loadBuffer = 2 #In tiles
 
 #Lame Variables:
 gameStarted = False

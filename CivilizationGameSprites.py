@@ -36,7 +36,7 @@ buttonLeft = [
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f', '#c3c3c3', '#c3c3c3', '#c3c3c3'],
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f', '#7f7f7f']
 ]
-buttonMiddle1 = [
+buttonMiddle0 = [
     ['#7f7f7f', '#7f7f7f', '#7f7f7f', '#7f7f7f'],
     ['#c3c3c3', '#c3c3c3', '#c3c3c3', '#c3c3c3'],
     ['#7a3605', '#8d4a1d', '#af622a', '#a35d2a'],
@@ -73,7 +73,7 @@ buttonMiddle1 = [
     ['#c3c3c3', '#c3c3c3', '#c3c3c3', '#c3c3c3'],
     ['#7f7f7f', '#7f7f7f', '#7f7f7f', '#7f7f7f']
 ]
-buttonMiddle2 = [
+buttonMiddle1 = [
     ['#7f7f7f', '#7f7f7f', '#7f7f7f', '#7f7f7f'],
     ['#c3c3c3', '#c3c3c3', '#c3c3c3', '#c3c3c3'],
     ['#7a3605', '#8d4a1d', '#af622a', '#a35d2a'],
@@ -110,7 +110,7 @@ buttonMiddle2 = [
     ['#c3c3c3', '#c3c3c3', '#c3c3c3', '#c3c3c3'],
     ['#7f7f7f', '#7f7f7f', '#7f7f7f', '#7f7f7f']
 ]
-buttonMiddle3 = [
+buttonMiddle2 = [
     ['#7f7f7f', '#7f7f7f', '#7f7f7f', '#7f7f7f'],
     ['#c3c3c3', '#c3c3c3', '#c3c3c3', '#c3c3c3'],
     ['#7a3605', '#8d4a1d', '#af622a', '#a35d2a'],

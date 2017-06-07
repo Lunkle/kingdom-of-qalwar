@@ -18,10 +18,10 @@ data.s.update()
 
 frame = 0
 
-##showStartScreen()
+showStartPage()
 
-##while data.gameStarted == False:
-##    pass
+while data.gameStarted == False:
+    pass
 
 init()
 
@@ -30,6 +30,6 @@ while data.gameOver == False:
     updateLand()
     data.s.update()
     print data.currentX, data.currentY
-    sleep(0.001)
+    sleep(0.01)
     
 mainloop()

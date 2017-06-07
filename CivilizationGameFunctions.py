@@ -41,11 +41,6 @@ def getRandomColour():
     r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
     return "#%02x%02x%02x" % (r, g, b)
 
-def showStartScreen():
-    startButton = data.s.create_rectangle(50, 50, 100, 100, fill = "blue", width = 5)
-    data.s.update()
-##    data.gameStarted = True
-
 def keyPressDetector(event):
     #To update
     k = event.keysym
@@ -133,19 +128,69 @@ def mouseWheelHandler(event):
     data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
-def makeBitmap(x, y, squareSize, bitmap, screen):
+def makeBitmap(x, y, squareSize, bitmap):
     squaresPixelsArray = []
     for i in range(len(bitmap)):
         for j in range(len(bitmap[i])):
             colourCode = bitmap[i][j]
             if colourCode != "#ffffff":
                 colour = colourCode
-                squaresPixelsArray.append(screen.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
+                squaresPixelsArray.append(data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
     return squaresPixelsArray
 
+class Button():
+    buttons = [] #This stores the entire scope of buttons and each of their pixels
+                 #3D array --> the primary array stores each button
+                 #         --> the secondary array stores each row of pixels of said button
+                 #         --> the tertiary array stores each colmn of the row of pixels
+    def __init__(self, buttonX, buttonY, text):
+        self.x = buttonX
+        self.y = buttonY
+        self.text = text
+        self.length = 0
+        for character in self.text:
+            if character == " ":
+                textLength = 20
+            else:
+                textLength = len(data.gameFontDictionary[character][0])
+                if character == "q" or character == "Q":
+                    textLength -= 10
+            self.length += textLength + 2
+        self.number = len(Button.buttons)
+        Button.buttons.append([])
+
+    def displayButton(self):
+        xValue = self.x
+        remainingLength = self.length
+        bitmapImage = data.buttonSegments[data.BUTTON_LEFT]
+        Button.buttons[self.number].append(makeBitmap(xValue, self.y, data.startScreenPixelSize, bitmapImage))
+        xValue += data.startScreenPixelSize * len(bitmapImage[0])
+        letterIndex = xValue #This is where the letters start showing up
+        while remainingLength > 0:
+            bitmapImage = data.buttonSegments[data.BUTTON_MIDDLE_TEMPLATE + str(random.randint(0, len(data.buttonSegments) - 3))]
+            Button.buttons[self.number].append(makeBitmap(xValue, self.y, data.startScreenPixelSize, bitmapImage))
+            xValue += data.startScreenPixelSize * len(bitmapImage[0])
+            remainingLength -= data.startScreenPixelSize * len(bitmapImage[0])
+        bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
+        Button.buttons[self.number].append(makeBitmap(xValue, self.y, data.startScreenPixelSize, bitmapImage))
+        for character in self.text:
+            bitmapImage = data.gameFontDictionary[character]
+            print data.startScreenPixelSize, len(data.buttonSegments[data.BUTTON_RIGHT]), len(bitmapImage)
+            Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (data.startScreenPixelSize * len(data.buttonSegments[data.BUTTON_RIGHT]) - len(bitmapImage)) / 2, 1, bitmapImage))
+            letterIndex += len(data.gameFontDictionary[character][0]) + 2
+        data.s.update()
+
+    def delete(self):
+        for i in range(len(buttons[self.number])):
+            for j in range(len(buttons[self.number][i])):
+                data.s.delete(buttons[self.number][i][j])
 
 def showStartPage():
-    pass
+    startButton = data.s.create_rectangle(50, 50, 100, 100, fill = "blue", width = 5)
+    startButton = Button(100, 200, "Start")
+    startButton.displayButton()
+    data.s.update()
+##    data.gameStarted = True
 
 def updateLand():
     data.s.delete(data.landPolygon)
@@ -187,7 +232,7 @@ def updateLand():
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
-            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, data.s)
+            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
 def display():
     updateLand()

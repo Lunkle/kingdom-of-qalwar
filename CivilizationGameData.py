@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 import CivilizationGameSprites as sprites
 import CivilizationGameFont as font
 
@@ -6,8 +6,8 @@ import CivilizationGameFont as font
 landColour = "#56b000"
 
 #Changeable Sizes:
-cWidth = 500
-cHeight = 500
+cWidth = 800
+cHeight = 600
 
 xTiles = 40
 yTiles = 40
@@ -44,9 +44,6 @@ currentY = (tileSize * yTiles * 2 ** 0.5 )/4 - cHeight/2
 previousCurrentX = currentX
 previousCurrentY = currentY
 
-originalDragMouseX = currentX
-originalDragMouseY = currentY
-
 clickedXMouse = currentX
 clickedYMouse = currentY
 
@@ -76,10 +73,10 @@ TOWN_HALL_RIGHT = "TownHallRight"
 TOWN_HALL_BOTTOM = "TownHallBotttom"
 RESIDENCE = "Residence"
 
-myInterface = Tk()
-
-s = Canvas(myInterface, width=cWidth, height=cHeight, background = "white")
-s.master.title("Civilization Game") #To Change
+root = Tk()
+root.resizable(False, False) #Set resizable to false
+s = Canvas(root, width=cWidth, height=cHeight, background = "white")
+s.master.title("Kingdom of Qalwar") #Yey  what a cool name
 
 gameFontDictionary = {
     "a":font.letterA,
@@ -187,5 +184,5 @@ buildingTypeSizes = {
     TOWN_HALL_LEFT:1,
     TOWN_HALL_RIGHT:1,
     TOWN_HALL_BOTTOM:1,
-    RESIDENCE:0.9
+    RESIDENCE:0.8
 }

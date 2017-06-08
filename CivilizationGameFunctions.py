@@ -162,7 +162,7 @@ class Button():
                 textLength = len(data.gameFontDictionary[character][0])
                 if character == "q" or character == "Q":
                     textLength -= 10
-            self.length += (textLength + data.buttonLetterSpacing) * data.startScreenButtonSize / 4.0
+            self.length += (textLength + data.buttonLetterSpacing) * self.size / 4.0
         self.number = len(Button.buttons)
         self.numOfMiddleSectionsRequired = ceil(self.length / Button.BUTTON_MIDDLE_WIDTH) * Button.BUTTON_MIDDLE_WIDTH
         x1 = self.x
@@ -199,7 +199,7 @@ class Button():
 
 def showStartPage():
     startButton = Button(100, 100, "Start", data.startScreenButtonSize)
-    testButton = Button(100, 200, "Donny", 2)
+    testButton = Button(100, 200, "Donny", 4)
     startButton.displayButton()
     testButton.displayButton()
     data.s.update()

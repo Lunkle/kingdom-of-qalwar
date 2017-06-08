@@ -9,8 +9,6 @@ landColour = "#56b000"
 cWidth = 500
 cHeight = 500
 
-startScreenPixelSize = 2
-
 xTiles = 40
 yTiles = 40
 
@@ -19,6 +17,10 @@ panLimitSpeed = 0.5
 
 minTileSize = 15
 maxTileSize = 250
+
+#For the Button class
+startScreenButtonSize = 2.0
+buttonLetterSpacing = 0
 
 startingTileSize = (minTileSize + maxTileSize) / 4
 

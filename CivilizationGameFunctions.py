@@ -3,7 +3,7 @@ from random import randint
 import random
 import colorsys
 from time import sleep
-from math import sin, sqrt
+from math import sin, sqrt, ceil
 import CivilizationGameData as data
 
 def init():
@@ -129,9 +129,12 @@ def mouseWheelHandler(event):
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
 def makeBitmap(x, y, squareSize, bitmap):
+    skip = int(1/squareSize)
+    if skip < 1:
+        skip = 1
     squaresPixelsArray = []
-    for i in range(len(bitmap)):
-        for j in range(len(bitmap[i])):
+    for i in range(0, len(bitmap), skip):
+        for j in range(0, len(bitmap[i]), skip):
             colourCode = bitmap[i][j]
             if colourCode != "#ffffff":
                 colour = colourCode
@@ -140,12 +143,16 @@ def makeBitmap(x, y, squareSize, bitmap):
 
 class Button():
     buttons = [] #This stores the entire scope of buttons and each of their pixels
-                 #3D array --> the primary array stores each button
-                 #         --> the secondary array stores each row of pixels of said button
-                 #         --> the tertiary array stores each colmn of the row of pixels
-    def __init__(self, buttonX, buttonY, text):
+                 #2D array --> the primary array stores each button
+                 #         --> the secondary array stores each pixels of said button
+    buttonBounds = [] #This stores the boudaries of each button.
+    BUTTON_ENDS_WIDTH = len(data.buttonSegments[data.BUTTON_LEFT][0]) + len(data.buttonSegments[data.BUTTON_RIGHT][0])
+    BUTTON_MIDDLE_WIDTH = len(data.buttonSegments[data.BUTTON_MIDDLE_0][0])
+    BUTTON_HEIGHT = len(data.buttonSegments[data.BUTTON_MIDDLE_0])
+    def __init__(self, buttonX, buttonY, text, size):
         self.x = buttonX
         self.y = buttonY
+        self.size = float(size)
         self.text = text
         self.length = 0
         for character in self.text:
@@ -155,40 +162,46 @@ class Button():
                 textLength = len(data.gameFontDictionary[character][0])
                 if character == "q" or character == "Q":
                     textLength -= 10
-            self.length += textLength + 2
+            self.length += (textLength + data.buttonLetterSpacing) * data.startScreenButtonSize / 4.0
         self.number = len(Button.buttons)
+        self.numOfMiddleSectionsRequired = ceil(self.length / Button.BUTTON_MIDDLE_WIDTH) * Button.BUTTON_MIDDLE_WIDTH
+        x1 = self.x
+        y1 = self.y
+        x2 = self.x + self.size * 2 * Button.BUTTON_ENDS_WIDTH + self.numOfMiddleSectionsRequired
+        y2 = self.y + self.size * Button.BUTTON_HEIGHT
         Button.buttons.append([])
+        Button.buttonBounds.append([x1, y1, x2, y2])
 
     def displayButton(self):
-        xValue = self.x
-        remainingLength = self.length
+        xValue = self.x #Index for where to place next segment of button
+        remainingLength = self.length #Variable to notify when to stop
+        #First Left Button Segment
         bitmapImage = data.buttonSegments[data.BUTTON_LEFT]
-        Button.buttons[self.number].append(makeBitmap(xValue, self.y, data.startScreenPixelSize, bitmapImage))
-        xValue += data.startScreenPixelSize * len(bitmapImage[0])
+        Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
+        xValue += self.size * len(bitmapImage[0])
         letterIndex = xValue #This is where the letters start showing up
         while remainingLength > 0:
             bitmapImage = data.buttonSegments[data.BUTTON_MIDDLE_TEMPLATE + str(random.randint(0, len(data.buttonSegments) - 3))]
-            Button.buttons[self.number].append(makeBitmap(xValue, self.y, data.startScreenPixelSize, bitmapImage))
-            xValue += data.startScreenPixelSize * len(bitmapImage[0])
-            remainingLength -= data.startScreenPixelSize * len(bitmapImage[0])
+            Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
+            xValue += self.size * len(bitmapImage[0])
+            remainingLength -= self.size * len(bitmapImage[0])
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
-        Button.buttons[self.number].append(makeBitmap(xValue, self.y, data.startScreenPixelSize, bitmapImage))
+        Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
         for character in self.text:
             bitmapImage = data.gameFontDictionary[character]
-            print data.startScreenPixelSize, len(data.buttonSegments[data.BUTTON_RIGHT]), len(bitmapImage)
-            Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (data.startScreenPixelSize * len(data.buttonSegments[data.BUTTON_RIGHT]) - len(bitmapImage)) / 2, 1, bitmapImage))
-            letterIndex += len(data.gameFontDictionary[character][0]) + 2
+            Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
+            letterIndex += (len(data.gameFontDictionary[character][0]) + data.buttonLetterSpacing ) * self.size / 4.0
         data.s.update()
 
     def delete(self):
         for i in range(len(buttons[self.number])):
-            for j in range(len(buttons[self.number][i])):
-                data.s.delete(buttons[self.number][i][j])
+                data.s.delete(buttons[self.number][i])
 
 def showStartPage():
-    startButton = data.s.create_rectangle(50, 50, 100, 100, fill = "blue", width = 5)
-    startButton = Button(100, 200, "Start")
+    startButton = Button(100, 100, "Start", data.startScreenButtonSize)
+    testButton = Button(100, 200, "Donny", 2)
     startButton.displayButton()
+    testButton.displayButton()
     data.s.update()
 ##    data.gameStarted = True
 

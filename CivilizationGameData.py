@@ -187,5 +187,5 @@ buildingTypeSizes = {
     TOWN_HALL_LEFT:1,
     TOWN_HALL_RIGHT:1,
     TOWN_HALL_BOTTOM:1,
-    RESIDENCE:0.8
+    RESIDENCE:0.9
 }

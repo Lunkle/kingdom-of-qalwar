@@ -25,8 +25,11 @@ buttonLetterSpacing = 0
 startingTileSize = (minTileSize + maxTileSize) / 4
 
 #Recommended-to-not-Change Variables:
-townHallStartingX = xTiles/2 - 1
-townHallStartingY = yTiles/2 - 1
+townHallStartingX = xTiles/4 - 1
+townHallStartingY = 3*yTiles/4 - 1
+
+enemyBaseStartingX = 3 * xTiles/4 - 1
+enemyBaseStartingX = yTiles/4 - 1
 
 loadBuffer = 2 #In tiles
 
@@ -174,6 +177,10 @@ buildingTypeImages = {
     TOWN_HALL_LEFT:sprites.townHallLeft,
     TOWN_HALL_RIGHT:sprites.townHallRight,
     TOWN_HALL_BOTTOM:sprites.townHallBottom,
+    ENEMY_BASE_TOP:sprites.enemyBaseTop,
+    ENEMY_BASE_LEFT:sprites.enemyBaseLeft,
+    ENEMY_BASE_RIGHT:sprites.enemyBaseRight,
+    ENEMY_BASE_BOTTOM:sprites.enemyBaseBottom,
     RESIDENCE:sprites.residence
 }
 

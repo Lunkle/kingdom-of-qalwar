@@ -16,12 +16,11 @@ data.s.pack()
 
 data.s.update()
 
-frame = 0
-
 showStartPage()
 
 while data.gameStarted == False:
-    pass
+    data.s.update()
+    sleep(0.01)
 
 init()
 
@@ -29,7 +28,7 @@ while data.gameOver == False:
 ##for i in range(100):
     updateLand()
     data.s.update()
-    print data.currentX, data.currentY
+    print(data.currentX, data.currentY)
     sleep(0.01)
     
 mainloop()

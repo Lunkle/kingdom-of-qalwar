@@ -91,6 +91,19 @@ townHallBottom = [
     ["#40af65", "#a829af"]
 ]
 
+enemyBaseTop = [
+    ["#40ff65", "#a829ff"]
+]
+enemyBaseLeft = [
+    ["#40df65", "#a829df"]
+]
+enemyBaseRight = [
+    ["#40cf65", "#a829cf"]
+]
+enemyBaseBottom = [
+    ["#40af65", "#a829af"]
+]
+
 #Buttons
 buttonLeft = [
     ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f'],

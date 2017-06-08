@@ -25,7 +25,6 @@ while data.gameStarted == False:
 init()
 
 while data.gameOver == False:
-##for i in range(100):
     updateLand()
     data.s.update()
     print(data.currentX, data.currentY)

@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 from random import randint
 import random
 import colorsys
@@ -18,6 +18,19 @@ def init():
     townHallBottom.add()
     newBuilding = data.Building(1, 20, data.RESIDENCE)
     newBuilding.add()
+
+def startGame():
+    global startButton#, testButton
+##    data.gameStarted = True
+    startButton.destroy()
+##    testButton.destroy()
+
+def showStartPage():
+    global startButton#, testButton
+    startButton = Button(100, 100, "Start", data.startScreenButtonSize, startGame)
+    startButton.displayButton()
+##    testButton = Button(100, 200, "Donny", 4, printHi)
+##    testButton.displayButton()
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)
@@ -76,14 +89,6 @@ def keyPressDetector(event):
 def keyReleaseDetector(event):
     k = event.keysym
     
-
-def mousePressedDetector(event):
-    print("clicked at", event.x, event.y)
-    data.clickedXMouse = event.x
-    data.clickedYMouse = event.y
-    data.previousCurrentX = data.currentX
-    data.previousCurrentY = data.currentY
-
 def mouseDragDetector(event):
     if data.gameStarted == True:
         rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
@@ -92,7 +97,6 @@ def mouseDragDetector(event):
         fixPan()
         data.currentX = rawCurrentX
         data.currentY = rawCurrentY
-    
 
 def mouseReleaseDetector(event):
     currentXLess = False
@@ -128,6 +132,15 @@ def mouseWheelHandler(event):
     data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
+def mousePressedDetector(event):
+    data.clickedXMouse = event.x
+    data.clickedYMouse = event.y
+    data.previousCurrentX = data.currentX
+    data.previousCurrentY = data.currentY
+    for i in range(len(Button.buttonBounds)):
+        if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
+            Button.buttonFunctions[i]() #This runs the assigned function or procedure call
+
 def makeBitmap(x, y, squareSize, bitmap):
     skip = int(1/squareSize)
     if skip < 1:
@@ -143,13 +156,16 @@ def makeBitmap(x, y, squareSize, bitmap):
 
 class Button():
     buttons = [] #This stores the entire scope of buttons and each of their pixels
-                 #2D array --> the primary array stores each button
-                 #         --> the secondary array stores each pixels of said button
+                 #3D array --> the primary array stores each button
+                 #         --> the secondary array stores each component of said button
+                 #         --> the tertiary array stores each pixels of component
     buttonBounds = [] #This stores the boudaries of each button.
+                      #Used in the mouse click function
+    buttonFunctions = []
     BUTTON_ENDS_WIDTH = len(data.buttonSegments[data.BUTTON_LEFT][0]) + len(data.buttonSegments[data.BUTTON_RIGHT][0])
     BUTTON_MIDDLE_WIDTH = len(data.buttonSegments[data.BUTTON_MIDDLE_0][0])
     BUTTON_HEIGHT = len(data.buttonSegments[data.BUTTON_MIDDLE_0])
-    def __init__(self, buttonX, buttonY, text, size):
+    def __init__(self, buttonX, buttonY, text, size, function):
         self.x = buttonX
         self.y = buttonY
         self.size = float(size)
@@ -157,20 +173,21 @@ class Button():
         self.length = 0
         for character in self.text:
             if character == " ":
-                textLength = 20
+                textLength = 10
             else:
                 textLength = len(data.gameFontDictionary[character][0])
                 if character == "q" or character == "Q":
                     textLength -= 10
             self.length += (textLength + data.buttonLetterSpacing) * self.size / 4.0
         self.number = len(Button.buttons)
-        self.numOfMiddleSectionsRequired = ceil(self.length / Button.BUTTON_MIDDLE_WIDTH) * Button.BUTTON_MIDDLE_WIDTH
+        self.numOfMiddleSectionsRequired = ceil(self.length / Button.BUTTON_MIDDLE_WIDTH)
         x1 = self.x
         y1 = self.y
-        x2 = self.x + self.size * 2 * Button.BUTTON_ENDS_WIDTH + self.numOfMiddleSectionsRequired
+        x2 = self.x + self.size * Button.BUTTON_ENDS_WIDTH + Button.BUTTON_MIDDLE_WIDTH * self.numOfMiddleSectionsRequired
         y2 = self.y + self.size * Button.BUTTON_HEIGHT
         Button.buttons.append([])
         Button.buttonBounds.append([x1, y1, x2, y2])
+        Button.buttonFunctions.append(function)
 
     def displayButton(self):
         xValue = self.x #Index for where to place next segment of button
@@ -188,22 +205,18 @@ class Button():
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
         Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
         for character in self.text:
-            bitmapImage = data.gameFontDictionary[character]
-            Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
-            letterIndex += (len(data.gameFontDictionary[character][0]) + data.buttonLetterSpacing ) * self.size / 4.0
+            if character == " ":
+                letterIndex += 10 * self.size / 4.0
+            else:
+                bitmapImage = data.gameFontDictionary[character]
+                Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
+                letterIndex += (len(data.gameFontDictionary[character][0]) + data.buttonLetterSpacing ) * self.size / 4.0
         data.s.update()
 
-    def delete(self):
-        for i in range(len(buttons[self.number])):
-                data.s.delete(buttons[self.number][i])
-
-def showStartPage():
-    startButton = Button(100, 100, "Start", data.startScreenButtonSize)
-    testButton = Button(100, 200, "Donny", 4)
-    startButton.displayButton()
-    testButton.displayButton()
-    data.s.update()
-##    data.gameStarted = True
+    def destroy(self):
+        for i in range(len(Button.buttons[self.number])):
+            for j in range(len(Button.buttons[self.number][i])):
+                data.s.delete(Button.buttons[self.number][i][j])
 
 def updateLand():
     data.s.delete(data.landPolygon)

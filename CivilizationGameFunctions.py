@@ -20,17 +20,14 @@ def init():
     newBuilding.add()
 
 def startGame():
-    global startButton#, testButton
-##    data.gameStarted = True
+    global startButton
+    data.gameStarted = True
     startButton.destroy()
-##    testButton.destroy()
 
 def showStartPage():
     global startButton#, testButton
     startButton = Button(100, 100, "Start", data.startScreenButtonSize, startGame)
     startButton.displayButton()
-##    testButton = Button(100, 200, "Donny", 4, printHi)
-##    testButton.displayButton()
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)
@@ -257,7 +254,7 @@ def updateLand():
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
-            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = "#ffffff")#data.landColour)
+            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
 def display():

@@ -29,7 +29,7 @@ townHallStartingX = xTiles/4 - 1
 townHallStartingY = 3*yTiles/4 - 1
 
 enemyBaseStartingX = 3 * xTiles/4 - 1
-enemyBaseStartingX = yTiles/4 - 1
+enemyBaseStartingY = yTiles/4 - 1
 
 loadBuffer = 2 #In tiles
 
@@ -74,6 +74,12 @@ TOWN_HALL_TOP = "TownHallTop"
 TOWN_HALL_LEFT = "TownHallLeft"
 TOWN_HALL_RIGHT = "TownHallRight"
 TOWN_HALL_BOTTOM = "TownHallBotttom"
+
+ENEMY_BASE_TOP = "TownHallTop"
+ENEMY_BASE_LEFT = "TownHallLeft"
+ENEMY_BASE_RIGHT = "TownHallRight"
+ENEMY_BASE_BOTTOM = "TownHallBotttom"
+
 RESIDENCE = "Residence"
 
 root = Tk()

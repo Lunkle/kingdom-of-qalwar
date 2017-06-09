@@ -24,10 +24,10 @@ while data.gameStarted == False:
 
 init()
 
+tutorial()
+
 while data.gameOver == False:
-    updateLand()
-    data.s.update()
-    print(data.currentX, data.currentY)
-    sleep(0.01)
+    updateScreen()
+    
     
 mainloop()

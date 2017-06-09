@@ -29,15 +29,37 @@ def init():
     newBuilding = data.Building(1, 20, data.RESIDENCE)
     newBuilding.add()
 
+def updateScreen():
+    updateLand()
+    for i in range(len(Button.buttonObject)):
+        Button.buttonObject[i].delete()
+        Button.buttonObject[i].displayButton()
+    data.s.update()
+    sleep(0.01)
+
 def startGame():
-    global startButton
+    global startButton, nextSeasonButton
     data.gameStarted = True
     startButton.destroy()
+    nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 50, "Next Season", 2, passTurn)
+    nextSeasonButton.createButton()
+
+def passTurn():
+    ##
+    ##
+    ##
+    pass
+
+def tutorial():
+    ##
+    ##
+    ##
+    pass
 
 def showStartPage():
-    global startButton#, testButton
+    global startButton
     startButton = Button(100, 100, "Start", data.startScreenButtonSize, startGame)
-    startButton.displayButton()
+    startButton.createButton()
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)
@@ -162,13 +184,15 @@ def makeBitmap(x, y, squareSize, bitmap):
     return squaresPixelsArray
 
 class Button():
+    buttonObject = [] #Stores every button object
     buttons = [] #This stores the entire scope of buttons and each of their pixels
                  #3D array --> the primary array stores each button
                  #         --> the secondary array stores each component of said button
                  #         --> the tertiary array stores each pixels of component
     buttonBounds = [] #This stores the boudaries of each button.
                       #Used in the mouse click function
-    buttonFunctions = []
+    buttonSegments = [] #2D array that stores each of the button's segments
+    buttonFunctions = [] #Stores the function called when clicked
     BUTTON_ENDS_WIDTH = len(data.buttonSegments[data.BUTTON_LEFT][0]) + len(data.buttonSegments[data.BUTTON_RIGHT][0])
     BUTTON_MIDDLE_WIDTH = len(data.buttonSegments[data.BUTTON_MIDDLE_0][0])
     BUTTON_HEIGHT = len(data.buttonSegments[data.BUTTON_MIDDLE_0])
@@ -192,11 +216,13 @@ class Button():
         y1 = self.y
         x2 = self.x + self.size * Button.BUTTON_ENDS_WIDTH + Button.BUTTON_MIDDLE_WIDTH * self.numOfMiddleSectionsRequired
         y2 = self.y + self.size * Button.BUTTON_HEIGHT
+        Button.buttonObject.append(self)
         Button.buttons.append([])
+        Button.buttonSegments.append([])
         Button.buttonBounds.append([x1, y1, x2, y2])
         Button.buttonFunctions.append(function)
 
-    def displayButton(self):
+    def createButton(self):
         xValue = self.x #Index for where to place next segment of button
         remainingLength = self.length #Variable to notify when to stop
         #First Left Button Segment
@@ -205,7 +231,9 @@ class Button():
         xValue += self.size * len(bitmapImage[0])
         letterIndex = xValue #This is where the letters start showing up
         while remainingLength > 0:
-            bitmapImage = data.buttonSegments[data.BUTTON_MIDDLE_TEMPLATE + str(random.randint(0, len(data.buttonSegments) - 3))]
+            randomSegmentNumber = random.randint(0, len(data.buttonSegments) - 3)
+            Button.buttonSegments[self.number].append(randomSegmentNumber)
+            bitmapImage = data.buttonSegments[data.BUTTON_MIDDLE_TEMPLATE + str(randomSegmentNumber)]
             Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
             xValue += self.size * len(bitmapImage[0])
             remainingLength -= self.size * len(bitmapImage[0])
@@ -218,16 +246,52 @@ class Button():
                 bitmapImage = data.gameFontDictionary[character]
                 Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
                 letterIndex += (len(data.gameFontDictionary[character][0]) + data.buttonLetterSpacing ) * self.size / 4.0
-        data.s.update()
 
-    def destroy(self):
+    def displayButton(self):
+        xValue = self.x #Index for where to place next segment of button
+        remainingLength = self.length #Variable to notify when to stop
+        #First Left Button Segment
+        bitmapImage = data.buttonSegments[data.BUTTON_LEFT]
+        Button.buttons[self.number][0] = makeBitmap(xValue, self.y, self.size, bitmapImage)
+        xValue += self.size * len(bitmapImage[0])
+        letterIndex = xValue #This is where the letters start showing up
+        segmentNumber = 0
+        while remainingLength > 0:
+            bitmapImage = data.buttonSegments[data.BUTTON_MIDDLE_TEMPLATE + str(Button.buttonSegments[self.number][segmentNumber])]
+            segmentNumber += 1
+            Button.buttons[self.number][segmentNumber] = makeBitmap(xValue, self.y, self.size, bitmapImage)
+            xValue += self.size * len(bitmapImage[0])
+            remainingLength -= self.size * len(bitmapImage[0])
+        bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
+        Button.buttons[self.number][segmentNumber + 1] = (makeBitmap(xValue, self.y, self.size, bitmapImage))
+        numOfSpaces = 0 #Because then character number goes up even though there was nothing to draw
+        for characterNumber in range(len(self.text)):
+            if self.text[characterNumber] == " ":
+                letterIndex += 10 * self.size / 4.0
+                numOfSpaces += 1
+            else:
+                bitmapImage = data.gameFontDictionary[self.text[characterNumber]]
+                Button.buttons[self.number][segmentNumber + 2 + characterNumber - numOfSpaces] = (makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
+                letterIndex += (len(data.gameFontDictionary[self.text[characterNumber]][0]) + data.buttonLetterSpacing ) * self.size / 4.0
+
+    def delete(self):
         for i in range(len(Button.buttons[self.number])):
             for j in range(len(Button.buttons[self.number][i])):
                 data.s.delete(Button.buttons[self.number][i][j])
-
-def drawButtons():
-    pass
-
+    
+    def destroy(self):
+        try:
+            for i in range(len(Button.buttons[self.number])):
+                for j in range(len(Button.buttons[self.number][i])):
+                    data.s.delete(Button.buttons[self.number][i][j])
+        except:
+            pass
+        del Button.buttons[self.number]
+        del Button.buttonBounds[self.number]
+        del Button.buttonFunctions[self.number]
+        del Button.buttonObject[self.number]
+        del Button.buttonSegments[self.number]
+                
 def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):

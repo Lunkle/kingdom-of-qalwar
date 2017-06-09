@@ -6,8 +6,8 @@ import CivilizationGameFont as font
 landColour = "#56b000"
 
 #Changeable Sizes:
-cWidth = 800
-cHeight = 600
+cWidth = 400
+cHeight = 300
 
 xTiles = 40
 yTiles = 40
@@ -19,7 +19,7 @@ minTileSize = 15
 maxTileSize = 250
 
 #For the Button class
-startScreenButtonSize = 2.0
+startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
 
 startingTileSize = (minTileSize + maxTileSize) / 4

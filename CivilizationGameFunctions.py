@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 from random import randint
 import random
 import colorsys
@@ -224,6 +224,9 @@ class Button():
         for i in range(len(Button.buttons[self.number])):
             for j in range(len(Button.buttons[self.number][i])):
                 data.s.delete(Button.buttons[self.number][i][j])
+
+def drawButtons():
+    pass
 
 def updateLand():
     data.s.delete(data.landPolygon)

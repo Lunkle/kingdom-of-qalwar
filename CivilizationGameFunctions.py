@@ -105,7 +105,20 @@ def keyPressDetector(event):
 
 def keyReleaseDetector(event):
     k = event.keysym
+
+def mousePressedDetector(event):
+    data.clickedXMouse = event.x
+    data.clickedYMouse = event.y
+    data.previousCurrentX = data.currentX
+    data.previousCurrentY = data.currentY
+    for i in range(len(Button.buttonBounds)):
+        try:
+            if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
+                Button.buttonFunctions[i]() #This runs the assigned function or procedure call
+        except:
+            pass
     
+
 def mouseDragDetector(event):
     if data.gameStarted == True:
         rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
@@ -148,19 +161,6 @@ def mouseWheelHandler(event):
 
     data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
-
-def mousePressedDetector(event):
-    data.clickedXMouse = event.x
-    data.clickedYMouse = event.y
-    data.previousCurrentX = data.currentX
-    data.previousCurrentY = data.currentY
-    for i in range(len(Button.buttonBounds)):
-        try:
-            if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
-                Button.buttonFunctions[i]() #This runs the assigned function or procedure call
-        except:
-            pass
-##    clickedTile = 
                 
 def updateLand():
     data.s.delete(data.landPolygon)

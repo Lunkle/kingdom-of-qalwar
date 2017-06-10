@@ -36,6 +36,7 @@ loadBuffer = 2 #In tiles
 
 #Lame Variables:
 gameStarted = False
+menuOpen = False
 gameOver = False
 
 landPolygon = 0
@@ -87,61 +88,6 @@ root = Tk()
 root.resizable(False, False) #Set resizable to false
 s = Canvas(root, width=cWidth, height=cHeight, background = "white")
 s.master.title("Kingdom of Qalwar") #Yey  what a cool name
-
-gameFontDictionary = {
-    "a":font.letterA,
-    "b":font.letterB,
-    "c":font.letterC,
-    "d":font.letterD,
-    "e":font.letterE,
-    "f":font.letterF,
-    "g":font.letterG,
-    "h":font.letterH,
-    "i":font.letterI,
-    "j":font.letterJ,
-    "k":font.letterK,
-    "l":font.letterL,
-    "m":font.letterM,
-    "n":font.letterN,
-    "o":font.letterO,
-    "p":font.letterP,
-    "q":font.letterQ,
-    "r":font.letterR,
-    "s":font.letterS,
-    "t":font.letterT,
-    "u":font.letterU,
-    "v":font.letterV,
-    "w":font.letterW,
-    "x":font.letterX,
-    "y":font.letterY,
-    "z":font.letterZ,
-    "A":font.letterA,
-    "B":font.letterB,
-    "C":font.letterC,
-    "D":font.letterD,
-    "E":font.letterE,
-    "F":font.letterF,
-    "G":font.letterG,
-    "H":font.letterH,
-    "I":font.letterI,
-    "J":font.letterJ,
-    "K":font.letterK,
-    "L":font.letterL,
-    "M":font.letterM,
-    "N":font.letterN,
-    "O":font.letterO,
-    "P":font.letterP,
-    "Q":font.letterQ,
-    "R":font.letterR,
-    "S":font.letterS,
-    "T":font.letterT,
-    "U":font.letterU,
-    "V":font.letterV,
-    "W":font.letterW,
-    "X":font.letterX,
-    "Y":font.letterY,
-    "Z":font.letterZ
-}
 
 #Coolest stuff
 class Building():

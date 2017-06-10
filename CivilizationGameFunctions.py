@@ -12,7 +12,6 @@ def showStartPage():
     startButton.createButton()
     aboutButton = Button(data.cWidth / 2 - 66, data.cHeight / 2 + 60, "About", data.startScreenButtonSize, startGame)
     aboutButton.createButton()
-    
 
 def initializeGame():
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
@@ -33,14 +32,6 @@ def initializeGame():
     enemyBaseBottom = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM)
     enemyBaseBottom.add()
 
-def updateScreen():
-    updateLand()
-    for i in range(len(Button.buttonObject)):
-        Button.buttonObject[i].delete()
-        Button.buttonObject[i].displayButton()
-    data.s.update()
-    sleep(0.01)
-
 def startGame():
     global startButton, aboutButton, nextSeasonButton, menuButton
     startButton.destroy()
@@ -52,11 +43,20 @@ def startGame():
     menuButton.createButton()
 
 def showMenu():
-    global menuButton, nextSeasonButton
+    global menuButton, nextSeasonButton, menuScreen, menuLine, backButton
+    data.menuOpen = True
     menuButton.destroy()
     nextSeasonButton.destroy()
     menuScreen = data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)
+##    data.s.create_rectangle(10, 10, 20, 20)
+    menuLine = data.s.create_line(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight - 52, fill = "#7f7f7f", width = 3)
+    backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
+    backButton.createButton()
     data.s.update()
+
+def closeMenu():
+    global menuScreen, menuLine, backButton
+    pass
 
 def passTurn():
     ##
@@ -153,19 +153,6 @@ def mousePressedDetector(event):
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
         except:
             pass
-
-def makeBitmap(x, y, squareSize, bitmap):
-    skip = int(1/squareSize)
-    if skip < 1:
-        skip = 1
-    squaresPixelsArray = []
-    for i in range(0, len(bitmap), skip):
-        for j in range(0, len(bitmap[i]), skip):
-            colourCode = bitmap[i][j]
-            if colourCode != "#ffffff":
-                colour = colourCode
-                squaresPixelsArray.append(data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
-    return squaresPixelsArray
                 
 def updateLand():
     data.s.delete(data.landPolygon)
@@ -209,6 +196,27 @@ def updateLand():
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
+def updateScreen():
+    if data.menuOpen == False:
+        updateLand()
+    for i in range(len(Button.buttonObject)):
+        Button.buttonObject[i].delete()
+        Button.buttonObject[i].displayButton()
+    data.s.update()
+    sleep(0.01)
+
+def makeBitmap(x, y, squareSize, bitmap):
+    skip = int(1/squareSize)
+    if skip < 1:
+        skip = 1
+    squaresPixelsArray = []
+    for i in range(0, len(bitmap), skip):
+        for j in range(0, len(bitmap[i]), skip):
+            colourCode = bitmap[i][j]
+            if colourCode != "#ffffff":
+                colour = colourCode
+                squaresPixelsArray.append(data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
+    return squaresPixelsArray
 
 #Button Class
 class Button():
@@ -234,7 +242,7 @@ class Button():
             if character == " ":
                 textLength = 10
             else:
-                textLength = len(data.gameFontDictionary[character][0])
+                textLength = len(data.font.fontDictionary[character][0])
                 if character == "q" or character == "Q":
                     textLength -= 10
             self.length += (textLength + data.buttonLetterSpacing) * self.size / 4.0
@@ -271,9 +279,9 @@ class Button():
             if character == " ":
                 letterIndex += 10 * self.size / 4.0
             else:
-                bitmapImage = data.gameFontDictionary[character]
+                bitmapImage = data.font.fontDictionary[character]
                 Button.buttons[self.number].append(makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
-                letterIndex += (len(data.gameFontDictionary[character][0]) + data.buttonLetterSpacing ) * self.size / 4.0
+                letterIndex += (len(data.font.fontDictionary[character][0]) + data.buttonLetterSpacing ) * self.size / 4.0
 
     def displayButton(self):
         xValue = self.x #Index for where to place next segment of button
@@ -298,9 +306,9 @@ class Button():
                 letterIndex += 10 * self.size / 4.0
                 numOfSpaces += 1
             else:
-                bitmapImage = data.gameFontDictionary[self.text[characterNumber]]
+                bitmapImage = data.font.fontDictionary[self.text[characterNumber]]
                 Button.buttons[self.number][segmentNumber + 2 + characterNumber - numOfSpaces] = (makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
-                letterIndex += (len(data.gameFontDictionary[self.text[characterNumber]][0]) + data.buttonLetterSpacing ) * self.size / 4.0        
+                letterIndex += (len(data.font.fontDictionary[self.text[characterNumber]][0]) + data.buttonLetterSpacing ) * self.size / 4.0        
 
     def delete(self):
         for i in range(len(Button.buttons[self.number])):

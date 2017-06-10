@@ -6,11 +6,11 @@ import CivilizationGameFont as font
 landColour = "#56b000"
 
 #Changeable Sizes:
-cWidth = 400
-cHeight = 300
+cWidth = 600
+cHeight = 450
 
-xTiles = 40
-yTiles = 40
+xTiles = 32
+yTiles = 32
 
 panLimitFactor = 1.05
 panLimitSpeed = 0.5
@@ -22,7 +22,7 @@ maxTileSize = 250
 startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
 
-startingTileSize = (minTileSize + maxTileSize) / 4
+startingTileSize = 50
 
 #Recommended-to-not-Change Variables:
 townHallStartingX = xTiles/4 - 1

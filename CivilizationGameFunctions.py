@@ -6,8 +6,15 @@ from time import sleep
 from math import sin, sqrt, ceil
 import CivilizationGameData as data
 
-def init():
-    data.gameStarted = True
+def showStartPage():
+    global startButton, aboutButton
+    startButton = Button(data.cWidth / 2 - 62, data.cHeight / 2, "Start", data.startScreenButtonSize, startGame)
+    startButton.createButton()
+    aboutButton = Button(data.cWidth / 2 - 66, data.cHeight / 2 + 60, "About", data.startScreenButtonSize, startGame)
+    aboutButton.createButton()
+    
+
+def initializeGame():
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
     townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
@@ -25,9 +32,6 @@ def init():
     enemyBaseRight.add()
     enemyBaseBottom = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM)
     enemyBaseBottom.add()
-    
-    newBuilding = data.Building(1, 20, data.RESIDENCE)
-    newBuilding.add()
 
 def updateScreen():
     updateLand()
@@ -38,9 +42,10 @@ def updateScreen():
     sleep(0.01)
 
 def startGame():
-    global startButton, nextSeasonButton
-    data.gameStarted = True
+    global startButton, aboutButton, nextSeasonButton
     startButton.destroy()
+    aboutButton.destroy()
+    data.gameStarted = True
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 50, "Next Season", 2, passTurn)
     nextSeasonButton.createButton()
 
@@ -55,11 +60,6 @@ def tutorial():
     ##
     ##
     pass
-
-def showStartPage():
-    global startButton
-    startButton = Button(100, 100, "Start", data.startScreenButtonSize, startGame)
-    startButton.createButton()
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)
@@ -85,35 +85,7 @@ def getRandomColour():
 
 def keyPressDetector(event):
     #To update
-    k = event.keysym
-    if data.gameStarted == False:
-        if k == "Return":
-            data.gameStarted = True
-        elif k == "Left" and data.changedTheme == True:
-            data.currentThemeNumber -= 1
-            data.leftArrowSize = 0.5
-            data.changedTheme = False
-        elif k == "Right" and data.changedTheme == True:
-            data.currentThemeNumber += 1
-            data.rightArrowSize = 0.5
-            data.changedTheme = False
-        setThemes(data.themesColours[data.themesList[data.currentThemeNumber%len(data.themesList)]])
-    else:
-        if k == "Return":
-            if data.wantToPause == True:
-                data.wantToPause = False
-            elif data.wantToPause == False:
-                data.wantToPause = True
-        if data.updatedValue == True:
-            if k == "Up" and data.newDirection != "Down":
-                data.newDirection = "Up"
-            elif k == "Down" and data.newDirection != "Up":
-                data.newDirection = "Down"
-            elif k == "Left" and data.newDirection != "Right":
-                data.newDirection = "Left"
-            elif k == "Right" and data.newDirection != "Left":
-                data.newDirection = "Right"
-            data.updatedValue = False
+    pass
 
 def keyReleaseDetector(event):
     k = event.keysym
@@ -167,8 +139,11 @@ def mousePressedDetector(event):
     data.previousCurrentX = data.currentX
     data.previousCurrentY = data.currentY
     for i in range(len(Button.buttonBounds)):
-        if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
-            Button.buttonFunctions[i]() #This runs the assigned function or procedure call
+        try:
+            if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
+                Button.buttonFunctions[i]() #This runs the assigned function or procedure call
+        except:
+            pass
 
 def makeBitmap(x, y, squareSize, bitmap):
     skip = int(1/squareSize)
@@ -286,11 +261,13 @@ class Button():
                     data.s.delete(Button.buttons[self.number][i][j])
         except:
             pass
-        del Button.buttons[self.number]
         del Button.buttonBounds[self.number]
+        del Button.buttons[self.number]
         del Button.buttonFunctions[self.number]
         del Button.buttonObject[self.number]
         del Button.buttonSegments[self.number]
+        for i in range(self.number, len(Button.buttonObject)):
+            Button.buttonObject[i].number -= 1
                 
 def updateLand():
     data.s.delete(data.landPolygon)
@@ -333,7 +310,3 @@ def updateLand():
 
             data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
-
-def display():
-    updateLand()
-    data.s.update()

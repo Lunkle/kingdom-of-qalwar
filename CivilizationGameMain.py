@@ -22,7 +22,7 @@ while data.gameStarted == False:
     data.s.update()
     sleep(0.01)
 
-init()
+initializeGame()
 
 tutorial()
 

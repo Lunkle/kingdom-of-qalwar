@@ -53,15 +53,10 @@ def startGame():
 
 def showMenu():
     global menuButton, nextSeasonButton
-    menuScreen = 0
-    for i in range(90):
-        data.s.delete(menuScreen)
-        menuScreen = data.s.create_rectangle(data.cWidth - 200 * sin(i), 0, data.cWidth, data.cHeight, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)
-        sleep(0.01)
-        s.update()
     menuButton.destroy()
     nextSeasonButton.destroy()
-    
+    menuScreen = data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)
+    data.s.update()
 
 def passTurn():
     ##

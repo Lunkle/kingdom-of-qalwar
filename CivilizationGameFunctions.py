@@ -42,12 +42,26 @@ def updateScreen():
     sleep(0.01)
 
 def startGame():
-    global startButton, aboutButton, nextSeasonButton
+    global startButton, aboutButton, nextSeasonButton, menuButton
     startButton.destroy()
     aboutButton.destroy()
     data.gameStarted = True
-    nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 50, "Next Season", 2, passTurn)
+    nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
     nextSeasonButton.createButton()
+    menuButton = Button(data.cWidth - 110, 10, "Menu", 2, showMenu)
+    menuButton.createButton()
+
+def showMenu():
+    global menuButton, nextSeasonButton
+    menuScreen = 0
+    for i in range(90):
+        data.s.delete(menuScreen)
+        menuScreen = data.s.create_rectangle(data.cWidth - 200 * sin(i), 0, data.cWidth, data.cHeight, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)
+        sleep(0.01)
+        s.update()
+    menuButton.destroy()
+    nextSeasonButton.destroy()
+    
 
 def passTurn():
     ##
@@ -157,7 +171,51 @@ def makeBitmap(x, y, squareSize, bitmap):
                 colour = colourCode
                 squaresPixelsArray.append(data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
     return squaresPixelsArray
+                
+def updateLand():
+    data.s.delete(data.landPolygon)
+    for i in range(len(data.Building.buildings)):
+        data.s.delete(data.Building.buildings[i])
+        for j in range(len(data.Building.buildingImages[i])):
+            data.s.delete(data.Building.buildingImages[i][j])
+    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+    tileXLength, tileYLength = getTileXYLength()
 
+    landShapeX1 = -data.currentX #Left boundary
+    landShapeY1 = polygonLandYLength / 2 - data.currentY #Middle of shape
+    
+    landShapeX2 = landShapeX1 + polygonLandXLength / 2
+    landShapeY2 = -data.currentY #Top boundary
+    
+    landShapeX3 = landShapeX1 + polygonLandXLength
+    landShapeY3 = landShapeY1
+    
+    landShapeX4 = landShapeX2
+    landShapeY4 = landShapeY2 + polygonLandYLength
+    
+    data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
+ 
+    for i in range(len(data.Building.buildings)):
+        x = data.Building.buildingsX[i]
+        y = data.Building.buildingsY[i]
+        buildingX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength # Top corner of
+        buildingY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength # quadrilateral
+        if buildingX1 > -tileXLength * data.loadBuffer and buildingX1 < data.cWidth + tileXLength * data.loadBuffer and buildingY1 > -tileYLength * data.loadBuffer and buildingY1 < data.cHeight + tileYLength * data.loadBuffer:
+            buildingX2 = buildingX1 + tileXLength / 2
+            buildingY2 = buildingY1 + tileYLength / 2
+            buildingX3 = buildingX1
+            buildingY3 = buildingY2 + tileYLength / 2
+            buildingX4 = buildingX1 - tileXLength / 2
+            buildingY4 = buildingY2
+            bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
+            bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
+            squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
+
+            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
+            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
+
+
+#Button Class
 class Button():
     buttonObject = [] #Stores every button object
     buttons = [] #This stores the entire scope of buttons and each of their pixels
@@ -247,7 +305,7 @@ class Button():
             else:
                 bitmapImage = data.gameFontDictionary[self.text[characterNumber]]
                 Button.buttons[self.number][segmentNumber + 2 + characterNumber - numOfSpaces] = (makeBitmap(letterIndex, self.y + (self.size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * self.size / 4.0) / 2, self.size / 4.0, bitmapImage))
-                letterIndex += (len(data.gameFontDictionary[self.text[characterNumber]][0]) + data.buttonLetterSpacing ) * self.size / 4.0
+                letterIndex += (len(data.gameFontDictionary[self.text[characterNumber]][0]) + data.buttonLetterSpacing ) * self.size / 4.0        
 
     def delete(self):
         for i in range(len(Button.buttons[self.number])):
@@ -268,45 +326,3 @@ class Button():
         del Button.buttonSegments[self.number]
         for i in range(self.number, len(Button.buttonObject)):
             Button.buttonObject[i].number -= 1
-                
-def updateLand():
-    data.s.delete(data.landPolygon)
-    for i in range(len(data.Building.buildings)):
-        data.s.delete(data.Building.buildings[i])
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
-    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-    tileXLength, tileYLength = getTileXYLength()
-
-    landShapeX1 = -data.currentX #Left boundary
-    landShapeY1 = polygonLandYLength / 2 - data.currentY #Middle of shape
-    
-    landShapeX2 = landShapeX1 + polygonLandXLength / 2
-    landShapeY2 = -data.currentY #Top boundary
-    
-    landShapeX3 = landShapeX1 + polygonLandXLength
-    landShapeY3 = landShapeY1
-    
-    landShapeX4 = landShapeX2
-    landShapeY4 = landShapeY2 + polygonLandYLength
-    
-    data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
- 
-    for i in range(len(data.Building.buildings)):
-        x = data.Building.buildingsX[i]
-        y = data.Building.buildingsY[i]
-        buildingX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength # Top corner of
-        buildingY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength # quadrilateral
-        if buildingX1 > -tileXLength * data.loadBuffer and buildingX1 < data.cWidth + tileXLength * data.loadBuffer and buildingY1 > -tileYLength * data.loadBuffer and buildingY1 < data.cHeight + tileYLength * data.loadBuffer:
-            buildingX2 = buildingX1 + tileXLength / 2
-            buildingY2 = buildingY1 + tileYLength / 2
-            buildingX3 = buildingX1
-            buildingY3 = buildingY2 + tileYLength / 2
-            buildingX4 = buildingX1 - tileXLength / 2
-            buildingY4 = buildingY2
-            bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
-            bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
-            squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
-
-            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
-            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)

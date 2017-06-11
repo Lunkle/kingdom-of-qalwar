@@ -40,6 +40,8 @@ menuOpen = False
 gameOver = False
 
 landPolygon = 0
+highlightedTile = [-1, -1]
+highlightedTileObject = 0
 
 tileSize = startingTileSize
 
@@ -90,27 +92,38 @@ s = Canvas(root, width=cWidth, height=cHeight, background = "white")
 s.master.title("Kingdom of Qalwar") #Yey  what a cool name
 
 #Coolest stuff
-class Building():
-    buildings = []
-    buildingImages = []
-    buildingTypes = []
-    buildingsX = []
-    buildingsY = []
+class Building():       #Building is used for the various types of buildings, including your own townhall, opponent's base, wall, etc.
+    buildingObject = [] #Stores the building class instance itself
+    buildingTile = []   #Usually this is invisible -- maybe this is completely useless beccause it is literally the tile underneath the building
+    buildingImages = [] #Stores each pixel of the building
+    buildingTypes = []  #What type of building is it? Residence, townhall, tower?
+    buildingsX = []     #X value on the grid
+    buildingsY = []     #Y value on the grid
     
     def __init__(self, gridX, gridY, buildingType):
-        self.x = gridX
-        self.y = gridY
-        self.type = buildingType
-        self.number = len(Building.buildings)
+        self.x = gridX                              #Set x value
+        self.y = gridY                              #Set y value
+        self.type = buildingType                    #Set building type
+        self.number = len(Building.buildingObject)  #Index number of the building
 
     def add(self):
-        Building.buildings.append(0)
-        Building.buildingImages.append([])
-        Building.buildingTypes.append(self.type)
-        Building.buildingsX.append(self.x)
-        Building.buildingsY.append(self.y)
+        sumOfCoordinates = self.x + self.y                          #Why use sum of coordinates?
+        for i in range(len(Building.buildings)):                    #In an isometric game the furthest items are drawn first
+            if sumOfCoordinates >= buildingsX[i] + buildings[Y]     #The sum of the coordinates on the grid are coincidentally a good way of sorting them
+                self.number = i                                     #The smaller the sum the furthest away, the bigger the sum the closer it is
+                break                                               #i.e. furthest one is (0,0) and closest one is (n-1,n-1) for some n tiles on a square grid
+        Building.buildingObject.insert(self.number, self)
+        Building.buildings.insert(self.number, 0)           #This part is just inserting everything into the list
+        Building.buildingImages.insert(self.number, [])     #Should not be append because you want the buildings to be in a specific order
+        Building.buildingTypes.insert(self.number, self.type)
+        Building.buildingsX.insert(self.number, self.x)
+        Building.buildingsY.insert(self.number, self.y)
+        for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
+            Building.buildingObject.number += 1
         
     def destroy(self):
+        del Building.buildingObject[self.number]
+        del Building.buildingTile[self.number]  #Delete everything
         del Building.buildings[self.number]
         del Building.buildingTypes[self.number]
         del Building.buildingsX[self.number]

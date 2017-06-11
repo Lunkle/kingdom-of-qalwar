@@ -3,7 +3,7 @@ from random import randint
 import random
 import colorsys
 from time import sleep
-from math import sin, sqrt, ceil
+from math import sin, cos, asin, acos, sqrt, ceil
 import CivilizationGameData as data
 
 def showStartPage():
@@ -14,6 +14,9 @@ def showStartPage():
     aboutButton.createButton()
 
 def initializeGame():
+    testBuilding = data.Building(10, 10, data.RESIDENCE)
+    testBuilding.add()
+    
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
     townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
@@ -117,7 +120,15 @@ def mousePressedDetector(event):
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
         except:
             pass
-    
+    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+    tileXLength, tileYLength = getTileXYLength()
+    landClickedX = data.clickedXMouse + data.currentX
+    landClickedY = data.clickedYMouse + data.currentY
+    xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
+    yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
+    tileClickedX = int(xB / tileYLength)
+    tileClickedY = data.yTiles - int(yB / tileYLength) - 1
+    print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
 
 def mouseDragDetector(event):
     if data.gameStarted == True:
@@ -161,7 +172,10 @@ def mouseWheelHandler(event):
 
     data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
-                
+
+def highlightSquare(x, y):
+    pass
+        
 def updateLand():
     data.s.delete(data.landPolygon)
     for i in range(len(data.Building.buildings)):

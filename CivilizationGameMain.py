@@ -20,7 +20,7 @@ showStartPage()
 
 while data.gameStarted == False:
     data.s.update()
-    sleep(0.01)
+    sleep(0.04)
 
 initializeGame()
 

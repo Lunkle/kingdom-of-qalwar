@@ -128,6 +128,8 @@ def mousePressedDetector(event):
     yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
     tileClickedX = int(xB / tileYLength)
     tileClickedY = data.yTiles - int(yB / tileYLength) - 1
+    if data.highlightedTile != [tileClickedX, tileClickedY]:
+        highlightSquare(tileClickedX, tileClickedY)
     print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
 
 def mouseDragDetector(event):
@@ -174,19 +176,22 @@ def mouseWheelHandler(event):
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
 def highlightSquare(x, y):
+    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+    tileXLength, tileYLength = getTileXYLength()
     data.s.delete(data.highlightedTileObject)
     data.highlightedTileObject = 0
-    if data.highligthedTile != [x, y]:
-        highlightX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength
-        highlightY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength
-        if highlightX1 > -tileXLength * data.loadBuffer and highlightX1 < data.cWidth + tileXLength * data.loadBuffer and highlightY1 > -tileYLength * data.loadBuffer and highlightY1 < data.cHeight + tileYLength * data.loadBuffer:
-            highlightX2 = highlightX1 + tileXLength / 2
-            highlightY2 = highlightY1 + tileYLength / 2
-            highlightX3 = highlightX1
-            highlightY3 = highlightY2 + tileYLength / 2
-            highlightX4 = highlightX1 - tileXLength / 2
-            highlightY4 = highlightY2
-            data.highlightedTileObject = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY, width = 0, fill = data.landColour)
+    landShapeTopX = -data.currentX + polygonLandXLength / 2
+    landShapeTopY = -data.currentY #Top boundary
+    highlightX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength
+    highlightY1 = landShapeTopY + ((x + y) / 2.0) * tileYLength
+    if highlightX1 > -tileXLength * data.loadBuffer and highlightX1 < data.cWidth + tileXLength * data.loadBuffer and highlightY1 > -tileYLength * data.loadBuffer and highlightY1 < data.cHeight + tileYLength * data.loadBuffer:
+        highlightX2 = highlightX1 + tileXLength / 2
+        highlightY2 = highlightY1 + tileYLength / 2
+        highlightX3 = highlightX1
+        highlightY3 = highlightY2 + tileYLength / 2
+        highlightX4 = highlightX1 - tileXLength / 2
+        highlightY4 = highlightY2
+        data.highlightedTileObject = data.s.create_polygon(highlightX1, highlightY1, highlightX2, highlightY2, highlightX3, highlightY3, highlightX4, highlightY4, width = 0, fill = "yellow")
         
 def updateLand():
     data.s.delete(data.landPolygon)
@@ -210,7 +215,9 @@ def updateLand():
     landShapeY4 = landShapeY2 + polygonLandYLength
     
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
- 
+    
+    highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
+    
     for i in range(len(data.Building.buildingObject)):
         x = data.Building.buildingsX[i]
         y = data.Building.buildingsY[i]

@@ -108,23 +108,22 @@ class Building():       #Building is used for the various types of buildings, in
 
     def add(self):
         sumOfCoordinates = self.x + self.y                          #Why use sum of coordinates?
-        for i in range(len(Building.buildings)):                    #In an isometric game the furthest items are drawn first
-            if sumOfCoordinates >= buildingsX[i] + buildings[Y]     #The sum of the coordinates on the grid are coincidentally a good way of sorting them
+        for i in range(len(Building.buildingObject)):               #In an isometric game the furthest items are drawn first
+            if sumOfCoordinates >= Building.buildingsX[i] + Building.buildingsY[i]  :  #The sum of the coordinates on the grid are coincidentally a good way of sorting them
                 self.number = i                                     #The smaller the sum the furthest away, the bigger the sum the closer it is
                 break                                               #i.e. furthest one is (0,0) and closest one is (n-1,n-1) for some n tiles on a square grid
         Building.buildingObject.insert(self.number, self)
-        Building.buildings.insert(self.number, 0)           #This part is just inserting everything into the list
+        Building.buildingTile.insert(self.number, 0)        #This part is just inserting everything into the list
         Building.buildingImages.insert(self.number, [])     #Should not be append because you want the buildings to be in a specific order
         Building.buildingTypes.insert(self.number, self.type)
         Building.buildingsX.insert(self.number, self.x)
         Building.buildingsY.insert(self.number, self.y)
         for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
-            Building.buildingObject.number += 1
+            Building.buildingObject[i].number += 1
         
     def destroy(self):
         del Building.buildingObject[self.number]
         del Building.buildingTile[self.number]  #Delete everything
-        del Building.buildings[self.number]
         del Building.buildingTypes[self.number]
         del Building.buildingsX[self.number]
         del Building.buildingsY[self.number]

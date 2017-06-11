@@ -174,12 +174,24 @@ def mouseWheelHandler(event):
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
 
 def highlightSquare(x, y):
-    pass
+    data.s.delete(data.highlightedTileObject)
+    data.highlightedTileObject = 0
+    if data.highligthedTile != [x, y]:
+        highlightX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength
+        highlightY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength
+        if highlightX1 > -tileXLength * data.loadBuffer and highlightX1 < data.cWidth + tileXLength * data.loadBuffer and highlightY1 > -tileYLength * data.loadBuffer and highlightY1 < data.cHeight + tileYLength * data.loadBuffer:
+            highlightX2 = highlightX1 + tileXLength / 2
+            highlightY2 = highlightY1 + tileYLength / 2
+            highlightX3 = highlightX1
+            highlightY3 = highlightY2 + tileYLength / 2
+            highlightX4 = highlightX1 - tileXLength / 2
+            highlightY4 = highlightY2
+            data.highlightedTileObject = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY, width = 0, fill = data.landColour)
         
 def updateLand():
     data.s.delete(data.landPolygon)
-    for i in range(len(data.Building.buildings)):
-        data.s.delete(data.Building.buildings[i])
+    for i in range(len(data.Building.buildingObject)):
+        data.s.delete(data.Building.buildingTile[i])
         for j in range(len(data.Building.buildingImages[i])):
             data.s.delete(data.Building.buildingImages[i][j])
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
@@ -199,7 +211,7 @@ def updateLand():
     
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
  
-    for i in range(len(data.Building.buildings)):
+    for i in range(len(data.Building.buildingObject)):
         x = data.Building.buildingsX[i]
         y = data.Building.buildingsY[i]
         buildingX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength # Top corner of
@@ -215,7 +227,7 @@ def updateLand():
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
-            data.Building.buildings[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
+            data.Building.buildingTile[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
 def updateScreen():

@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 from random import randint
 import random
 import colorsys
@@ -7,11 +7,12 @@ from math import sin, cos, asin, acos, sqrt, ceil
 import CivilizationGameData as data
 
 def showStartPage():
-    global startButton, aboutButton
+    global title, startButton, aboutButton
     startButton = Button(data.cWidth / 2 - 62, data.cHeight / 2, "Start", data.startScreenButtonSize, startGame)
     startButton.createButton()
     aboutButton = Button(data.cWidth / 2 - 66, data.cHeight / 2 + 60, "About", data.startScreenButtonSize, startGame)
     aboutButton.createButton()
+    title = createText(data.cWidth / 2 - 130, 120, "Kingdom of Qalwar", 2)
 
 def initializeGame():
     testBuilding = data.Building(10, 10, data.RESIDENCE)
@@ -36,7 +37,9 @@ def initializeGame():
     enemyBaseBottom.add()
 
 def startGame():
-    global startButton, aboutButton, nextSeasonButton, menuButton
+    global title, startButton, aboutButton, nextSeasonButton, menuButton
+    for i in range(len(title)):
+        data.s.delete(title[i])
     startButton.destroy()
     aboutButton.destroy()
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
@@ -118,6 +121,7 @@ def mousePressedDetector(event):
         try:
             if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
+                data.clickedButton = True
         except:
             pass
     
@@ -147,7 +151,7 @@ def mouseReleaseDetector(event):
         currentYMore = True
     while currentXLess == True or currentYLess == True or currentXMore == True or currentYMore == True:
         break
-    if data.gameStarted == True and data.mouseDragged == False:
+    if data.gameStarted == True and data.mouseDragged == False and data.clickedButton == False:
         polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
         tileXLength, tileYLength = getTileXYLength()
         landClickedX = data.clickedXMouse + data.currentX
@@ -156,10 +160,12 @@ def mouseReleaseDetector(event):
         yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
         tileClickedX = int(xB / tileYLength)
         tileClickedY = data.yTiles - int(yB / tileYLength) - 1
-        if data.highlightedTile != [tileClickedX, tileClickedY]:
-            highlightSquare(tileClickedX, tileClickedY)
+        if 0 <= tileClickedX < data.xTiles and 0 <= tileClickedY < data.yTiles:
+            if data.highlightedTile != [tileClickedX, tileClickedY]:
+                highlightSquare(tileClickedX, tileClickedY)
         print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
     data.mouseDragged = False
+    data.clickedButton = False
 
 def mouseWheelHandler(event):
     oldPolygonLandXLength, oldPolygonLandYLength = getLandPolygonXYLength()
@@ -199,6 +205,7 @@ def highlightSquare(x, y):
         
 def updateLand():
     data.s.delete(data.landPolygon)
+    data.s.delete(data.dirtLeft, data.dirtRight)
     
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
@@ -210,12 +217,14 @@ def updateLand():
     landShapeY2 = -data.currentY #Top boundary
     
     landShapeX3 = landShapeX1 + polygonLandXLength
-    landShapeY3 = landShapeY1
+    landShapeY3 = landShapeY1 #Right boundary
     
-    landShapeX4 = landShapeX2
+    landShapeX4 = landShapeX2 #Bottom boundary
     landShapeY4 = landShapeY2 + polygonLandYLength
     
-    data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
+    data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, outline = data.landOutlineColour, width = 1)
+    data.dirtLeft = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX4, landShapeY4, landShapeX4, landShapeY4 + tileYLength * data.dirtThickness, landShapeX1, landShapeY1 + tileYLength * data.dirtThickness, fill = data.dirtColour, outline = data.dirtOutlineColour, width = 1)
+    data.dirtRight = data.s.create_polygon(landShapeX3, landShapeY3, landShapeX4, landShapeY4, landShapeX4, landShapeY4 + tileYLength * data.dirtThickness, landShapeX3, landShapeY3 + tileYLength * data.dirtThickness, fill = data.dirtColour, outline = data.dirtOutlineColour, width = 1)
 
 def updateBuildings():
     for i in range(len(data.Building.buildingObject)):
@@ -274,7 +283,7 @@ def createText(x, y, text, size, center = False):
     letterArray = []
     for character in text:
             if character == " ":
-                letterIndex += 10 * size / 4.0
+                letterIndex += 20 * size / 4.0
             else:
                 bitmapImage = data.font.fontDictionary[character]
                 if center == True:
@@ -282,6 +291,8 @@ def createText(x, y, text, size, center = False):
                 else:
                     letterArray += makeBitmap(letterIndex, y, size / 4.0, bitmapImage)
                 letterIndex += (len(data.font.fontDictionary[character][0]) + data.buttonLetterSpacing ) * size / 4.0
+                if character == "q" or character == "Q":
+                    letterIndex -= 10 * size / 4.0
     return letterArray
 
 #Button Class

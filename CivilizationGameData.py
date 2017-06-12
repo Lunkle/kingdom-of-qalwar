@@ -1,9 +1,12 @@
-from Tkinter import *
+from tkinter import *
 import CivilizationGameSprites as sprites
 import CivilizationGameFont as font
 
 #Changeable Colours:
 landColour = "#56b000"
+landOutlineColour = "#6bdb00"
+dirtColour = "#b08257"
+dirtOutlineColour = "#cdaf94"
 enemyLandColour = "#1e2f5f"
 
 #Changeable Sizes:
@@ -18,6 +21,8 @@ panLimitSpeed = 0.5
 
 minTileSize = 15
 maxTileSize = 250
+
+dirtThickness = 1.5
 
 #For the Button class
 startScreenButtonSize = 2.5
@@ -40,7 +45,10 @@ menuOpen = False
 gameOver = False
 
 landPolygon = 0
-highlightedTile = [-1, -1]
+dirtLeft = 0
+dirtRight = 0
+
+highlightedTile = [-1000, -1000] #Set it off the screen
 highlightedTileObject = 0
 
 tileSize = startingTileSize
@@ -49,6 +57,7 @@ currentX = (tileSize * xTiles * 2 ** 0.5 )/2 - cWidth/2
 currentY = (tileSize * yTiles * 2 ** 0.5 )/4 - cHeight/2
 
 mouseDragged = False
+clickedButton = False
 
 previousCurrentX = currentX
 previousCurrentY = currentY

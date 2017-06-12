@@ -39,11 +39,11 @@ def startGame():
     global startButton, aboutButton, nextSeasonButton, menuButton
     startButton.destroy()
     aboutButton.destroy()
-    data.gameStarted = True
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
     nextSeasonButton.createButton()
     menuButton = Button(data.cWidth - 110, 10, "Menu", 2, showMenu)
     menuButton.createButton()
+    data.gameStarted = True
 
 def showMenu():
     global menuButton, nextSeasonButton, menuFeatures, backButton
@@ -120,19 +120,9 @@ def mousePressedDetector(event):
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
         except:
             pass
-    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-    tileXLength, tileYLength = getTileXYLength()
-    landClickedX = data.clickedXMouse + data.currentX
-    landClickedY = data.clickedYMouse + data.currentY
-    xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
-    yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
-    tileClickedX = int(xB / tileYLength)
-    tileClickedY = data.yTiles - int(yB / tileYLength) - 1
-    if data.highlightedTile != [tileClickedX, tileClickedY]:
-        highlightSquare(tileClickedX, tileClickedY)
-    print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
-
+    
 def mouseDragDetector(event):
+    data.mouseDragged = True
     if data.gameStarted == True:
         rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
         rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
@@ -157,6 +147,19 @@ def mouseReleaseDetector(event):
         currentYMore = True
     while currentXLess == True or currentYLess == True or currentXMore == True or currentYMore == True:
         break
+    if data.gameStarted == True and data.mouseDragged == False:
+        polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+        tileXLength, tileYLength = getTileXYLength()
+        landClickedX = data.clickedXMouse + data.currentX
+        landClickedY = data.clickedYMouse + data.currentY
+        xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
+        yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
+        tileClickedX = int(xB / tileYLength)
+        tileClickedY = data.yTiles - int(yB / tileYLength) - 1
+        if data.highlightedTile != [tileClickedX, tileClickedY]:
+            highlightSquare(tileClickedX, tileClickedY)
+        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
+    data.mouseDragged = False
 
 def mouseWheelHandler(event):
     oldPolygonLandXLength, oldPolygonLandYLength = getLandPolygonXYLength()
@@ -180,6 +183,7 @@ def highlightSquare(x, y):
     tileXLength, tileYLength = getTileXYLength()
     data.s.delete(data.highlightedTileObject)
     data.highlightedTileObject = 0
+    data.highlightedTile = [x, y]
     landShapeTopX = -data.currentX + polygonLandXLength / 2
     landShapeTopY = -data.currentY #Top boundary
     highlightX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength
@@ -195,10 +199,7 @@ def highlightSquare(x, y):
         
 def updateLand():
     data.s.delete(data.landPolygon)
-    for i in range(len(data.Building.buildingObject)):
-        data.s.delete(data.Building.buildingTile[i])
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
+    
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
@@ -215,14 +216,21 @@ def updateLand():
     landShapeY4 = landShapeY2 + polygonLandYLength
     
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, width = 0)
-    
-    highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
-    
+
+def updateBuildings():
+    for i in range(len(data.Building.buildingObject)):
+        for j in range(len(data.Building.buildingImages[i])):
+            data.s.delete(data.Building.buildingImages[i][j])
+            
+    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+    tileXLength, tileYLength = getTileXYLength()
+    landShapeTopX = -data.currentX + polygonLandXLength / 2
+    landShapeTopY = -data.currentY
     for i in range(len(data.Building.buildingObject)):
         x = data.Building.buildingsX[i]
         y = data.Building.buildingsY[i]
-        buildingX1 = landShapeX2 + ((x - y) / 2.0) * tileXLength # Top corner of
-        buildingY1 = landShapeY2 + ((x + y) / 2.0) * tileYLength # quadrilateral
+        buildingX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength # Top corner of
+        buildingY1 = landShapeTopY + ((x + y) / 2.0) * tileYLength # quadrilateral
         if buildingX1 > -tileXLength * data.loadBuffer and buildingX1 < data.cWidth + tileXLength * data.loadBuffer and buildingY1 > -tileYLength * data.loadBuffer and buildingY1 < data.cHeight + tileYLength * data.loadBuffer:
             buildingX2 = buildingX1 + tileXLength / 2
             buildingY2 = buildingY1 + tileYLength / 2
@@ -234,13 +242,14 @@ def updateLand():
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
-            data.Building.buildingTile[i] = data.s.create_polygon(buildingX1, buildingY1, buildingX2, buildingY2, buildingX3, buildingY3, buildingX4, buildingY4, width = 0, fill = data.landColour)
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
 def updateScreen():
     if data.menuOpen == False:
 ##        createText(10, 10, "Season " + , 2)
         updateLand()
+        highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
+        updateBuildings()
     for i in range(len(Button.buttonObject)):
         Button.buttonObject[i].delete()
         Button.buttonObject[i].displayButton()

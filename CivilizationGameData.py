@@ -48,6 +48,8 @@ tileSize = startingTileSize
 currentX = (tileSize * xTiles * 2 ** 0.5 )/2 - cWidth/2
 currentY = (tileSize * yTiles * 2 ** 0.5 )/4 - cHeight/2
 
+mouseDragged = False
+
 previousCurrentX = currentX
 previousCurrentY = currentY
 
@@ -94,7 +96,6 @@ s.master.title("Kingdom of Qalwar") #Yey  what a cool name
 #Coolest stuff
 class Building():       #Building is used for the various types of buildings, including your own townhall, opponent's base, wall, etc.
     buildingObject = [] #Stores the building class instance itself
-    buildingTile = []   #Usually this is invisible -- maybe this is completely useless beccause it is literally the tile underneath the building
     buildingImages = [] #Stores each pixel of the building
     buildingTypes = []  #What type of building is it? Residence, townhall, tower?
     buildingsX = []     #X value on the grid
@@ -112,8 +113,7 @@ class Building():       #Building is used for the various types of buildings, in
             if sumOfCoordinates >= Building.buildingsX[i] + Building.buildingsY[i]  :  #The sum of the coordinates on the grid are coincidentally a good way of sorting them
                 self.number = i                                     #The smaller the sum the furthest away, the bigger the sum the closer it is
                 break                                               #i.e. furthest one is (0,0) and closest one is (n-1,n-1) for some n tiles on a square grid
-        Building.buildingObject.insert(self.number, self)
-        Building.buildingTile.insert(self.number, 0)        #This part is just inserting everything into the list
+        Building.buildingObject.insert(self.number, self)   #This part is just inserting everything into the list
         Building.buildingImages.insert(self.number, [])     #Should not be append because you want the buildings to be in a specific order
         Building.buildingTypes.insert(self.number, self.type)
         Building.buildingsX.insert(self.number, self.x)
@@ -122,9 +122,9 @@ class Building():       #Building is used for the various types of buildings, in
             Building.buildingObject[i].number += 1
         
     def destroy(self):
-        del Building.buildingObject[self.number]
-        del Building.buildingTile[self.number]  #Delete everything
+        del Building.buildingObject[self.number]  #Delete everything
         del Building.buildingTypes[self.number]
+        del Building.buildingImages[self.number]
         del Building.buildingsX[self.number]
         del Building.buildingsY[self.number]
 

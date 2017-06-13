@@ -1,3 +1,5 @@
+import CivilizationGameData as data
+
 #Buildings
 residence = [
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#512900', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff'],
@@ -73,10 +75,6 @@ residence = [
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#512900', '#512900', '#ddb588', '#835b2e', '#512900', '#512900'],
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#512900', '#512900'],
 ]
-
-##residence = [
-##    ["#f7e9d1", "#ff0000"]
-##]
 
 townHallTop = [
     ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#b6d8fb', '#007fff', '#007fff', '#007fff', '#ffffff', '#ffffff', '#ffffff', '#007fff', '#007fff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff'],
@@ -298,8 +296,19 @@ enemyBaseRight = [
     ["#40cf65", "#a829cf"]
 ]
 enemyBaseBottom = [
-    ["#40cf65", "#a829cf"]
+    ["#ffcf65", "#a829cf"]
 ]
+
+myenv = locals()
+
+for k in myenv:
+    if k[:5] != "button":
+        newSprite = []
+        for i in range(0, len(myenv[k]), int(data.resolution)):
+            newSprite.append([])
+            for j in range(0, len(myenv[k][i]), int(data.resolution)):
+                newSprite[int(j / data.resolution)].append(myenv[k][i][j])
+        myenv[k] = newSprite
 
 #Buttons
 buttonLeft = [

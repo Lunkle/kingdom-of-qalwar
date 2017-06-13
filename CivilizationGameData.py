@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 import CivilizationGameSprites as sprites
 import CivilizationGameFont as font
 
@@ -23,6 +23,8 @@ minTileSize = 15
 maxTileSize = 250
 
 dirtThickness = 1.5
+
+resolution = 4 #Change to higher for faster game
 
 #For the Button class
 startScreenButtonSize = 2.5
@@ -77,7 +79,6 @@ yMouseReleasedAt = currentY
 panSlipX = 0 ## Maybe delete this
 panSlipY = 0 ## Maybe delete this as well
 
-
 BUTTON_LEFT = "ButtonLeft"
 BUTTON_MIDDLE_TEMPLATE = "ButtonMiddle"
 BUTTON_MIDDLE_0 = "ButtonMiddle0"
@@ -129,7 +130,6 @@ class Building():       #Building is used for the various types of buildings, in
         Building.buildingsY.insert(self.number, self.y)
         for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
             Building.buildingObject[i].number += 1
-        print(Building.buildingObject)
         
     def destroy(self):
         del Building.buildingObject[self.number]  #Delete everything

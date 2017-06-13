@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 import CivilizationGameSprites as sprites
 import CivilizationGameFont as font
 
@@ -90,10 +90,10 @@ TOWN_HALL_LEFT = "TownHallLeft"
 TOWN_HALL_RIGHT = "TownHallRight"
 TOWN_HALL_BOTTOM = "TownHallBotttom"
 
-ENEMY_BASE_TOP = "TownHallTop"
-ENEMY_BASE_LEFT = "TownHallLeft"
-ENEMY_BASE_RIGHT = "TownHallRight"
-ENEMY_BASE_BOTTOM = "TownHallBotttom"
+ENEMY_BASE_TOP = "EnemyBaseTop"
+ENEMY_BASE_LEFT = "EnemyBaseLeft"
+ENEMY_BASE_RIGHT = "EnemyBaseRight"
+ENEMY_BASE_BOTTOM = "EnemyBaseBotttom"
 
 RESIDENCE = "Residence"
 
@@ -129,6 +129,7 @@ class Building():       #Building is used for the various types of buildings, in
         Building.buildingsY.insert(self.number, self.y)
         for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
             Building.buildingObject[i].number += 1
+        print(Building.buildingObject)
         
     def destroy(self):
         del Building.buildingObject[self.number]  #Delete everything
@@ -165,5 +166,9 @@ buildingTypeSizes = {
     TOWN_HALL_LEFT:1,
     TOWN_HALL_RIGHT:1,
     TOWN_HALL_BOTTOM:1,
+    ENEMY_BASE_TOP:1,
+    ENEMY_BASE_LEFT:1,
+    ENEMY_BASE_RIGHT:1,
+    ENEMY_BASE_BOTTOM:1,
     RESIDENCE:0.8
 }

@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 from random import randint
 import random
 import colorsys
@@ -26,7 +26,7 @@ def initializeGame():
     townHallRight.add()
     townHallBottom = data.Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM)
     townHallBottom.add()
-    
+
     enemyBaseTop = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY, data.ENEMY_BASE_TOP)
     enemyBaseTop.add()
     enemyBaseLeft = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY + 1, data.ENEMY_BASE_LEFT)
@@ -35,6 +35,7 @@ def initializeGame():
     enemyBaseRight.add()
     enemyBaseBottom = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM)
     enemyBaseBottom.add()
+
 
 def startGame():
     global title, startButton, aboutButton, nextSeasonButton, menuButton

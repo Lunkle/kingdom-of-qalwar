@@ -1,5 +1,5 @@
 from PIL import Image
-im = Image.open("cat-meme.png") #Can be many different formats.
+im = Image.open("Base Lvl 1 Top.png") #Can be many different formats.
 pix = im.load()
 xLength, yLength = im.size #Get the width and hight of the image for iterating over
 ##print pix[50, 50] #Get the RGBA Value of the a pixel of an image
@@ -35,4 +35,3 @@ print(imageArray)
 ##for i in range(len(colours)):
 ##    print 'elif colourCode == ' + str(i + 9) + ':'
 ##    print '\tcolour = "' + colours[i] + '"'
-

@@ -261,6 +261,10 @@ def updateBuildings():
 
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
+def showResources():
+    for i in range(len(data.resourceTypes)):
+        data.s.create_rectangle(10, data.cHeight - 30 - i * 30, data.cWidth / 4, data.cHeight - 10 - i * 30)
+
 def updateScreen():
     if data.menuOpen == False:
 ##        createText(10, 10, "Season " + , 2)
@@ -270,6 +274,7 @@ def updateScreen():
     for i in range(len(Button.buttonObject)):
         Button.buttonObject[i].delete()
         Button.buttonObject[i].displayButton()
+    showResources()
     data.s.update()
     sleep(0.01)
 

@@ -1,5 +1,5 @@
 from PIL import Image
-im = Image.open("Base Lvl 1 Top.png") #Can be many different formats.
+im = Image.open("Opponents Base\Lvl 1\Opponents Base Lvl 1 Bottom.png") #Can be many different formats.
 pix = im.load()
 xLength, yLength = im.size #Get the width and hight of the image for iterating over
 ##print pix[50, 50] #Get the RGBA Value of the a pixel of an image
@@ -27,7 +27,21 @@ for i in range(yLength):
         r, g, b, a = pix[j, i]
         hexCode = "#%02x%02x%02x" % (r, g, b)
         imageArray[i].append(hexCode)
-print(imageArray)
+
+changed = False
+for i in range(1, len(imageArray)):
+    for j in range(len(imageArray[i]) - 1, -1, -1):
+        if imageArray[i][j] == "#ffffff":
+            del imageArray[i][j]
+            changed = True
+        else:
+            break
+if changed == False:
+    print("Already in most simple format")
+else:
+    print(imageArray)
+
+##print(imageArray)
 
 
 ##colours = ['#ffffff', '#512900', '#626262', '#353535', '#444444', '#535353', '#4f0000', '#bd4444', '#9f2626', '#810808', '#808080', '#835b2e', '#744c1f', '#a1794c', '#556d9b', '#738bb9', '#926a3d', '#91a9d7', '#a9afb4', '#ddb588', '#bf976a', '#013e00', '#6fac51', '#518e33', '#ded914', '#337015']

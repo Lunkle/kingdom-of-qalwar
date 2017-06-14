@@ -38,7 +38,7 @@ def initializeGame():
 
 
 def startGame():
-    global title, startButton, aboutButton, nextSeasonButton, menuButton
+    global title, startButton, aboutButton, nextSeasonButton, menuButton, settingsButton
     for i in range(len(title)):
         data.s.delete(title[i])
     startButton.destroy()
@@ -47,7 +47,14 @@ def startGame():
     nextSeasonButton.createButton()
     menuButton = Button(data.cWidth - 110, 10, "Menu", 2, showMenu)
     menuButton.createButton()
+    settingsButton = Button(10, 10, "Settings", 2, showSettings)
+    settingsButton.createButton()
     data.gameStarted = True
+
+def showSettings():
+    pass
+##    data.resolution = 4
+##    data.reload(sprites)
 
 def showMenu():
     global menuButton, nextSeasonButton, menuFeatures, backButton

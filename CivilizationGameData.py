@@ -1,6 +1,6 @@
 from Tkinter import *
 
-resolution = 4 #Change to higher for faster game
+resolution = 3 #Change to higher for faster game
                #Must be a whole number
 
 import CivilizationGameSprites as sprites

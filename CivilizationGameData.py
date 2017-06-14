@@ -1,4 +1,7 @@
-from tkinter import *
+from Tkinter import *
+
+resolution = 4 #Change to higher for faster game
+
 import CivilizationGameSprites as sprites
 import CivilizationGameFont as font
 
@@ -23,8 +26,6 @@ minTileSize = 15
 maxTileSize = 250
 
 dirtThickness = 1.5
-
-resolution = 4 #Change to higher for faster game
 
 #For the Button class
 startScreenButtonSize = 2.5

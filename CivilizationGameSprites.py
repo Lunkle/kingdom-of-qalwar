@@ -299,16 +299,17 @@ enemyBaseBottom = [
     ["#ffcf65", "#a829cf"]
 ]
 
-myenv = locals()
+originalSprites = [residence, townHallTop, townHallLeft, townHallRight, townHallBottom, enemyBaseTop, enemyBaseLeft, enemyBaseRight, enemyBaseBottom]
+updatedSprites = []
+for i in range(len(originalSprites)):
+    newSprite = []
+    for j in range(0, len(originalSprites[i]), int(data.resolution)):
+        newSprite.append([])
+        for k in range(0, len(originalSprites[i][j]), int(data.resolution)):
+            newSprite[int(j / data.resolution)].append(originalSprites[i][j][k])
+    updatedSprites.append(newSprite)
 
-for k in myenv:
-    if k[:5] != "button":
-        newSprite = []
-        for i in range(0, len(myenv[k]), int(data.resolution)):
-            newSprite.append([])
-            for j in range(0, len(myenv[k][i]), int(data.resolution)):
-                newSprite[int(j / data.resolution)].append(myenv[k][i][j])
-        myenv[k] = newSprite
+residence, townHallTop, townHallLeft, townHallRight, townHallBottom, enemyBaseTop, enemyBaseLeft, enemyBaseRight, enemyBaseBottom = updatedSprites
 
 #Buttons
 buttonLeft = [

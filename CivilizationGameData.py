@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 
 resolution = 3 #Change to higher for faster game
                #Must be a whole number
@@ -43,6 +43,11 @@ enemyBaseStartingY = yTiles/4 - 1
 
 loadBuffer = 2 #In tiles
 
+qals = 500
+wood = 500
+gold = 100
+mana = 100
+
 QALS = "Qal"
 WOOD = "Wood"
 GOLD = "Gold"
@@ -53,10 +58,10 @@ resourceTypes = {
     WOOD:wood,
     GOLD:gold,
     MANA:mana
-]
+}
 
 resourceMaximum = {
-    COINS:1000,
+    QALS:1000,
     WOOD:1000,
     GOLD:250,
     MANA:100

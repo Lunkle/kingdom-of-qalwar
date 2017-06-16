@@ -1,5 +1,5 @@
 from PIL import Image
-im = Image.open("Opponents Base\Lvl 1\Opponents Base Lvl 1 Bottom.png") #Can be many different formats.
+im = Image.open("Resources Art\Qals.png") #Can be many different formats.
 pix = im.load()
 xLength, yLength = im.size #Get the width and hight of the image for iterating over
 ##print pix[50, 50] #Get the RGBA Value of the a pixel of an image
@@ -24,7 +24,7 @@ imageArray = []
 for i in range(yLength):
     imageArray.append([])
     for j in range(xLength):
-        r, g, b, a = pix[j, i]
+        r, g, b = pix[j, i]
         hexCode = "#%02x%02x%02x" % (r, g, b)
         imageArray[i].append(hexCode)
 

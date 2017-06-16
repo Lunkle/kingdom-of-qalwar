@@ -1,6 +1,6 @@
 from Tkinter import *
 
-resolution = 3 #Change to higher for faster game
+resolution = 4 #Change to higher for faster game
                #Must be a whole number
 
 import CivilizationGameSprites as sprites
@@ -43,6 +43,8 @@ enemyBaseStartingY = yTiles/4 - 1
 
 loadBuffer = 2 #In tiles
 
+resourceIndicatorLength = 2 * cWidth / 5
+
 qals = 500
 wood = 500
 gold = 100
@@ -52,20 +54,6 @@ QALS = "Qal"
 WOOD = "Wood"
 GOLD = "Gold"
 MANA = "Mana"
-
-resourceTypes = {
-    QALS:qals,
-    WOOD:wood,
-    GOLD:gold,
-    MANA:mana
-}
-
-resourceMaximum = {
-    QALS:1000,
-    WOOD:1000,
-    GOLD:250,
-    MANA:100
-}
 
 #Lame Variables:
 gameStarted = False
@@ -171,6 +159,41 @@ buttonSegments = {
     BUTTON_MIDDLE_1:sprites.buttonMiddle1,
     BUTTON_MIDDLE_2:sprites.buttonMiddle2,
     BUTTON_RIGHT:sprites.buttonRight
+}
+
+resourceTypes = [
+    QALS,
+    WOOD,
+    GOLD,
+    MANA
+]
+
+resourceAmounts = {
+    QALS:qals,
+    WOOD:wood,
+    GOLD:gold,
+    MANA:mana
+}
+
+resourceMaximum = {
+    QALS:1000,
+    WOOD:1000,
+    GOLD:250,
+    MANA:100
+}
+
+resourceIcons = {
+    QALS:sprites.qals,
+    WOOD:sprites.wood,
+    GOLD:sprites.gold,
+    MANA:sprites.mana
+}
+
+resourceColours = {
+    QALS:"#ca5c37",
+    WOOD:"#a07b54",
+    GOLD:"#e5c100",
+    MANA:"#02bfd2"
 }
 
 buildingTypeImages = {

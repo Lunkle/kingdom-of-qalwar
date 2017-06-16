@@ -231,9 +231,12 @@ def updateLand():
     landShapeY4 = landShapeY2 + polygonLandYLength
     
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, outline = data.landOutlineColour, width = 1)
+    data.s.tag_lower(data.landPolygon)
     data.dirtLeft = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX4, landShapeY4, landShapeX4, landShapeY4 + tileYLength * data.dirtThickness, landShapeX1, landShapeY1 + tileYLength * data.dirtThickness, fill = data.dirtColour, outline = data.dirtOutlineColour, width = 1)
     data.dirtRight = data.s.create_polygon(landShapeX3, landShapeY3, landShapeX4, landShapeY4, landShapeX4, landShapeY4 + tileYLength * data.dirtThickness, landShapeX3, landShapeY3 + tileYLength * data.dirtThickness, fill = data.dirtColour, outline = data.dirtOutlineColour, width = 1)
-
+    data.s.tag_lower(data.dirtLeft)
+    data.s.tag_lower(data.dirtRight)
+    
 def updateBuildings():
     for i in range(len(data.Building.buildingObject)):
         for j in range(len(data.Building.buildingImages[i])):
@@ -262,8 +265,13 @@ def updateBuildings():
             data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
 
 def showResources():
-    for i in range(len(data.resourceTypes)):
-        data.s.create_rectangle(10, data.cHeight - 30 - i * 30, data.cWidth / 4, data.cHeight - 10 - i * 30)
+    for i in range(len(data.resourceTypes) - 1, -1, -1):
+        data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, data.resourceIndicatorLength, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30)
+        resource = data.resourceTypes[i]
+        ratioOfResourceToMaximum = float(data.resourceAmounts[resource]) / data.resourceMaximum[resource]
+        #Top Left x1 y1, Bottom Right x2 y2
+        data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, data.resourceIndicatorLength * ratioOfResourceToMaximum, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30, fill = data.resourceColours[resource])
+        makeBitmap(8, data.cHeight - 3 - (len(data.resourceTypes) - i) * 30, 2, data.resourceIcons[resource])
 
 def updateScreen():
     if data.menuOpen == False:

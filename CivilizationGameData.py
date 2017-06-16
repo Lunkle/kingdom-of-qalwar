@@ -15,7 +15,7 @@ enemyLandColour = "#1e2f5f"
 
 #Changeable Sizes:
 cWidth = 600
-cHeight = 450
+cHeight = 400
 
 xTiles = 32
 yTiles = 32
@@ -27,6 +27,8 @@ minTileSize = 15
 maxTileSize = 250
 
 dirtThickness = 1.5
+
+notificationPixelSize = 3
 
 #For the Button class
 startScreenButtonSize = 2.5
@@ -108,7 +110,7 @@ s = Canvas(root, width=cWidth, height=cHeight, background = "white")
 s.master.title("Kingdom of Qalwar") #Yey  what a cool name
 
 #Coolest stuff
-class Building():       #Building is used for the various types of buildings, including your own townhall, opponent's base, wall, etc.
+class Building():       #Building is used for the various types of buildings, including your own townhall, opponents base, wall, etc.
     buildingObject = [] #Stores the building class instance itself
     buildingImages = [] #Stores each pixel of the building
     buildingTypes = []  #What type of building is it? Residence, townhall, tower?
@@ -168,13 +170,6 @@ resourceMaximum = {
     MANA:100
 }
 
-resourceIcons = {
-    QALS:sprites.qals,
-    WOOD:sprites.wood,
-    GOLD:sprites.gold,
-    MANA:sprites.mana
-}
-
 resourceColours = {
     QALS:"#ca5c37",
     WOOD:"#a07b54",
@@ -183,12 +178,41 @@ resourceColours = {
 }
 
 #Image Data
+resourceIcons = {
+    QALS:sprites.qals,
+    WOOD:sprites.wood,
+    GOLD:sprites.gold,
+    MANA:sprites.mana
+}
+
 buttonSegments = {
     BUTTON_LEFT:sprites.buttonLeft,
     BUTTON_MIDDLE_0:sprites.buttonMiddle0,
     BUTTON_MIDDLE_1:sprites.buttonMiddle1,
     BUTTON_MIDDLE_2:sprites.buttonMiddle2,
     BUTTON_RIGHT:sprites.buttonRight
+}
+
+PAPER_TOP_LEFT = "PaperTopLeft"
+PAPER_TOP_RIGHT = "PaperTopRight"
+PAPER_BOTTOM_LEFT = "PaperBottomLeft"
+PAPER_BOTTOM_RIGHT = "PaperBottomRight"
+PAPER_UP = "PaperUp"
+PAPER_LEFT = "PaperLeft"
+PAPER_RIGHT = "PaperRight"
+PAPER_DOWN = "PaperDown"
+PAPER_MIDDLE = "PaperMiddle"
+
+paperPieces = {
+    PAPER_TOP_LEFT:sprites.paperTopLeft,
+    PAPER_TOP_RIGHT:sprites.paperTopRight,
+    PAPER_BOTTOM_LEFT:sprites.paperBottomLeft,
+    PAPER_BOTTOM_RIGHT:sprites.paperBottomRight,
+    PAPER_UP:sprites.paperUp,
+    PAPER_LEFT:sprites.paperLeft,
+    PAPER_RIGHT:sprites.paperRight,
+    PAPER_DOWN:sprites.paperDown,
+    PAPER_MIDDLE:sprites.paperMiddle
 }
 
 buildingTypeImages = {

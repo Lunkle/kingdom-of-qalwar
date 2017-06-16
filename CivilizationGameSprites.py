@@ -674,3 +674,114 @@ buttonRight = [
     ['#d7d7d7', '#c3c3c3', '#7f7f7f'],
     ['#7f7f7f', '#7f7f7f']
 ]
+
+#Paper
+paperMiddle = [
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#fdd26c', '#ffd16f', '#fed36b', '#fdd26c', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#fed06e'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd16f', '#ffd26d', '#ffd26d', '#fed16c'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd16d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#fed16c', '#ffd26d', '#ffd26d', '#ffd16f', '#ffd16d', '#ffd16f', '#fed36d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#fed26f', '#ffd16f', '#ffd16f', '#ffd26d', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f'],
+    ['#fed36d', '#ffd26d', '#ffd16f', '#ffd16f', '#ffd16f', '#fdd06b', '#ffd26d', '#ffd26b', '#fed26f', '#fed16c', '#fed26f']
+]
+paperTopLeft = [
+    ['#ffffff', '#5a3115', '#77411d', '#77411d', '#77411d', '#77411f', '#77411d', '#77411d', '#77411d', '#77411d', '#77411d', '#77411d'],
+    ['#71482c', '#f19f4b', '#f09837', '#ee9434', '#ee9635', '#ed9534', '#ee9537', '#ee9635', '#ee9537', '#ee9635', '#ee9635', '#f09636'],
+    ['#70482e', '#f09f4e', '#ffbb5b', '#fab955', '#fab857', '#fbb958', '#fbb958', '#fbb958', '#fbb959', '#fbb959', '#faba58', '#fab857'],
+    ['#71472e', '#ef9e4d', '#ffb95a', '#ffd26e', '#fad06c', '#f8b856', '#faba58', '#f9b957', '#fed26f', '#ffd16f', '#ffd46e', '#fbb959'],
+    ['#72482f', '#f09f4e', '#ffba5a', '#ffd26e', '#fdd16e', '#fdd26c', '#fdd26c', '#fdd26c', '#fdd16e', '#fed26f', '#fdd16e', '#ffd46e'],
+    ['#71472e', '#f09f4d', '#ffbb59', '#ffd16e', '#fed26f', '#ffd270', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb5a', '#fab857', '#ffd26e', '#ffd16f', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb59', '#fdb958', '#ffd170', '#fed16c', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb5b', '#fdb958', '#ffd170', '#fed16c', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffba5a', '#f9bb58', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbc5a', '#ffd470', '#fed16c', '#fed16c', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb59', '#ffd06d', '#fed16c', '#fed16a', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d']
+]
+paperTopRight = [
+    ['#77411d', '#76401c', '#77411d', '#79411e', '#fffaf2', '#fffffd', '#ffffff', '#ffffff', '#ffffff', '#ffffff'],
+    ['#ed9534', '#ba7439', '#e1c989', '#f7f5a0', '#683a09', '#fffaf1', '#f9f9f9', '#fefefe'],
+    ['#faae4e', '#ea9332', '#a15c23', '#fff4af', '#f4d674', '#6b3803', '#fffbf3', '#fdfdfd'],
+    ['#fbb958', '#f5a647', '#9d5a23', '#fff4ac', '#f6cf70', '#fad270', '#6d3806', '#fffbf2', '#fdfdfb', '#fefffd'],
+    ['#ffc965', '#f7a849', '#9d5a23', '#feeba6', '#f7d071', '#ffd471', '#fdd26a', '#713e09', '#fffaf2', '#fffdfe'],
+    ['#ffcb67', '#f7a849', '#9d5a25', '#ffeca4', '#fad175', '#ffd16f', '#ffd16f', '#ffd16f', '#794314', '#fff8ef'],
+    ['#fdb958', '#f7a849', '#9d5a25', '#be7a3b', '#bf7931', '#c37930', '#c27a32', '#c2782f', '#c5782a', '#7d421a'],
+    ['#f9b957', '#f6a748', '#9c571c', '#7a4116', '#7b4016', '#7b4016', '#7b4016', '#7b4016', '#c57b3a', '#7d421a'],
+    ['#ffcb67', '#f6a748', '#d07e28', '#c57425', '#c57425', '#c57425', '#c57425', '#c37223', '#793b0c', '#7d4522'],
+    ['#ffc867', '#f3a948', '#e99535', '#e69333', '#e79235', '#e79434', '#e79436', '#e69333', '#c4741f', '#7c4119'],
+    ['#feca67', '#fbbb59', '#fcba59', '#fab857', '#fdbd5c', '#f4b856', '#f8b453', '#fbbb5a', '#eb9737', '#81431a'],
+    ['#ffd26d', '#fdc765', '#f7bb59', '#f9ba59', '#ffce6b', '#ffd26d', '#f8b856', '#fab857', '#ec9536', '#7e4319']
+]
+paperBottomLeft = [
+    ['#71472e', '#eea04d', '#ffbc5a', '#ffd06d', '#ffd26d', '#ffd26d', '#f4ba59', '#f6ba58', '#ffd46e', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#72492d', '#f2a14f', '#ffbb5b', '#f6ba58', '#f7b956', '#f7b956', '#f8b655', '#fbb958', '#f8b958', '#f4b856', '#f8b95a', '#ffd270'],
+    ['#734930', '#7d4014', '#e99944', '#e99533', '#e99533', '#e89633', '#e99533', '#ea9634', '#e89432', '#e99533', '#fbb958', '#fed16c'],
+    ['#704729', '#c67f3f', '#793c0f', '#773c14', '#793e16', '#793e16', '#783e16', '#743d14', '#c2762b', '#ee973a', '#fbb959', '#ffd26d'],
+    ['#714a2d', '#c77e3a', '#f09b40', '#fff7a4', '#fff8a7', '#fff8a7', '#fcf7a3', '#7a461f', '#c2782d', '#eb9435', '#fcba59', '#faba59'],
+    ['#ffffff', '#5a3115', '#c47b36', '#ef973d', '#ffd16e', '#ffd26d', '#fdd26c', '#7b461c', '#c3792e', '#ef9638', '#fbb958', '#fab858'],
+    ['#ffffff', '#ffffff', '#61371e', '#c57f3a', '#f0983e', '#ffd16e', '#fcd26c', '#7a431a', '#c2782d', '#ee9537', '#fbb958', '#fab858'],
+    ['#ffffff', '#ffffff', '#ffffff', '#603419', '#c47e38', '#e89338', '#fdcd69', '#7a451b', '#c3752b', '#eb9234', '#feba59', '#fdb958'],
+    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#6b3f24', '#c47b36', '#ed953b', '#81431a', '#bf752e', '#ed9639', '#ed9639', '#ed9639'],
+    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#673f25', '#c17833', '#c2782d', '#7b4320', '#c17730', '#c27831', '#c27831'],
+    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#6f4127', '#6f3e1e', '#724121', '#714322', '#724123', '#724123']
+]
+paperBottomRight = [
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#f1bb59', '#f9b957', '#e99535', '#7e4319'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#f8ba57', '#fbb958', '#ec9536', '#7e4319'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#f9b957', '#fab857', '#ec9536', '#7e4319'],
+    ['#ffd16f', '#fed36d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#f9b958', '#ea9636', '#7e4317'],
+    ['#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd16f', '#ffd370', '#f9b958', '#ea9636', '#7e4317'],
+    ['#fdd06b', '#ffd26d', '#ffd26b', '#fed26f', '#fed16c', '#fed26f', '#fdd26c', '#f9b958', '#ea9636', '#7e4319'],
+    ['#fcc25f', '#fed36d', '#fed36d', '#f7bb59', '#fbb756', '#ffbb5a', '#ffd16e', '#f9b958', '#ea9636', '#7d4218'],
+    ['#fcb857', '#feb856', '#feb856', '#fcb857', '#fdb958', '#fdb958', '#fcb857', '#f9b756', '#ea9334', '#7e4319'],
+    ['#ed953b', '#ec9538', '#ec943a', '#ed9639', '#ed9639', '#ed9639', '#ed9639', '#ef963c', '#ed953b', '#7b4016'],
+    ['#c2782f', '#c2782f', '#c2782f', '#c2782f', '#c2782f', '#c2782f', '#c17931', '#c2782f', '#c1772e', '#7a4621'],
+    ['#724123', '#724123', '#734023', '#724123', '#724123', '#724123', '#724123', '#724121', '#714022', '#fffcf9']
+]
+paperUp = [
+    ['#77411d', '#77411d', '#77411d', '#77411d', '#77411d', '#77411d'],
+    ['#ee9537', '#ee9635', '#ee9635', '#f09636', '#ef9535', '#ef9535'],
+    ['#fbb959', '#fbb959', '#faba58', '#fab857', '#fbb958', '#fbb958'],
+    ['#fed26f', '#ffd16f', '#ffd46e', '#fbb959', '#fbbb59', '#f5b957'],
+    ['#fdd16e', '#fed26f', '#fdd16e', '#ffd46e', '#fed36d', '#fed36d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d']
+]
+paperLeft = [
+    ['#70482e', '#f09f4d', '#ffbc5c', '#ffce6c', '#ffd26d', '#ffd26d', '#fcd16b', '#ffd16f', '#fcd16b', '#ffd46e', '#ffd26b', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbc5a', '#ffd470', '#fed16c', '#fed16c', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb59', '#ffd06d', '#fed16c', '#fed16a', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb5b', '#ffca66', '#ffd26d', '#fed36d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb5b', '#fdb958', '#ffd170', '#fdd26c', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffbb5b', '#fdb958', '#ffd170', '#fed16c', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#71472e', '#f09f4d', '#ffba5a', '#f9bb58', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+]
+paperRight = [
+    ['#ffd26d', '#fdd26c', '#ffd16f', '#fed36b', '#fdd26c', '#ffd26d', '#f8b856', '#f9b957', '#ec9536', '#7e4319'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#fed06e', '#fdc763', '#f9b957', '#ea9636', '#7e4319'],
+    ['#ffd26d', '#ffd26d', '#ffd16f', '#ffd26d', '#ffd26d', '#fed16c', '#fed16c', '#f9b958', '#e89535', '#7e4319'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd46e', '#fbbb5a', '#e89535', '#7e4319'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#f1bb59', '#f9b957', '#e99535', '#7e4319'],
+]
+paperDown = [
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#ffd26d', '#ffd16d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d'],
+    ['#fed16c', '#ffd26d', '#ffd26d', '#ffd16f', '#ffd16d', '#ffd16f', '#fed36d'],
+    ['#fed26f', '#ffd16f', '#ffd16f', '#ffd26d', '#ffd16f', '#ffd16f', '#ffd16f'],
+    ['#fed36d', '#ffd26d', '#ffd16f', '#ffd16f', '#ffd16f', '#fdd06b', '#ffd26d'],
+    ['#fdd26c', '#ffd16d', '#fdb958', '#fdb958', '#fdb958', '#fcc25f', '#fed36d'],
+    ['#fdb958', '#fdb958', '#fdb958', '#fdb958', '#fdb958', '#fcb857', '#feb856'],
+    ['#ec9538', '#ec9538', '#ed953b', '#ed953b', '#ed953b', '#ed953b', '#ec9538'],
+    ['#c2782f', '#c27831', '#c27831', '#c2782f', '#c2782f', '#c2782f', '#c2782f'],
+    ['#724123', '#724123', '#724123', '#724123', '#724123', '#724123', '#724123'],
+]

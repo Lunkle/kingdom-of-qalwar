@@ -45,16 +45,6 @@ loadBuffer = 2 #In tiles
 
 resourceIndicatorLength = 2 * cWidth / 5
 
-qals = 500
-wood = 500
-gold = 100
-mana = 100
-
-QALS = "Qal"
-WOOD = "Wood"
-GOLD = "Gold"
-MANA = "Mana"
-
 #Lame Variables:
 gameStarted = False
 menuOpen = False
@@ -152,14 +142,10 @@ class Building():       #Building is used for the various types of buildings, in
         del Building.buildingsX[self.number]
         del Building.buildingsY[self.number]
 
-#Image Data
-buttonSegments = {
-    BUTTON_LEFT:sprites.buttonLeft,
-    BUTTON_MIDDLE_0:sprites.buttonMiddle0,
-    BUTTON_MIDDLE_1:sprites.buttonMiddle1,
-    BUTTON_MIDDLE_2:sprites.buttonMiddle2,
-    BUTTON_RIGHT:sprites.buttonRight
-}
+QALS = "Qal"
+WOOD = "Wood"
+GOLD = "Gold"
+MANA = "Mana"
 
 resourceTypes = [
     QALS,
@@ -169,10 +155,10 @@ resourceTypes = [
 ]
 
 resourceAmounts = {
-    QALS:qals,
-    WOOD:wood,
-    GOLD:gold,
-    MANA:mana
+    QALS:500,
+    WOOD:500,
+    GOLD:100,
+    MANA:100
 }
 
 resourceMaximum = {
@@ -194,6 +180,15 @@ resourceColours = {
     WOOD:"#a07b54",
     GOLD:"#e5c100",
     MANA:"#02bfd2"
+}
+
+#Image Data
+buttonSegments = {
+    BUTTON_LEFT:sprites.buttonLeft,
+    BUTTON_MIDDLE_0:sprites.buttonMiddle0,
+    BUTTON_MIDDLE_1:sprites.buttonMiddle1,
+    BUTTON_MIDDLE_2:sprites.buttonMiddle2,
+    BUTTON_RIGHT:sprites.buttonRight
 }
 
 buildingTypeImages = {

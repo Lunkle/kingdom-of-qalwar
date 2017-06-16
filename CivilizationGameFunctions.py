@@ -49,6 +49,8 @@ def startGame():
     menuButton.createButton()
     settingsButton = Button(10, 10, "Settings", 2, showSettings)
     settingsButton.createButton()
+    updateResources()
+    updateButtons()
     data.gameStarted = True
 
 def showSettings():
@@ -66,6 +68,7 @@ def showMenu():
     menuFeatures.append(data.s.create_line(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight - 52, fill = "#7f7f7f", width = 3))
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     backButton.createButton()
+    updateButtons()
     data.s.update()
 
 def closeMenu():
@@ -78,12 +81,11 @@ def closeMenu():
     for i in range(len(menuFeatures)):
         data.s.delete(menuFeatures[i])
     backButton.destroy()
+    updateButtons()
+    data.s.update()
 
 def passTurn():
-    ##
-    ##
-    ##
-    pass
+    addResource([data.QALS, data.WOOD, data.GOLD, data.MANA], [100, 100, 5, 10])
 
 def tutorial():
     ##
@@ -128,8 +130,8 @@ def mousePressedDetector(event):
     for i in range(len(Button.buttonBounds)):
         try:
             if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
-                Button.buttonFunctions[i]() #This runs the assigned function or procedure call
                 data.clickedButton = True
+                Button.buttonFunctions[i]() #This runs the assigned function or procedure call
         except:
             pass
     
@@ -191,6 +193,22 @@ def mouseWheelHandler(event):
 
     data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
     data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
+
+def addResource(resources, amounts):
+    for i in range(len(resources)):
+        data.resourceAmounts[resources[i]] += amounts[i]
+        if data.resourceAmounts[resources[i]] > data.resourceMaximum[resources[i]]:
+           data.resourceAmounts[resources[i]] = data.resourceMaximum[resources[i]]
+    updateResources()
+
+def removeResource(resources, amounts):
+    for i in range(len(resources)):
+        if data.resourceAmounts[resources[i]] < 0:
+            return False
+    for i in range(len(resources)):
+        data.resourceAmounts[resources[i]] -= amounts[i]
+    updateResources()
+    return True
 
 def highlightSquare(x, y):
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
@@ -262,9 +280,14 @@ def updateBuildings():
             bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
 
-            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage)
+            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, toBack = True)
 
-def showResources():
+def updateButtons():
+    for i in range(len(Button.buttonObject)):
+        Button.buttonObject[i].delete()
+        Button.buttonObject[i].displayButton()
+
+def updateResources():
     for i in range(len(data.resourceTypes) - 1, -1, -1):
         data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, data.resourceIndicatorLength, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30)
         resource = data.resourceTypes[i]
@@ -275,18 +298,14 @@ def showResources():
 
 def updateScreen():
     if data.menuOpen == False:
-##        createText(10, 10, "Season " + , 2)
+##        createText(data.cWidth / 2, 10, "Season ", 2)
+        updateBuildings()
         updateLand()
         highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
-        updateBuildings()
-    for i in range(len(Button.buttonObject)):
-        Button.buttonObject[i].delete()
-        Button.buttonObject[i].displayButton()
-    showResources()
     data.s.update()
     sleep(0.01)
 
-def makeBitmap(x, y, squareSize, bitmap):
+def makeBitmap(x, y, squareSize, bitmap, toBack = False):
     skip = int(1/squareSize)
     if skip < 1:
         skip = 1
@@ -296,7 +315,10 @@ def makeBitmap(x, y, squareSize, bitmap):
             colourCode = bitmap[i][j]
             if colourCode != "#ffffff":
                 colour = colourCode
-                squaresPixelsArray.append(data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0))
+                pixel = data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0)
+                squaresPixelsArray.append(pixel)
+                if toBack == True:
+                    data.s.tag_lower(pixel)
     return squaresPixelsArray
 
 def createText(x, y, text, size, center = False):

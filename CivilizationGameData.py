@@ -58,6 +58,9 @@ landPolygon = 0
 dirtLeft = 0
 dirtRight = 0
 
+notificationOpen = False 
+notificationPage = []
+
 highlightedTile = [-1000, -1000] #Set it off the screen
 highlightedTileObject = 0
 

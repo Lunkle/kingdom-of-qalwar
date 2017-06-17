@@ -29,6 +29,8 @@ maxTileSize = 250
 dirtThickness = 1.5
 
 notificationPixelSize = 3
+notificationScreenBorderX = 1.0/10.0 #The smaller these are (or bigger the denominator)
+notificationScreenBorderY = 1.0/8.0 #the smaller the border and bigger the notification
 
 #For the Button class
 startScreenButtonSize = 2.5

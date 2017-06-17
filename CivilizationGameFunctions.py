@@ -17,7 +17,7 @@ def showStartPage():
 def initializeGame():
     testBuilding = data.Building(10, 10, data.RESIDENCE)
     testBuilding.add()
-    
+
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
     townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
@@ -54,7 +54,7 @@ def startGame():
     data.gameStarted = True
 
 def showSettings():
-    pass
+    createNotification()
 ##    data.resolution = 4
 ##    data.reload(sprites)
 
@@ -134,7 +134,7 @@ def mousePressedDetector(event):
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
         except:
             pass
-    
+
 def mouseDragDetector(event):
     data.mouseDragged = True
     if data.gameStarted == True:
@@ -179,7 +179,7 @@ def mouseReleaseDetector(event):
 
 def mouseWheelHandler(event):
     oldPolygonLandXLength, oldPolygonLandYLength = getLandPolygonXYLength()
-    
+
     if event.num == 5 or event.delta == -120:
         data.tileSize *= 0.90
     if event.num == 4 or event.delta == 120:
@@ -228,38 +228,38 @@ def highlightSquare(x, y):
         highlightX4 = highlightX1 - tileXLength / 2
         highlightY4 = highlightY2
         data.highlightedTileObject = data.s.create_polygon(highlightX1, highlightY1, highlightX2, highlightY2, highlightX3, highlightY3, highlightX4, highlightY4, width = 0, fill = "yellow")
-        
+
 def updateLand():
     data.s.delete(data.landPolygon)
     data.s.delete(data.dirtLeft, data.dirtRight)
-    
+
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
 
     landShapeX1 = -data.currentX #Left boundary
     landShapeY1 = polygonLandYLength / 2 - data.currentY #Middle of shape
-    
+
     landShapeX2 = landShapeX1 + polygonLandXLength / 2
     landShapeY2 = -data.currentY #Top boundary
-    
+
     landShapeX3 = landShapeX1 + polygonLandXLength
     landShapeY3 = landShapeY1 #Right boundary
-    
+
     landShapeX4 = landShapeX2 #Bottom boundary
     landShapeY4 = landShapeY2 + polygonLandYLength
-    
+
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, outline = data.landOutlineColour, width = 1)
     data.s.tag_lower(data.landPolygon)
     data.dirtLeft = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX4, landShapeY4, landShapeX4, landShapeY4 + tileYLength * data.dirtThickness, landShapeX1, landShapeY1 + tileYLength * data.dirtThickness, fill = data.dirtColour, outline = data.dirtOutlineColour, width = 1)
     data.dirtRight = data.s.create_polygon(landShapeX3, landShapeY3, landShapeX4, landShapeY4, landShapeX4, landShapeY4 + tileYLength * data.dirtThickness, landShapeX3, landShapeY3 + tileYLength * data.dirtThickness, fill = data.dirtColour, outline = data.dirtOutlineColour, width = 1)
     data.s.tag_lower(data.dirtLeft)
     data.s.tag_lower(data.dirtRight)
-    
+
 def updateBuildings():
     for i in range(len(data.Building.buildingObject)):
         for j in range(len(data.Building.buildingImages[i])):
             data.s.delete(data.Building.buildingImages[i][j])
-            
+
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
     landShapeTopX = -data.currentX + polygonLandXLength / 2
@@ -304,6 +304,36 @@ def updateScreen():
         highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
     data.s.update()
     sleep(0.01)
+
+def createNotification():
+    data.s.create_rectangle(0, 0, data.cWidth + 2, data.cHeight + 2, fill = "black", width = 0, stipple = "gray75")
+    makeBitmap(int(data.cWidth * data.notificationScreenBorderX), int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_TOP_LEFT])
+    makeBitmap(int(data.cWidth * data.notificationScreenBorderX), int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_LEFT]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_BOTTOM_LEFT])
+    makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_TOP_RIGHT][0]) * data.notificationPixelSize, int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_TOP_RIGHT])
+    makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_BOTTOM_RIGHT][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_RIGHT]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_BOTTOM_RIGHT])
+    #Top Edge
+    for i in range(int(data.cWidth * data.notificationScreenBorderX) + len(data.paperPieces[data.PAPER_TOP_LEFT][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_TOP_RIGHT][0]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_UP][0]) * data.notificationPixelSize, len(data.paperPieces[data.PAPER_UP][0]) * data.notificationPixelSize):
+        makeBitmap(i, int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_UP])
+    makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_TOP_RIGHT][0]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_UP][0]) * data.notificationPixelSize, int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_UP])
+    #Left Edge
+    for i in range(int(data.cHeight * data.notificationScreenBorderY) + len(data.paperPieces[data.PAPER_TOP_LEFT]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_LEFT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize, len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize):
+        makeBitmap(int(data.cWidth * data.notificationScreenBorderX), i, data.notificationPixelSize, data.paperPieces[data.PAPER_LEFT])
+    makeBitmap(int(data.cWidth * data.notificationScreenBorderX), int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_LEFT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_LEFT])
+    #Right Edge
+    for i in range(int(data.cHeight * data.notificationScreenBorderY) + len(data.paperPieces[data.PAPER_TOP_RIGHT]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_RIGHT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_RIGHT]) * data.notificationPixelSize, len(data.paperPieces[data.PAPER_RIGHT]) * data.notificationPixelSize):
+        makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_RIGHT][0]) * data.notificationPixelSize, i, data.notificationPixelSize, data.paperPieces[data.PAPER_RIGHT])
+    makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_RIGHT][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_RIGHT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_RIGHT]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_RIGHT])
+    #Bottom Edge
+    for i in range(int(data.cWidth * data.notificationScreenBorderX) + len(data.paperPieces[data.PAPER_BOTTOM_LEFT][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_BOTTOM_RIGHT][0]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_DOWN][0]) * data.notificationPixelSize, len(data.paperPieces[data.PAPER_DOWN][0]) * data.notificationPixelSize):
+        makeBitmap(i, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_DOWN])
+    makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_BOTTOM_RIGHT][0]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_DOWN][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_DOWN])
+    #Middle
+    for i in range(int(data.cWidth * data.notificationScreenBorderX) + len(data.paperPieces[data.PAPER_LEFT][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_RIGHT][0]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE][0]) * data.notificationPixelSize, len(data.paperPieces[data.PAPER_MIDDLE][0]) * data.notificationPixelSize):
+        for j in range(int(data.cHeight * data.notificationScreenBorderY) + len(data.paperPieces[data.PAPER_UP]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE]) * data.notificationPixelSize, len(data.paperPieces[data.PAPER_MIDDLE]) * data.notificationPixelSize):
+            makeBitmap(i, j, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE])
+            makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE][0]) * data.notificationPixelSize, j, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE])
+        makeBitmap(i, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE])
+    makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE])
 
 def makeBitmap(x, y, squareSize, bitmap, toBack = False):
     skip = int(1/squareSize)
@@ -420,7 +450,7 @@ class Button():
         for i in range(len(Button.buttons[self.number])):
             for j in range(len(Button.buttons[self.number][i])):
                 data.s.delete(Button.buttons[self.number][i][j])
-    
+
     def destroy(self):
         try:
             for i in range(len(Button.buttons[self.number])):

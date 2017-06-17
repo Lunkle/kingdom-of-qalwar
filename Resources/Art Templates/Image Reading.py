@@ -47,4 +47,3 @@ print "]"
 ##for i in range(len(colours)):
 ##    print 'elif colourCode == ' + str(i + 9) + ':'
 ##    print '\tcolour = "' + colours[i] + '"'
->>>>>>> 65026c78443ed0bf77da7ed62560ed06460bca28

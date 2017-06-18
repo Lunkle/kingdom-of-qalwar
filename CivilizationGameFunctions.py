@@ -1,9 +1,8 @@
-##from tkinter import *
 from random import randint
 import random
 import colorsys
 from time import sleep
-from math import sin, cos, asin, acos, sqrt, ceil
+from math import sqrt, ceil
 import CivilizationGameData as data
 
 def showStartPage():
@@ -71,6 +70,7 @@ def showMenu():
     for i in range(10):
         menuFeatures.append(data.s.create_rectangle(data.cWidth - 190, i * 100 + 10, data.cWidth - 30, (i + 1) * 100, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
     menuFeatures.append(data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
+    createScroller(data.cWidth - 20, 10, data.cHeight - 72)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     backButton.createButton()
     updateButtons()
@@ -359,7 +359,15 @@ def createNotification(text):
     for i in range(len(text)):
         textLength = getTextLength(text[i], data.notificationTextSize)
         data.notificationPage.append(createText((data.cWidth - textLength) / 2, 2 * data.cHeight / 3 + (i - len(text)) * 30, text[i], data.notificationTextSize))
-        
+
+####################################################YYYYYYYYYYYYOOOOOOOOOOOOOOOOOLLLLLLLLLLLOOOOOOOOOOOOOOOOOOO0000000000000000000000000000000000000000000000000
+def createScroller(x, y, height):
+    scrollerObject = []
+    scrollerObject.append([data.s.create_rectangle(x, y, x + 5, y + height, fill = "#7f7f7f", width = 0)])
+    scrollerObject.append(makeBitmap(x, y, data.scrollerPixelSize, data.scrollerSegments[data.]))
+    
+    
+    return scrollerObject
 
 def deleteNotification():
     data.notificationOpen = False
@@ -369,10 +377,12 @@ def deleteNotification():
     data.notificationPage = []
 
 def makeBitmap(x, y, squareSize, bitmap, toBack = False, colourAdd = [False, "#ffffff", 50], onlyDarker = False):
+    #Try not to use toBack, colourAdd, and onlyDarker all together because that will be very slow.
+    #Actually only darker doesn't take up that much time to process. colourAdd is the real killer.
     skip = int(1/squareSize)
-    if skip < 1:
-        skip = 1
-    squaresPixelsArray = []
+    if skip < 1:                #This is is to reduce how many pixels need to be drawn when zoomed out.
+        skip = 1                #i.e. when each pixel only takes up half a square, you can skip a pixel every other time
+    squaresPixelsArray = [] #This is the array that stores each pixel so they can be deleted.
     for i in range(0, len(bitmap), skip):
         for j in range(0, len(bitmap[i]), skip):
             colourCode = bitmap[i][j]
@@ -400,7 +410,7 @@ def makeBitmap(x, y, squareSize, bitmap, toBack = False, colourAdd = [False, "#f
                 squaresPixelsArray.append(pixel)
                 if toBack == True:
                     data.s.tag_lower(pixel)
-    return squaresPixelsArray
+    return squaresPixelsArray #Return the aray so the pixels can be deleted
 
 def createText(x, y, text, size, center = False, onButton = False, addColour = [False, "#ffffff", 0]):
     letterIndex = x
@@ -446,6 +456,7 @@ class Button():
     BUTTON_ENDS_WIDTH = len(data.buttonSegments[data.BUTTON_LEFT][0]) + len(data.buttonSegments[data.BUTTON_RIGHT][0])
     BUTTON_MIDDLE_WIDTH = len(data.buttonSegments[data.BUTTON_MIDDLE_0][0])
     BUTTON_HEIGHT = len(data.buttonSegments[data.BUTTON_MIDDLE_0])
+    
     def __init__(self, buttonX, buttonY, text, size, function):
         self.x = buttonX
         self.y = buttonY
@@ -510,22 +521,23 @@ class Button():
         Button.buttons[self.number][segmentNumber + 1] = (makeBitmap(xValue, self.y, self.size, bitmapImage))
         Button.buttons[self.number][segmentNumber + 2] = createText(letterIndex, self.y, self.text, self.size, onButton = True)
 
-    def delete(self):
+    def delete(self): #For updating the screen
         for i in range(len(Button.buttons[self.number])):
             for j in range(len(Button.buttons[self.number][i])):
                 data.s.delete(Button.buttons[self.number][i][j])
 
     def destroy(self):
-        try:
+        try: #Try to delete everything if it hasn't already been deleted
             for i in range(len(Button.buttons[self.number])):
                 for j in range(len(Button.buttons[self.number][i])):
                     data.s.delete(Button.buttons[self.number][i][j])
         except:
             pass
-        del Button.buttonBounds[self.number]
-        del Button.buttons[self.number]
-        del Button.buttonFunctions[self.number]
-        del Button.buttonObject[self.number]
-        del Button.buttonSegments[self.number]
+        #Then delete all the data
+        del Button.buttonBounds[self.number]    #Delete the bounds check
+        del Button.buttons[self.number]         #Delete the pixels STORER (not the pixels themselves)
+        del Button.buttonFunctions[self.number] #Delete the function
+        del Button.buttonObject[self.number]    #Delete the object HOLDER (again, not the class instance itself)
+        del Button.buttonSegments[self.number]  #Delete the button segment data (not each segment -- its data)
         for i in range(self.number, len(Button.buttonObject)):
-            Button.buttonObject[i].number -= 1
+            Button.buttonObject[i].number -= 1          #Reduce all numbers of buttons before by 1 to fill up the gap.

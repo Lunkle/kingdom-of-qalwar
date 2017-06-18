@@ -16,18 +16,18 @@ data.s.pack()
 
 data.s.update()
 
+
 showStartPage()
+#On the start page the start button will start the game
 
 while data.gameStarted == False:
-    data.s.update()
-##    sleep(0.04)
+    data.s.update()#While the start button is not pressed, keep on updating
 
-initializeGame()
+initializeGame() #When game starts, initialize the game
 
-tutorial()
+tutorial() #Currently has nothing, but might be added later
 
 while data.gameOver == False:
-    updateScreen()
-    
-    
+    updateScreen() #Updates game screen (land, buildings, higlighted tile, etc.)
+
 mainloop()

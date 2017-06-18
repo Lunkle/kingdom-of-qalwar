@@ -675,6 +675,23 @@ buttonRight = [
     ['#7f7f7f', '#7f7f7f']
 ]
 
+#Scroller
+scrollerTop = [
+    []
+]
+scrollerMiddle0 = [
+    []
+]
+scrollerMiddle1 = [
+    []
+]
+scrollerMiddle2 = [
+    []
+]
+scrollerBottom = [
+    []
+]
+
 #Paper
 paperMiddle = [
     ['#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#ffd26d', '#fdd26c', '#ffd16f', '#fed36b', '#fdd26c', '#ffd26d'],

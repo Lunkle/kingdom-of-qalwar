@@ -6,14 +6,14 @@ resolution = 4 #Change to higher for faster game
 import CivilizationGameSprites as sprites
 import CivilizationGameFont as font
 
-#Changeable Colours:
+#Changeable Colours ////////////////////////////////////////////////////////////
 landColour = "#56b000"
 landOutlineColour = "#6bdb00"
 dirtColour = "#b08257"
 dirtOutlineColour = "#cdaf94"
 enemyLandColour = "#1e2f5f"
 
-#Changeable Sizes:
+#Changeable Sizes ////////////////////////////////////////////////////////////
 cWidth = 600
 cHeight = 400
 
@@ -33,18 +33,22 @@ notificationScreenBorderX = 1.0/10.0 #The smaller these are (or bigger the denom
 notificationScreenBorderY = 1.0/8.0 #the smaller the border and bigger the notification
 notificationTextSize = 2
 
-qalsEconomy = 10
-woodEconomy = 10
-goldEconomy = 2
-manaEconomy = 5
+qalsEconomy = 10    #Economy is the amount of each resource
+woodEconomy = 10    #the player gains each week
+goldEconomy = 2     #This can be increaesed through
+manaEconomy = 5     #building and upgrading buildings.
 
-#For the Button class
+#For the Button class ////////////////////////////////////////////////////////////
 startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
 
+#For the Scroller ////////////////////////////////////////////////////////////
+scrollerPixelSize = 2
+
+#Recommended-to-not-Change Variables ////////////////////////////////////////////////////////////
+
 startingTileSize = 30
 
-#Recommended-to-not-Change Variables:
 townHallStartingX = xTiles/4 - 1
 townHallStartingY = 3*yTiles/4 - 1
 
@@ -56,16 +60,16 @@ loadBuffer = 2 #In tiles
 resourceIndicatorLength = 2 * cWidth / 5 - 10
 resourceTextSize = 2
 
-#Lame Variables:
+#Lame Variables ////////////////////////////////////////////////////////////
 gameStarted = False
 menuOpen = False
 gameOver = False
 
-landPolygon = 0
-dirtLeft = 0
-dirtRight = 0
+landPolygon = 0 #Stores land object
+dirtLeft = 0    #Stores left dirt object
+dirtRight = 0   #Stores right dirt object
 
-notificationOpen = False 
+notificationOpen = False
 notificationPage = []
 
 highlightedTile = [-1000, -1000] #Set it off the screen
@@ -106,6 +110,13 @@ BUTTON_MIDDLE_1 = "ButtonMiddle1"
 BUTTON_MIDDLE_2 = "ButtonMiddle2"
 BUTTON_RIGHT = "ButtonRight"
 
+SCROLLER_TOP = "ScrollerTop"
+SCROLLER_MIDDLE_TEMPLATE = "ScrollerMiddle"
+SCROLLER_MIDDLE_0 = "ScrollerMiddle0"
+SCROLLER_MIDDLE_1 = "ScrollerMiddle1"
+SCROLLER_MIDDLE_2 = "ScrollerMiddle2"
+SCROLLER_BOTTOM = "ScrollerBottom"
+
 TOWN_HALL_TOP = "TownHallTop"
 TOWN_HALL_LEFT = "TownHallLeft"
 TOWN_HALL_RIGHT = "TownHallRight"
@@ -123,7 +134,7 @@ root.resizable(False, False) #Set resizable to false
 s = Canvas(root, width=cWidth, height=cHeight, background = "white")
 s.master.title("Kingdom of Qalwar") #Yey  what a cool name
 
-#Coolest stuff
+#Coolest stuff ////////////////////////////////////////////////////////////
 class Building():       #Building is used for the various types of buildings, including your own townhall, opponents base, wall, etc.
     buildingObject = [] #Stores the building class instance itself
     buildingImages = [] #Stores each pixel of the building
@@ -191,7 +202,7 @@ resourceColours = {
     MANA:"#02bfd2"
 }
 
-#Image Data
+#Image Data ////////////////////////////////////////////////////////////
 resourceIcons = {
     QALS:sprites.qals,
     WOOD:sprites.wood,
@@ -205,6 +216,14 @@ buttonSegments = {
     BUTTON_MIDDLE_1:sprites.buttonMiddle1,
     BUTTON_MIDDLE_2:sprites.buttonMiddle2,
     BUTTON_RIGHT:sprites.buttonRight
+}
+
+scrollerSegments = {
+    SCROLLER_TOP:sprites.scrollerTop,
+    SCROLLER_MIDDLE_0:sprites.scrollerMiddle0,
+    SCROLLER_MIDDLE_1:sprites.scrollerMiddle1,
+    SCROLLER_MIDDLE_2:sprites.scrollerMiddle2,
+    SCROLLER_BOTTOM:sprites.scrollerBottom
 }
 
 PAPER_TOP_LEFT = "PaperTopLeft"

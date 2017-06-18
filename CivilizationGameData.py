@@ -31,6 +31,12 @@ dirtThickness = 1.5
 notificationPixelSize = 3
 notificationScreenBorderX = 1.0/10.0 #The smaller these are (or bigger the denominator)
 notificationScreenBorderY = 1.0/8.0 #the smaller the border and bigger the notification
+notificationTextSize = 2
+
+qalsEconomy = 10
+woodEconomy = 10
+goldEconomy = 2
+manaEconomy = 5
 
 #For the Button class
 startScreenButtonSize = 2.5
@@ -47,7 +53,8 @@ enemyBaseStartingY = yTiles/4 - 1
 
 loadBuffer = 2 #In tiles
 
-resourceIndicatorLength = 2 * cWidth / 5
+resourceIndicatorLength = 2 * cWidth / 5 - 10
+resourceTextSize = 2
 
 #Lame Variables:
 gameStarted = False
@@ -63,6 +70,8 @@ notificationPage = []
 
 highlightedTile = [-1000, -1000] #Set it off the screen
 highlightedTileObject = 0
+
+resourceObjects = [[]]
 
 tileSize = startingTileSize
 

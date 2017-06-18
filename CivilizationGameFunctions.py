@@ -55,7 +55,7 @@ def startGame():
 
 def showSettings():
     global doneButton
-    createNotification()
+    createNotification(["You Suck", "A Lot"])
     doneButton = Button(data.cWidth / 2 - 46, data.cHeight * (1 / data.notificationScreenBorderY - 1) * data.notificationScreenBorderY - 60, "Done", 2, doneReading)
     doneButton.createButton()
 ##    data.resolution = 4
@@ -68,7 +68,9 @@ def showMenu():
     nextSeasonButton.destroy()
     menuFeatures = []
     menuFeatures.append(data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
-    menuFeatures.append(data.s.create_line(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight - 52, fill = "#7f7f7f", width = 3))
+    for i in range(10):
+        menuFeatures.append(data.s.create_rectangle(data.cWidth - 190, i * 100 + 10, data.cWidth - 30, (i + 1) * 100, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
+    menuFeatures.append(data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     backButton.createButton()
     updateButtons()
@@ -93,7 +95,11 @@ def doneReading():
     doneButton.destroy()
 
 def passTurn():
-    addResource([data.QALS, data.WOOD, data.GOLD, data.MANA], [100, 100, 5, 10])
+    global doneButton
+    addResource([data.QALS, data.WOOD, data.GOLD, data.MANA], [data.qalsEconomy, data.woodEconomy, data.goldEconomy, data.manaEconomy])
+    createNotification(["You collected", str(data.qalsEconomy) + " " + data.QALS, str(data.woodEconomy) + " " + data.WOOD, str(data.goldEconomy) + " " + data.GOLD, str(data.manaEconomy) + " " + data.MANA])
+    doneButton = Button(data.cWidth / 2 - 46, data.cHeight * (1 / data.notificationScreenBorderY - 1) * data.notificationScreenBorderY - 60, "Done", 2, doneReading)
+    doneButton.createButton()
 
 def tutorial():
     ##
@@ -145,7 +151,7 @@ def mousePressedDetector(event):
 
 def mouseDragDetector(event):
     data.mouseDragged = True
-    if data.gameStarted == True and data.notificationOpen == False:
+    if data.gameStarted == True and data.menuOpen == False and data.notificationOpen == False:
         rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
         rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
         polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
@@ -181,7 +187,7 @@ def mouseReleaseDetector(event):
         if 0 <= tileClickedX < data.xTiles and 0 <= tileClickedY < data.yTiles:
             if data.highlightedTile != [tileClickedX, tileClickedY]:
                 highlightSquare(tileClickedX, tileClickedY)
-        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
+##        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
     data.mouseDragged = False
     data.clickedButton = False
 
@@ -212,7 +218,7 @@ def addResource(resources, amounts):
 
 def removeResource(resources, amounts):
     for i in range(len(resources)):
-        if data.resourceAmounts[resources[i]] < 0:
+        if data.resourceAmounts[resources[i]] - amounts[i] < 0:
             return False
     for i in range(len(resources)):
         data.resourceAmounts[resources[i]] -= amounts[i]
@@ -297,13 +303,19 @@ def updateButtons():
         Button.buttonObject[i].displayButton()
 
 def updateResources():
+    for i in range(len(data.resourceObjects)):
+        for j in range(len(data.resourceObjects[i])):
+            data.s.delete(data.resourceObjects[i][j])
+    data.resourceObjects = []
     for i in range(len(data.resourceTypes) - 1, -1, -1):
-        data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, data.resourceIndicatorLength, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30)
+        data.resourceObjects.append([data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, 10 + data.resourceIndicatorLength, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30)])
         resource = data.resourceTypes[i]
         ratioOfResourceToMaximum = float(data.resourceAmounts[resource]) / data.resourceMaximum[resource]
+##        print(ratioOfResourceToMaximum)
         #Top Left x1 y1, Bottom Right x2 y2
-        data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, data.resourceIndicatorLength * ratioOfResourceToMaximum, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30, fill = data.resourceColours[resource])
-        makeBitmap(8, data.cHeight - 3 - (len(data.resourceTypes) - i) * 30, 2, data.resourceIcons[resource])
+        data.resourceObjects.append([data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, 10 + data.resourceIndicatorLength * ratioOfResourceToMaximum, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30, fill = data.resourceColours[resource])])
+        data.resourceObjects.append(makeBitmap(8, data.cHeight - 3 - (len(data.resourceTypes) - i) * 30, 2, data.resourceIcons[resource]))
+        data.resourceObjects.append(createText(40, data.cHeight - (len(data.resourceTypes) - i) * 30 + 4, str(data.resourceAmounts[resource]), data.resourceTextSize, addColour = [True, data.resourceColours[resource], 80]))
 
 def updateScreen():
     if data.menuOpen == False and data.notificationOpen == False:
@@ -314,7 +326,7 @@ def updateScreen():
     data.s.update()
     sleep(0.01)
 
-def createNotification():
+def createNotification(text):
     data.notificationOpen = True
     data.notificationPage.append([data.s.create_rectangle(0, 0, data.cWidth + 2, data.cHeight + 2, fill = "black", width = 0, stipple = "gray75")])
     data.notificationPage.append(makeBitmap(int(data.cWidth * data.notificationScreenBorderX), int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_TOP_LEFT]))
@@ -344,15 +356,19 @@ def createNotification():
             data.notificationPage.append(makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE][0]) * data.notificationPixelSize, j, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE]))
         data.notificationPage.append(makeBitmap(i, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE]))
     data.notificationPage.append(makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_LEFT]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE][0]) * data.notificationPixelSize, int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_DOWN]) * data.notificationPixelSize - len(data.paperPieces[data.PAPER_MIDDLE]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_MIDDLE]))
+    for i in range(len(text)):
+        textLength = getTextLength(text[i], data.notificationTextSize)
+        data.notificationPage.append(createText((data.cWidth - textLength) / 2, 2 * data.cHeight / 3 + (i - len(text)) * 30, text[i], data.notificationTextSize))
+        
 
 def deleteNotification():
     data.notificationOpen = False
     for i in range(len(data.notificationPage)):
         for j in range(len(data.notificationPage[i])):
             data.s.delete(data.notificationPage[i][j])
-        
+    data.notificationPage = []
 
-def makeBitmap(x, y, squareSize, bitmap, toBack = False):
+def makeBitmap(x, y, squareSize, bitmap, toBack = False, colourAdd = [False, "#ffffff", 50], onlyDarker = False):
     skip = int(1/squareSize)
     if skip < 1:
         skip = 1
@@ -362,13 +378,31 @@ def makeBitmap(x, y, squareSize, bitmap, toBack = False):
             colourCode = bitmap[i][j]
             if colourCode != "#ffffff":
                 colour = colourCode
+                if colourAdd[0] == True:
+                    percentage = colourAdd[2] / 100.0
+                    originalColour = colour
+                    originalRGB = originalColour.lstrip('#')
+                    oR, oG, oB = tuple(int(originalRGB[i:i+2], 16) for i in (0, 2 ,4))              #o = Original
+                    addColour = colourAdd[1]
+                    addRGB = addColour.lstrip('#')
+                    aR, aG, aB = tuple(int(addRGB[i:i+2], 16) for i in (0, 2 ,4))                   #a = Added
+                    dR, dG, dB = aR - oR, aG - oG, aB - oB                                          #d = Difference
+                    if onlyDarker == True:
+                        dR, dG, dB = [min(w, 0) for w in [dR, dG, dB]]
+##                        print("original colour is darker")
+                    nR, nG, nB = oR + dR * percentage, oG + dG * percentage, oB + dG * percentage   #n = New
+                    nR, nG, nB = [min(w, 255) for w in [nR, nG, nB]]
+                    nR, nG, nB = [max(w, 0) for w in [nR, nG, nB]]
+                    colour = "#%02x%02x%02x" % (nR, nG, nB)
+##                    print("Original =", oR, oG, oB, "    Added =", aR, aG, aB, "    Difference =", dR, dG, dB, "    New =", nR, nG, nB)
+##                    print(originalColour, colour, percentage)
                 pixel = data.s.create_rectangle(x + squareSize * j, y + squareSize * i, x + squareSize * (j + 1), y + squareSize * (i + 1), fill = colour, width = 0)
                 squaresPixelsArray.append(pixel)
                 if toBack == True:
                     data.s.tag_lower(pixel)
     return squaresPixelsArray
 
-def createText(x, y, text, size, center = False):
+def createText(x, y, text, size, center = False, onButton = False, addColour = [False, "#ffffff", 0]):
     letterIndex = x
     letterArray = []
     for character in text:
@@ -376,14 +410,27 @@ def createText(x, y, text, size, center = False):
                 letterIndex += 20 * size / 4.0
             else:
                 bitmapImage = data.font.fontDictionary[character]
-                if center == True:
-                    letterArray += makeBitmap(letterIndex, y + (size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * size / 4.0) / 2, size / 4.0, bitmapImage)
+                if onButton == True:
+                    addColour = [True, "#af622d", 100]
+                    letterArray += makeBitmap(letterIndex, y + (size * len(data.buttonSegments[data.BUTTON_MIDDLE_0]) - len(bitmapImage) * size / 4.0) / 2, size / 4.0, bitmapImage, colourAdd = addColour, onlyDarker = True)
                 else:
-                    letterArray += makeBitmap(letterIndex, y, size / 4.0, bitmapImage)
+                    letterArray += makeBitmap(letterIndex, y, size / 4.0, bitmapImage, colourAdd = addColour, onlyDarker = True)
                 letterIndex += (len(data.font.fontDictionary[character][0]) + data.buttonLetterSpacing ) * size / 4.0
                 if character == "q" or character == "Q":
                     letterIndex -= 10 * size / 4.0
     return letterArray
+
+def getTextLength(text, size):
+    stringLength = 0
+    for character in text:
+        if character == " ":
+            stringLength += 20 * size / 4.0
+        else:
+            bitmapImage = data.font.fontDictionary[character]
+            stringLength += (len(data.font.fontDictionary[character][0]) + data.buttonLetterSpacing) * size / 4.0
+            if character == "q" or character == "Q":
+                stringLength -= 10 * size / 4.0
+    return stringLength
 
 #Button Class
 class Button():
@@ -442,7 +489,7 @@ class Button():
             remainingLength -= self.size * len(bitmapImage[0])
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
         Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
-        Button.buttons[self.number].append(createText(letterIndex, self.y, self.text, self.size, center = True))
+        Button.buttons[self.number].append(createText(letterIndex, self.y, self.text, self.size, onButton = True))
 
     def displayButton(self):
         xValue = self.x #Index for where to place next segment of button
@@ -461,7 +508,7 @@ class Button():
             remainingLength -= self.size * len(bitmapImage[0])
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
         Button.buttons[self.number][segmentNumber + 1] = (makeBitmap(xValue, self.y, self.size, bitmapImage))
-        Button.buttons[self.number][segmentNumber + 2] = createText(letterIndex, self.y, self.text, self.size, center = True)
+        Button.buttons[self.number][segmentNumber + 2] = createText(letterIndex, self.y, self.text, self.size, onButton = True)
 
     def delete(self):
         for i in range(len(Button.buttons[self.number])):

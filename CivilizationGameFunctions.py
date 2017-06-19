@@ -8,9 +8,7 @@ import CivilizationGameData as data
 def showStartPage():
     global title, startButton, aboutButton
     startButton = Button(data.cWidth / 2 - 62, data.cHeight / 2, "Start", data.startScreenButtonSize, startGame)
-    startButton.createButton()
     aboutButton = Button(data.cWidth / 2 - 66, data.cHeight / 2 + 60, "About", data.startScreenButtonSize, startGame)
-    aboutButton.createButton()
     title = createText(data.cWidth / 2 - 130, 120, "Kingdom of Qalwar", 2)
 
 def initializeGame():
@@ -43,11 +41,8 @@ def startGame():
     startButton.destroy()
     aboutButton.destroy()
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
-    nextSeasonButton.createButton()
     menuButton = Button(data.cWidth - 110, 10, "Menu", 2, showMenu)
-    menuButton.createButton()
     settingsButton = Button(10, 10, "Settings", 2, showSettings)
-    settingsButton.createButton()
     updateResources()
     updateButtons()
     data.gameStarted = True
@@ -56,7 +51,6 @@ def showSettings():
     global doneButton
     createNotification(["You Suck", "A Lot"])
     doneButton = Button(data.cWidth / 2 - 46, data.cHeight * (1 / data.notificationScreenBorderY - 1) * data.notificationScreenBorderY - 60, "Done", 2, doneReading)
-    doneButton.createButton()
 ##    data.resolution = 4
 ##    data.reload(sprites)
 
@@ -72,7 +66,6 @@ def showMenu():
     menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     menuFeatures.append(createScroller(data.cWidth - 10, 10, data.cHeight - 72, data.numOfMenuPanels * 90 + 20))
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
-    backButton.createButton()
     updateButtons()
     data.s.update()
 
@@ -82,7 +75,6 @@ def closeMenu():
     menuButton = Button(data.cWidth - 110, 10, "Menu", 2, showMenu)
     menuButton.createButton()
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
-    nextSeasonButton.createButton()
     for i in range(len(menuFeatures)):
         for j in range(len(menuFeatures[i])):
             if isinstance(menuFeatures[i][j], list):
@@ -104,7 +96,6 @@ def passTurn():
     addResource([data.QALS, data.WOOD, data.GOLD, data.MANA], [data.qalsEconomy, data.woodEconomy, data.goldEconomy, data.manaEconomy])
     createNotification(["You collected", str(data.qalsEconomy) + " " + data.QALS, str(data.woodEconomy) + " " + data.WOOD, str(data.goldEconomy) + " " + data.GOLD, str(data.manaEconomy) + " " + data.MANA])
     doneButton = Button(data.cWidth / 2 - 46, data.cHeight * (1 / data.notificationScreenBorderY - 1) * data.notificationScreenBorderY - 60, "Done", 2, doneReading)
-    doneButton.createButton()
 
 def tutorial():
     ##
@@ -509,7 +500,6 @@ class Button():
         Button.buttonBounds.append([x1, y1, x2, y2])
         Button.buttonFunctions.append(function)
 
-    def createButton(self):
         xValue = self.x #Index for where to place next segment of button
         remainingLength = self.length #Variable to notify when to stop
         #First Left Button Segment
@@ -526,7 +516,7 @@ class Button():
             remainingLength -= self.size * len(bitmapImage[0])
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
         Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
-        Button.buttons[self.number].append(createText(letterIndex, self.y, self.text, self.size, onButton = True))
+        Button.buttons[self.number].append(createText(letterIndex, self.y, self.text, self.size, onButton = True))        
 
     def displayButton(self):
         xValue = self.x #Index for where to place next segment of button

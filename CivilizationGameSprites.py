@@ -677,62 +677,29 @@ buttonRight = [
 
 #Scroller
 scrollerTop = [
-    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff'],
-    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#b1662d', '#844013', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#7f7f7f', '#c3c3c3', '#a75b2a', '#99581e', '#9a5c18', '#b1662d', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#7f7f7f', '#c3c3c3', '#844013', '#844013', '#b1662d', '#844013', '#d28338', '#8e4a1b', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f', '#ffffff', '#ffffff', '#ffffff'],
+    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#c3c3c3', '#7f7f7f'],
+    ['#ffffff', '#7f7f7f', '#c3c3c3', '#d28338', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#7f7f7f', '#c3c3c3', '#b1662d', '#844013', '#844013', '#b1662d', '#c3c3c3', '#7f7f7f'],
 ]
 scrollerMiddle0 = [
-    ['#7f7f7f', '#c3c3c3', '#a34303', '#a34303', '#a55a20', '#844013', '#b1662d', '#a55a20', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#7f7f7f', '#c3c3c3', '#844013', '#b1662d', '#a55a20', '#b1662d', '#c3c3c3', '#7f7f7f'],
 ]
 scrollerMiddle1 = [
-    ['#7f7f7f', '#c3c3c3', '#844013', '#844013', '#b1662d', '#844013', '#d28338', '#8e4a1b', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#7f7f7f', '#c3c3c3', '#844013', '#d28338', '#8e4a1b', '#b1662d', '#c3c3c3', '#7f7f7f'],
 ]
 scrollerMiddle2 = [
-    ['#7f7f7f', '#c3c3c3', '#9a5c18', '#9a5c18', '#a55a20', '#9a5c18', '#af622a', '#a75b2a', '#844013', '#c3c3c3', '#7f7f7f'],
+    ['#7f7f7f', '#c3c3c3', '#9a5c18', '#af622a', '#a75b2a', '#844013', '#c3c3c3', '#7f7f7f'],
 ]
 scrollerMiddle3 = [
-    ['#7f7f7f', '#c3c3c3', '#99581e', '#a34303', '#99581e', '#99581e', '#b1662d', '#8d4a1d', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#7f7f7f', '#c3c3c3', '#a34303', '#99581e', '#8d4a1d', '#b1662d', '#c3c3c3', '#7f7f7f'],
 ]
 scrollerBottom = [
-    ['#7f7f7f', '#c3c3c3', '#844013', '#844013', '#a34303', '#af622a', '#9a5c18', '#b1662d', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#7f7f7f', '#c3c3c3', '#a75b2a', '#af622a', '#d28338', '#844013', '#d28338', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#a34303', '#b1662d', '#844013', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f'],
+    ['#7f7f7f', '#c3c3c3', '#a34303', '#964508', '#b1662d', '#844013', '#c3c3c3', '#7f7f7f'],
+    ['#ffffff', '#7f7f7f', '#c3c3c3', '#9a5c18', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#c3c3c3', '#7f7f7f'],
+    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f'],
 ]
-
-##scrollerTop = [
-##    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff'],
-##    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#b1662d', '#844013', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#7f7f7f', '#c3c3c3', '#a75b2a', '#99581e', '#9a5c18', '#b1662d', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##    ['#7f7f7f', '#c3c3c3', '#844013', '#844013', '#b1662d', '#844013', '#d28338', '#8e4a1b', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##]
-##scrollerMiddle0 = [
-##    ['#7f7f7f', '#c3c3c3', '#a34303', '#a34303', '#a55a20', '#844013', '#b1662d', '#a55a20', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##]
-##scrollerMiddle1 = [
-##    ['#7f7f7f', '#c3c3c3', '#844013', '#844013', '#b1662d', '#844013', '#d28338', '#8e4a1b', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##]
-##scrollerMiddle2 = [
-##    ['#7f7f7f', '#c3c3c3', '#9a5c18', '#9a5c18', '#a55a20', '#9a5c18', '#af622a', '#a75b2a', '#844013', '#c3c3c3', '#7f7f7f'],
-##]
-##scrollerMiddle3 = [
-##    ['#7f7f7f', '#c3c3c3', '#99581e', '#a34303', '#99581e', '#99581e', '#b1662d', '#8d4a1d', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##]
-##scrollerBottom = [
-##    ['#7f7f7f', '#c3c3c3', '#844013', '#844013', '#a34303', '#af622a', '#9a5c18', '#b1662d', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#7f7f7f', '#c3c3c3', '#a75b2a', '#af622a', '#d28338', '#844013', '#d28338', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#a34303', '#b1662d', '#844013', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#b1662d', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#7f7f7f'],
-##    ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff', '#7f7f7f'],
-##]
 
 #Paper
 paperMiddle = [

@@ -38,12 +38,14 @@ woodEconomy = 10    #the player gains each week
 goldEconomy = 2     #This can be increaesed through
 manaEconomy = 5     #building and upgrading buildings.
 
+numOfMenuPanels = 10
+
 #For the Button class ////////////////////////////////////////////////////////////
 startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
 
 #For the Scroller ////////////////////////////////////////////////////////////
-scrollerPixelSize = 2
+scrollerPixelSize = 1
 
 #Recommended-to-not-Change Variables ////////////////////////////////////////////////////////////
 

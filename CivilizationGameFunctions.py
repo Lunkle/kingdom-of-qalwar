@@ -66,11 +66,11 @@ def showMenu():
     menuButton.destroy()
     nextSeasonButton.destroy()
     menuFeatures = []
-    menuFeatures.append(data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
-    for i in range(10):
-        menuFeatures.append(data.s.create_rectangle(data.cWidth - 190, i * 100 + 10, data.cWidth - 30, (i + 1) * 100, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
-    menuFeatures.append(data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3))
-    createScroller(data.cWidth - 20, 10, data.cHeight - 72)
+    menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    for i in range(data.numOfMenuPanels):
+        menuFeatures.append([data.s.create_rectangle(data.cWidth - 190, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    menuFeatures.append(createScroller(data.cWidth - 10, 10, data.cHeight - 72, data.numOfMenuPanels * 90 + 20))
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     backButton.createButton()
     updateButtons()
@@ -84,7 +84,12 @@ def closeMenu():
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
     nextSeasonButton.createButton()
     for i in range(len(menuFeatures)):
-        data.s.delete(menuFeatures[i])
+        for j in range(len(menuFeatures[i])):
+            if isinstance(menuFeatures[i][j], list):
+                for k in range(len(menuFeatures[i][j])):
+                    data.s.delete(menuFeatures[i][j][k])
+            else:
+                data.s.delete(menuFeatures[i][j])
     backButton.destroy()
     updateButtons()
     data.s.update()
@@ -329,6 +334,7 @@ def updateScreen():
 def createNotification(text):
     data.notificationOpen = True
     data.notificationPage.append([data.s.create_rectangle(0, 0, data.cWidth + 2, data.cHeight + 2, fill = "black", width = 0, stipple = "gray75")])
+    data.s.update()
     data.notificationPage.append(makeBitmap(int(data.cWidth * data.notificationScreenBorderX), int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_TOP_LEFT]))
     data.notificationPage.append(makeBitmap(int(data.cWidth * data.notificationScreenBorderX), int((1 / data.notificationScreenBorderY - 1) * data.cHeight * data.notificationScreenBorderY) - len(data.paperPieces[data.PAPER_BOTTOM_LEFT]) * data.notificationPixelSize, data.notificationPixelSize, data.paperPieces[data.PAPER_BOTTOM_LEFT]))
     data.notificationPage.append(makeBitmap(int((1 / data.notificationScreenBorderX - 1) * data.cWidth * data.notificationScreenBorderX) - len(data.paperPieces[data.PAPER_TOP_RIGHT][0]) * data.notificationPixelSize, int(data.cHeight * data.notificationScreenBorderY), data.notificationPixelSize, data.paperPieces[data.PAPER_TOP_RIGHT]))
@@ -361,11 +367,31 @@ def createNotification(text):
         data.notificationPage.append(createText((data.cWidth - textLength) / 2, 2 * data.cHeight / 3 + (i - len(text)) * 30, text[i], data.notificationTextSize))
 
 ####################################################YYYYYYYYYYYYOOOOOOOOOOOOOOOOOLLLLLLLLLLLOOOOOOOOOOOOOOOOOOO0000000000000000000000000000000000000000000000000
-def createScroller(x, y, height):
+def createScroller(x, y, scrollerHeight, displayedActualHeight):
     scrollerObject = []
-    scrollerObject.append([data.s.create_rectangle(x, y, x + 5, y + height, fill = "#7f7f7f", width = 0)])
-    scrollerObject.append(makeBitmap(x, y, data.scrollerPixelSize, data.scrollerSegments[data.]))
+    scrollerObject.append([data.s.create_rectangle(x, y, x + 5, y + scrollerHeight, fill = "#7f7f7f", width = 0)])
+    fractionOfActualThatsSeen = (scrollerHeight + 20.0) / displayedActualHeight
+    sizeOfScroller = fractionOfActualThatsSeen * scrollerHeight
+    indexScrollerSize = sizeOfScroller * data.scrollerPixelSize
+    print(scrollerHeight, displayedActualHeight, indexScrollerSize)
     
+    topBitmapImage = data.scrollerSegments[data.SCROLLER_TOP]
+    scrollerXValue = x - (len(topBitmapImage[0]) * data.scrollerPixelSize - 5) / 2
+    scrollerObject.append(makeBitmap(scrollerXValue, y, data.scrollerPixelSize, topBitmapImage))
+
+    bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM]
+    scrollerXValue = x - (len(bottomBitmapImage[0]) * data.scrollerPixelSize - 5) / 2
+    scrollerObject.append(makeBitmap(scrollerXValue, indexScrollerSize - len(bottomBitmapImage) * data.scrollerPixelSize, data.scrollerPixelSize, bottomBitmapImage))
+
+    middleSegmentsStart = y + len(topBitmapImage) * data.scrollerPixelSize
+    middleSegmentsLength = indexScrollerSize - (len(topBitmapImage) + len(bottomBitmapImage)) * data.scrollerPixelSize
+    print(middleSegmentsStart, middleSegmentsLength, middleSegmentsStart + middleSegmentsLength, len(data.scrollerSegments[data.SCROLLER_MIDDLE_0]))
+
+
+    for i in range(int(middleSegmentsStart), int(indexScrollerSize - len(bottomBitmapImage) * data.scrollerPixelSize), len(data.scrollerSegments[data.SCROLLER_MIDDLE_0])):
+        bitmapImage = data.scrollerSegments[data.SCROLLER_MIDDLE_TEMPLATE + str(randint(0, len(data.scrollerSegments) - 3))]
+        scrollerXValue = x - (len(bitmapImage[0]) * data.scrollerPixelSize - 5) / 2
+        scrollerObject.append(makeBitmap(scrollerXValue, middleSegmentsStart + (i - middleSegmentsStart) * data.scrollerPixelSize, data.scrollerPixelSize, bitmapImage))
     
     return scrollerObject
 

@@ -45,7 +45,8 @@ startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
 
 #For the Scroller ////////////////////////////////////////////////////////////
-scrollerPixelSize = 2
+scrollerPixelSize = 3
+scrollerUpdated = True
 
 #Recommended-to-not-Change Variables ////////////////////////////////////////////////////////////
 

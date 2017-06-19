@@ -65,6 +65,7 @@ def showMenu():
         menuFeatures.append([data.s.create_rectangle(data.cWidth - 190, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     menuScroller = Scroller(data.cWidth - 10, 10, 1, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20)
+    menuScroller.displayScroller()
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     updateButtons()
     data.s.update()
@@ -144,6 +145,11 @@ def mousePressedDetector(event):
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
         except:
             pass
+    for i in range(len(Scroller.scrollerBounds)):
+        if Scroller.scrollerBounds[i][0] <= data.clickedXMouse <= Scroller.scrollerBounds[i][2] and Scroller.scrollerBounds[i][1] <= data.clickedYMouse <= Scroller.scrollerBounds[i][3]:
+            data.clickedScroller = True
+            Scroller.scrollerObject[i].clickedScroller = True
+            Scroller.scrollerObject[i].clickedY = event.y - Scroller.scrollerObject[i].y
 
 def mouseDragDetector(event):
     data.mouseDragged = True
@@ -154,6 +160,20 @@ def mouseDragDetector(event):
         fixPan()
         data.currentX = rawCurrentX
         data.currentY = rawCurrentY
+    if data.clickedScroller == True:
+        for i in range(len(Scroller.scrollerObject)):
+            if Scroller.scrollerObject[i].clickedScroller == True:
+                scroller = Scroller.scrollerObject[i]
+                break
+        scroller.draggedY = event.y - scroller.y - scroller.clickedY
+        scroller.scrolledPercentage = float(scroller.draggedY) / float(scroller.scrollableLength) * 100
+        if scroller.scrolledPercentage < 0:
+            scroller.scrolledPercentage = 0
+        if scroller.scrolledPercentage > 100:
+            scroller.scrolledPercentage = 100
+        print(scroller.scrolledPercentage)
+        scroller.delete()
+        scroller.displayScroller()
 
 def mouseReleaseDetector(event):
     currentXLess = False
@@ -186,6 +206,7 @@ def mouseReleaseDetector(event):
 ##        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
     data.mouseDragged = False
     data.clickedButton = False
+    data.clickedScroller = False
 
 def mouseWheelHandler(event):
     if data.notificationOpen == False:
@@ -444,7 +465,7 @@ class Button():
     BUTTON_ENDS_WIDTH = len(data.buttonSegments[data.BUTTON_LEFT][0]) + len(data.buttonSegments[data.BUTTON_RIGHT][0])
     BUTTON_MIDDLE_WIDTH = len(data.buttonSegments[data.BUTTON_MIDDLE_0][0])
     BUTTON_HEIGHT = len(data.buttonSegments[data.BUTTON_MIDDLE_0])
-    
+
     def __init__(self, buttonX, buttonY, text, size, function):
         self.x = buttonX
         self.y = buttonY
@@ -487,7 +508,7 @@ class Button():
             remainingLength -= self.size * len(bitmapImage[0])
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
         Button.buttons[self.number].append(makeBitmap(xValue, self.y, self.size, bitmapImage))
-        Button.buttons[self.number].append(createText(letterIndex, self.y, self.text, self.size, onButton = True))        
+        Button.buttons[self.number].append(createText(letterIndex, self.y, self.text, self.size, onButton = True))
 
     def displayButton(self):
         xValue = self.x #Index for where to place next segment of button
@@ -539,7 +560,7 @@ class Scroller():
     scrollerBounds = [] #This stores the boudaries of each scroller.
                       #Used in the mouse click function
     scrollerSegments = [] #2D array that stores each of the scroller's segments
-    
+
     def __init__(self, scrollerX, scrollerY, scrollerPixelSize, scrollerWidth, scrollerHeight, displayedActualHeight):
         self.number = len(Scroller.scrollerObject)
         self.x = scrollerX
@@ -548,14 +569,17 @@ class Scroller():
         self.scrollerWidth = scrollerWidth
         self.scrollerHeight = scrollerHeight #Scroller height is the entire thing's height
         self.actualHeight = displayedActualHeight
-        self.scrolledPercentage = 0
+        self.scrolledPercentage = 50
         self.scrollerXValue = self.x - (len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize - self.scrollerWidth) / 2
-        
+        self.clickedY = 0
+        self.draggedY = 0
+        self.clickedScroller = False
+
         Scroller.scrollerObject.append(self)
 
         Scroller.scrollerSegments.append([])
         Scroller.scrollerPixels.append([])
-        
+
         Scroller.scrollerPixels[self.number].append([data.s.create_rectangle(self.x, self.y, self.x + self.scrollerWidth, self.y + self.scrollerHeight, fill = "#7f7f7f", width = 0)])
         fractionOfActualThatsSeen = (self.scrollerHeight + 20.0) / self.actualHeight
 
@@ -569,39 +593,38 @@ class Scroller():
         Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.pixelSize, topBitmapImage))
 
         bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM]
-        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.scrollerTabSize, self.pixelSize, bottomBitmapImage))
+        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize, self.pixelSize, bottomBitmapImage))
 
         #These segments actually show where the thing is
         for i in range(int(self.y), int(self.scrollerTabSize), len(data.scrollerSegments[data.SCROLLER_MIDDLE_0])):
             randomSegmentNumber = randint(0, len(data.scrollerSegments) - 3)
-            Scroller.scrollerSegments.append(randomSegmentNumber)
+            Scroller.scrollerSegments[self.number].append(randomSegmentNumber)
             bitmapImage = data.scrollerSegments[data.SCROLLER_MIDDLE_TEMPLATE + str(randomSegmentNumber)]
             Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + (i - self.y) * self.pixelSize, self.pixelSize, bitmapImage))
 
-        Scroller.scrollerBounds.append([self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabHeight + len(bottomBitmapImage) * self.pixelSize])
-        print(Scroller.scrollerBounds[self.number])
+        Scroller.scrollerBounds.append([self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(bottomBitmapImage) * self.pixelSize])
 
     def displayScroller(self):
+        print("Display at yvalue ", self.scrolledPercentage / 100.0 * self.scrollerHeight + 10)
         topBitmapImage = data.scrollerSegments[data.SCROLLER_TOP]
-        Scroller.scrollerPixels[self.number][0] = makeBitmap(self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.pixelSize, topBitmapImage)
+        Scroller.scrollerPixels[self.number][0] = makeBitmap(self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize + self.scrolledPercentage / 100.0 * self.scrollerHeight, self.pixelSize, topBitmapImage)
 
         bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM]
-        Scroller.scrollerPixels[self.number][1] = makeBitmap(self.scrollerXValue, self.scrollerTabSize, self.pixelSize, bottomBitmapImage)
-
-        print(self.y, self.scrollerTabHeight, self.y + self.scrollerTabHeight, len(data.scrollerSegments[data.SCROLLER_MIDDLE_0]))
+        Scroller.scrollerPixels[self.number][1] = makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + self.scrolledPercentage / 100.0 * self.scrollerHeight, self.pixelSize, bottomBitmapImage)
 
         segmentNumber = 0
-        for i in range(int(self.y), int(self.scrollerTabSize), len(data.scrollerSegments[data.SCROLLER_MIDDLE_0])):
-            Scroller.scrollerSegments.append(randomSegmentNumber)
-            bitmapImage = data.scrollerSegments[data.SCROLLER_MIDDLE_TEMPLATE + str(randomSegmentNumber)]
-            Scroller.scrollerPixels[self.number][2 + segmentNumber] = makeBitmap(self.scrollerXValue, self.y + (i - self.y) * self.pixelSize, self.pixelSize, bitmapImage)
+        for i in range(len(Scroller.scrollerSegments[self.number])):
+            segmentNumber = Scroller.scrollerSegments[self.number][i]
+            bitmapImage = data.scrollerSegments[data.SCROLLER_MIDDLE_TEMPLATE + str(segmentNumber)]
+            Scroller.scrollerPixels[self.number][2 + segmentNumber] = makeBitmap(self.scrollerXValue, self.y + (i - self.y) * self.pixelSize + self.scrolledPercentage / 100.0 * self.scrollerHeight, self.pixelSize, bitmapImage)
             segmentNumber += 1
-
-        Scroller.scrollerBounds[self.number] = [self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabHeight + len(bottomBitmapImage) * self.pixelSize]
+            
+        Scroller.scrollerBounds[self.number] = [self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize + self.scrolledPercentage / 100.0 * self.scrollerHeight, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(bottomBitmapImage) * self.pixelSize + self.scrolledPercentage / 100.0 * self.scrollerHeight]
         print(Scroller.scrollerBounds[self.number])
 
     def delete(self): #For updating the screen
-        for i in range(len(Scroller.scrollerPixels[self.number])):
+        print(Scroller.scrollerPixels[self.number])
+        for i in range(1, len(Scroller.scrollerPixels[self.number])):
             for j in range(len(Scroller.scrollerPixels[self.number][i])):
                 data.s.delete(Scroller.scrollerPixels[self.number][i][j])
 

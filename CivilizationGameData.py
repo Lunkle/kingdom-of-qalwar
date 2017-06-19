@@ -86,6 +86,7 @@ currentY = (tileSize * yTiles * 2 ** 0.5 )/4 - cHeight/2
 
 mouseDragged = False
 clickedButton = False
+clickedScroller = False
 
 previousCurrentX = currentX
 previousCurrentY = currentY

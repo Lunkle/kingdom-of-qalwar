@@ -38,6 +38,7 @@ woodEconomy = 10    #the player gains each week
 goldEconomy = 2     #This can be increaesed through
 manaEconomy = 5     #building and upgrading buildings.
 
+menuFeatures = []
 numOfMenuPanels = 10
 
 #For the Button class ////////////////////////////////////////////////////////////

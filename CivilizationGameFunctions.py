@@ -55,36 +55,56 @@ def showSettings():
 ##    data.reload(sprites)
 
 def showMenu():
-    global menuButton, nextSeasonButton, menuFeatures, menuScroller, backButton
+    global menuButton, nextSeasonButton, menuScroller, backButton
     data.menuOpen = True
     menuButton.destroy()
     nextSeasonButton.destroy()
-    menuFeatures = []
-    menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
-    for i in range(data.numOfMenuPanels):
-        menuFeatures.append([data.s.create_rectangle(data.cWidth - 190, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
-    menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
-    menuScroller = Scroller(data.cWidth - 10, 10, data.scrollerPixelSize, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20)
+##    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    data.menuFeatures.append(redrawMenu(0))
+##    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     updateButtons()
     data.s.update()
 
 def closeMenu():
-    global menuButton, nextSeasonButton, menuFeatures, menuScroller, backButton
+    global menuButton, nextSeasonButton, menuScroller, backButton
     data.menuOpen = False
     menuButton = Button(data.cWidth - 110, 10, "Menu", 2, showMenu)
     nextSeasonButton = Button(data.cWidth - 200, data. cHeight - 42, "Next Season", 2, passTurn)
-    for i in range(len(menuFeatures)):
-        for j in range(len(menuFeatures[i])):
-            if isinstance(menuFeatures[i][j], list):
-                for k in range(len(menuFeatures[i][j])):
-                    data.s.delete(menuFeatures[i][j][k])
+    for i in range(len(data.menuFeatures)):
+        for j in range(len(data.menuFeatures[i])):
+            if isinstance(data.menuFeatures[i][j], list):
+                for k in range(len(data.menuFeatures[i][j])):
+                    data.s.delete(data.menuFeatures[i][j][k])
             else:
-                data.s.delete(menuFeatures[i][j])
+                data.s.delete(data.menuFeatures[i][j])
     menuScroller.destroy()
     backButton.destroy()
     updateButtons()
     data.s.update()
+
+def redrawMenu(index):
+    print("Index is", index)
+    for i in range(len(data.menuFeatures)):
+        for j in range(len(data.menuFeatures[i])):
+            if isinstance(data.menuFeatures[i][j], list):
+                for k in range(len(data.menuFeatures[i][j])):
+                    data.s.delete(data.menuFeatures[i][j][k])
+            else:
+                data.s.delete(data.menuFeatures[i][j])
+    data.menuFeatures = []
+    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    for i in range(data.numOfMenuPanels):
+        if i * 100 + 10 - index > data.cHeight - 52:
+            print("outside", i)
+            break
+        if (i + 1) * 100 - index >= -1:
+            print(i)
+            data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 190, i * 100 + 10 - index, data.cWidth - 17, (i + 1) * 100 - index, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    updateButtons()
+    print("done")
 
 def doneReading():
     global doneButton
@@ -148,6 +168,7 @@ def mousePressedDetector(event):
         if Scroller.scrollerBounds[i][0] <= data.clickedXMouse <= Scroller.scrollerBounds[i][2] and Scroller.scrollerBounds[i][1] <= data.clickedYMouse <= Scroller.scrollerBounds[i][3]:
             data.clickedScroller = True
             Scroller.scrollerObject[i].clickedScroller = True
+            Scroller.scrollerObject[i].scrolledOriginalPercentage = Scroller.scrollerObject[i].scrolledPercentage
             Scroller.scrollerObject[i].clickedY = event.y - Scroller.scrollerObject[i].y
 
 def mouseDragDetector(event):
@@ -166,14 +187,15 @@ def mouseDragDetector(event):
                 scroller = Scroller.scrollerObject[i]
                 break
         scroller.draggedY = event.y - scroller.y - scroller.clickedY
-        scroller.scrolledPercentage = float(scroller.draggedY) / float(scroller.scrollableLength) * 100
+        scroller.scrolledPercentage = scroller.scrolledOriginalPercentage + float(scroller.draggedY) / float(scroller.scrollableLength) * 100
         if scroller.scrolledPercentage < 0:
             scroller.scrolledPercentage = 0
         if scroller.scrolledPercentage > 100:
             scroller.scrolledPercentage = 100
         scroller.deleteScroller()
-        data.s.update()
         scroller.displayScroller()
+        data.s.update()
+##        sleep(0.02)
         data.scrollerUpdated = True
 
 def mouseReleaseDetector(event):
@@ -193,17 +215,18 @@ def mouseReleaseDetector(event):
     while currentXLess == True or currentYLess == True or currentXMore == True or currentYMore == True:
         break
     if data.gameStarted == True and data.mouseDragged == False and data.clickedButton == False and data.notificationOpen == False:
-        polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-        tileXLength, tileYLength = getTileXYLength()
-        landClickedX = data.clickedXMouse + data.currentX
-        landClickedY = data.clickedYMouse + data.currentY
-        xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
-        yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
-        tileClickedX = int(xB / tileYLength)
-        tileClickedY = data.yTiles - int(yB / tileYLength) - 1
-        if 0 <= tileClickedX < data.xTiles and 0 <= tileClickedY < data.yTiles:
-            if data.highlightedTile != [tileClickedX, tileClickedY]:
-                highlightSquare(tileClickedX, tileClickedY)
+        if data.menuOpen == True and event.x < data.cWidth - 199 or data.menuOpen == False:
+            polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+            tileXLength, tileYLength = getTileXYLength()
+            landClickedX = data.clickedXMouse + data.currentX
+            landClickedY = data.clickedYMouse + data.currentY
+            xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
+            yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
+            tileClickedX = int(xB / tileYLength)
+            tileClickedY = data.yTiles - int(yB / tileYLength) - 1
+            if 0 <= tileClickedX < data.xTiles and 0 <= tileClickedY < data.yTiles:
+                if data.highlightedTile != [tileClickedX, tileClickedY]:
+                    highlightSquare(tileClickedX, tileClickedY)
 ##        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
     data.mouseDragged = False
     data.clickedButton = False
@@ -561,8 +584,12 @@ class Scroller():
     scrollerBounds = [] #This stores the boudaries of each scroller.
                       #Used in the mouse click function
     scrollerSegments = [] #2D array that stores each of the scroller's segments
+    scrollerFunctions = [] #Array stores each page that the scroller is assigned to
 
-    def __init__(self, scrollerX, scrollerY, scrollerPixelSize, scrollerWidth, scrollerHeight, displayedActualHeight):
+    topBitmapImage = data.scrollerSegments[data.SCROLLER_TOP]
+    bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM] 
+
+    def __init__(self, scrollerX, scrollerY, scrollerWidth, scrollerHeight, displayedActualHeight, scrollerPixelSize, function):
         self.number = len(Scroller.scrollerObject)
         self.x = scrollerX
         self.y = scrollerY
@@ -571,13 +598,15 @@ class Scroller():
         self.scrollerHeight = scrollerHeight #Scroller height is the entire thing's height
         self.actualHeight = displayedActualHeight
         self.scrolledPercentage = 0
+        self.scrolledOriginalPercentage = 0
         self.scrollerXValue = self.x - (len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize - self.scrollerWidth) / 2
         self.clickedY = 0
         self.draggedY = 0
         self.clickedScroller = False
+        self.actualDisplayIndex = 0
 
         Scroller.scrollerObject.append(self)
-
+        Scroller.scrollerFunctions.append(function)
         Scroller.scrollerSegments.append([])
         Scroller.scrollerPixels.append([])
 
@@ -590,30 +619,28 @@ class Scroller():
         self.scrollableLength = self.scrollerHeight - self.scrollerTabSize
 
         #The top and bottom segments are additional to the actual scrolling part, which are the middle segments
-        topBitmapImage = data.scrollerSegments[data.SCROLLER_TOP]
-        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.pixelSize, topBitmapImage))
+        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize, self.pixelSize, Scroller.topBitmapImage))
 
-        bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM]
-        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize - 1, self.pixelSize, bottomBitmapImage))
+        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + 2, self.pixelSize, Scroller.bottomBitmapImage))
 
         #These segments actually show where the thing is
-        for i in range(int(self.y), self.y + int(self.scrollerTabSize), len(data.scrollerSegments[data.SCROLLER_MIDDLE_0]) * self.pixelSize):
+        for i in range(int(self.y), self.y + int(self.scrollerTabSize), int(len(data.scrollerSegments[data.SCROLLER_MIDDLE_0]) * self.pixelSize)):
             randomSegmentNumber = randint(0, len(data.scrollerSegments) - 3)
             Scroller.scrollerSegments[self.number].append(randomSegmentNumber)
             bitmapImage = data.scrollerSegments[data.SCROLLER_MIDDLE_TEMPLATE + str(randomSegmentNumber)]
-            Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + i * self.pixelSize, self.pixelSize, bitmapImage))
+            Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, i, self.pixelSize, bitmapImage))
 
-        Scroller.scrollerBounds.append([self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(bottomBitmapImage) * self.pixelSize])
+        Scroller.scrollerBounds.append([self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(Scroller.bottomBitmapImage) * self.pixelSize])
 
     def displayScroller(self):
         yIndex = self.scrolledPercentage / 100.0 * self.scrollableLength
-        print("Display at yvalue ", self.scrolledPercentage / 100.0 * self.scrollerHeight + 10)
+        self.actualDisplayIndex = self.scrolledPercentage / 100 * (self.actualHeight - self.scrollerHeight + 72)
 
-        topBitmapImage = data.scrollerSegments[data.SCROLLER_TOP]
-        Scroller.scrollerPixels[self.number][1] = makeBitmap(self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize + yIndex, self.pixelSize, topBitmapImage)
+        Scroller.scrollerFunctions[self.number](self.actualDisplayIndex)
 
-        bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM]
-        Scroller.scrollerPixels[self.number][2] = makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + yIndex - 1, self.pixelSize, bottomBitmapImage)
+        Scroller.scrollerPixels[self.number].append([data.s.create_rectangle(self.x, self.y, self.x + self.scrollerWidth, self.y + self.scrollerHeight, fill = "#7f7f7f", width = 0)])
+        Scroller.scrollerPixels[self.number][1] = makeBitmap(self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize + yIndex, self.pixelSize, Scroller.topBitmapImage)
+        Scroller.scrollerPixels[self.number][2] = makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + yIndex + 2, self.pixelSize, Scroller.bottomBitmapImage)
 
         segmentIndex = 0
         for i in range(len(Scroller.scrollerSegments[self.number])):
@@ -622,11 +649,10 @@ class Scroller():
             Scroller.scrollerPixels[self.number][3 + segmentIndex] = makeBitmap(self.scrollerXValue, self.y + i * self.pixelSize + yIndex, self.pixelSize, bitmapImage)
             segmentIndex += 1
             
-        Scroller.scrollerBounds[self.number] = [self.scrollerXValue, self.y - len(topBitmapImage) * self.pixelSize + yIndex, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(bottomBitmapImage) * self.pixelSize + yIndex]
-        print(Scroller.scrollerBounds[self.number])
-
+        Scroller.scrollerBounds[self.number] = [self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize + yIndex, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(Scroller.bottomBitmapImage) * self.pixelSize + yIndex]
+        
     def deleteScroller(self): #For updating the screen
-        for i in range(1, len(Scroller.scrollerPixels[self.number])):
+        for i in range(len(Scroller.scrollerPixels[self.number])):
             for j in range(len(Scroller.scrollerPixels[self.number][i])):
                 data.s.delete(Scroller.scrollerPixels[self.number][i][j])
 

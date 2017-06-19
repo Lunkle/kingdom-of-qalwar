@@ -677,28 +677,24 @@ buttonRight = [
 
 #Scroller
 scrollerTop = [
-    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f', '#ffffff', '#ffffff', '#ffffff'],
-    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#7f7f7f', '#c3c3c3', '#d28338', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#7f7f7f', '#c3c3c3', '#b1662d', '#844013', '#844013', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#daa520', '#daa520', '#daa520', '#daa520'],
+    ['#daa520', '#d28338', '#b1662d', '#daa520']
 ]
 scrollerMiddle0 = [
-    ['#7f7f7f', '#c3c3c3', '#844013', '#b1662d', '#a55a20', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#daa520', '#844013', '#b1662d', '#daa520'],
 ]
 scrollerMiddle1 = [
-    ['#7f7f7f', '#c3c3c3', '#844013', '#d28338', '#8e4a1b', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#daa520', '#844013', '#d28338', '#daa520'],
 ]
 scrollerMiddle2 = [
-    ['#7f7f7f', '#c3c3c3', '#9a5c18', '#af622a', '#a75b2a', '#844013', '#c3c3c3', '#7f7f7f'],
+    ['#daa520', '#9a5c18', '#af622a', '#daa520'],
 ]
 scrollerMiddle3 = [
-    ['#7f7f7f', '#c3c3c3', '#a34303', '#99581e', '#8d4a1d', '#b1662d', '#c3c3c3', '#7f7f7f'],
+    ['#daa520', '#a34303', '#99581e', '#daa520'],
 ]
 scrollerBottom = [
-    ['#7f7f7f', '#c3c3c3', '#a34303', '#964508', '#b1662d', '#844013', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#7f7f7f', '#c3c3c3', '#9a5c18', '#b1662d', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#7f7f7f', '#c3c3c3', '#c3c3c3', '#7f7f7f'],
-    ['#ffffff', '#ffffff', '#ffffff', '#7f7f7f', '#7f7f7f'],
+    ['#daa520', '#9a5c18', '#b1662d', '#daa520'],
+    ['#daa520', '#daa520', '#daa520', '#daa520']
 ]
 
 #Paper

@@ -14,6 +14,8 @@ dirtColour = "#b08257"
 dirtOutlineColour = "#cdaf94"
 enemyLandColour = "#1e2f5f"
 
+buildingPanelColour = "#e1e7e9"
+
 #Changeable Sizes ////////////////////////////////////////////////////////////
 cWidth = 600
 cHeight = 400

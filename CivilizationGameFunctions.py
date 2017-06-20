@@ -128,6 +128,8 @@ def tutorial():
     ##
     pass
 
+def drawBuildingIcon(x, y, building, size)
+
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)
     polygonLandYLength = int(((data.tileSize * data.yTiles) * 2 ** 0.5)/2)
@@ -252,8 +254,8 @@ def mouseWheelHandler(event):
 
         newPolygonLandXLength, newPolygonLandYLength = getLandPolygonXYLength()
 
-        data.currentX = (data.currentX + data.cWidth/2)/oldPolygonLandXLength*newPolygonLandXLength - data.cWidth/2
-        data.currentY = (data.currentY + data.cHeight/2)/oldPolygonLandYLength*newPolygonLandYLength - data.cHeight/2
+        data.currentX = (data.currentX + data.cWidth / 2) / oldPolygonLandXLength * newPolygonLandXLength - data.cWidth / 2
+        data.currentY = (data.currentY + data.cHeight / 2) / oldPolygonLandYLength * newPolygonLandYLength - data.cHeight / 2
 
 def addResource(resources, amounts):
     for i in range(len(resources)):
@@ -591,7 +593,7 @@ class Scroller():
     scrollerFunctions = [] #Array stores each page that the scroller is assigned to
 
     topBitmapImage = data.scrollerSegments[data.SCROLLER_TOP]
-    bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM] 
+    bottomBitmapImage = data.scrollerSegments[data.SCROLLER_BOTTOM]
 
     def __init__(self, scrollerX, scrollerY, scrollerWidth, scrollerHeight, displayedActualHeight, scrollerPixelSize, function):
         self.number = len(Scroller.scrollerObject)
@@ -652,9 +654,9 @@ class Scroller():
             bitmapImage = data.scrollerSegments[data.SCROLLER_MIDDLE_TEMPLATE + str(segmentNumber)]
             Scroller.scrollerPixels[self.number][3 + segmentIndex] = makeBitmap(self.scrollerXValue, self.y + i * self.pixelSize + yIndex, self.pixelSize, bitmapImage)
             segmentIndex += 1
-            
+
         Scroller.scrollerBounds[self.number] = [self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize + yIndex, self.scrollerXValue + len(data.scrollerSegments[data.SCROLLER_MIDDLE_0][0]) * self.pixelSize, self.y + self.scrollerTabSize + len(Scroller.bottomBitmapImage) * self.pixelSize + yIndex]
-        
+
     def deleteScroller(self): #For updating the screen
         for i in range(len(Scroller.scrollerPixels[self.number])):
             for j in range(len(Scroller.scrollerPixels[self.number][i])):
@@ -678,7 +680,7 @@ class Scroller():
 #Selectable Panel Class
 class SelectablePanel():
     panelObject = [] #Stores every panel object
-    panels = [] #This stores the entire scope of panels and each of their pixels
+    panelPixels = [] #This stores the entire scope of panels and each of their pixels
                  #3D array --> the primary array stores each panel
                  #         --> the secondary array stores each component of said panel
                  #         --> the tertiary array stores each pixels of component
@@ -687,21 +689,25 @@ class SelectablePanel():
     panelSegments = [] #2D array that stores each of the panel's segments
     panelFunctions = [] #Stores the function called when clicked
 
-    def __init__(self, panelX1, panelY1, panelX2, panelY2, text, size, function):
-        self.x = panelX
-        self.y = panelY
-        self.size = float(size)
-        self.text = text
-        self.length = 0
-        
+    def __init__(self, panelX1, panelY1, panelX2, panelY2, graphicsFunction):
+        self.number = len(SelectablePanel.panelObject)
+        self.x1 = panelX1
+        self.y1 = panelY1
+        self.x2 = panelX2
+        self.y2 = panelY2
+        self.graphics = graphicsFunction
+
         SelectablePanel.panelObject.append(self)
-        SelectablePanel.panels.append([])
+        SelectablePanel.panelPixels.append([])
         SelectablePanel.panelSegments.append([])
         SelectablePanel.panelBounds.append([])
-        SelectablePanel.panelFunctions.append(function)
+
+        SelectablePanel.panelPixels[self.number].append([[data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)]])
+        SelectablePanel.panelPixels[self.number].append(self.graphics())
 
     def displaypanel(self):
-        pass
+        SelectablePanel.panelPixels[self.number][0] = [data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)]
+        SelectablePanel.panelPixels[self.number][1] = self.graphics()
 
     def delete(self): #For updating the screen
         for i in range(len(SelectablePanel.panels[self.number])):

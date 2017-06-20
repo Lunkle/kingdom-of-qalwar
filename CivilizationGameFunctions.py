@@ -128,7 +128,10 @@ def tutorial():
     ##
     pass
 
-def drawBuildingIcon(x, y, building, size)
+def drawBuildingIcon(x, y, building, size):
+    pixels = []
+    pixels.append(makeBitmap(x, y, size, data.buildingTypeImages[building]))
+    return pixels
 
 def getLandPolygonXYLength():
     polygonLandXLength = int(((data.tileSize * data.xTiles) * 2 ** 0.5)/1)

@@ -45,11 +45,12 @@ def startGame():
     settingsButton = Button(10, 10, "Settings", 2, showSettings)
     updateResources()
     updateButtons()
+    data.seasonIndicator = createText(data.cWidth / 2 - 100, 10, "Season " + str(data.seasonNumber), 2, addColour = [True, data.seasonTextHighlightColour, 50])
     data.gameStarted = True
 
 def showSettings():
     global doneButton
-    createNotification(["You Suck", "A Lot"])
+    createNotification(["Much is waiting", "to be done"])
     doneButton = Button(data.cWidth / 2 - 46, data.cHeight * (1 / data.notificationScreenBorderY - 1) * data.notificationScreenBorderY - 60, "Done", 2, doneReading)
 ##    data.resolution = 4
 ##    data.reload(sprites)
@@ -113,6 +114,10 @@ def doneReading():
 
 def passTurn():
     global doneButton
+    data.seasonNumber += 1
+    for i in range(len(data.seasonIndicator)):
+        data.s.delete(data.seasonIndicator[i])
+    data.seasonIndicator = createText(data.cWidth / 2 - 100, 10, "Season " + str(data.seasonNumber), 2, addColour = [True, data.seasonTextHighlightColour, 50])
     addResource([data.QALS, data.WOOD, data.GOLD, data.MANA], [data.qalsEconomy, data.woodEconomy, data.goldEconomy, data.manaEconomy])
     createNotification(["You collected", str(data.qalsEconomy) + " " + data.QALS, str(data.woodEconomy) + " " + data.WOOD, str(data.goldEconomy) + " " + data.GOLD, str(data.manaEconomy) + " " + data.MANA])
     doneButton = Button(data.cWidth / 2 - 46, data.cHeight * (1 / data.notificationScreenBorderY - 1) * data.notificationScreenBorderY - 60, "Done", 2, doneReading)
@@ -360,7 +365,6 @@ def updateResources():
 
 def updateScreen():
     if data.menuOpen == False and data.notificationOpen == False:
-##        createText(data.cWidth / 2, 10, "Season ", 2)
         updateBuildings()
         updateLand()
         highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
@@ -670,3 +674,52 @@ class Scroller():
         del Scroller.scrollerSegments[self.number]  #Delete the scroller segment data (not each segment -- its data)
         for i in range(self.number, len(Scroller.scrollerObject)):
             Scroller.scrollerObject[i].number -= 1          #Reduce all numbers of following scrollers by 1 to fill up the gap.
+
+#Selectable Panel Class
+class SelectablePanel():
+    panelObject = [] #Stores every panel object
+    panels = [] #This stores the entire scope of panels and each of their pixels
+                 #3D array --> the primary array stores each panel
+                 #         --> the secondary array stores each component of said panel
+                 #         --> the tertiary array stores each pixels of component
+    panelBounds = [] #This stores the boudaries of each panel.
+                      #Used in the mouse click function
+    panelSegments = [] #2D array that stores each of the panel's segments
+    panelFunctions = [] #Stores the function called when clicked
+
+    def __init__(self, panelX1, panelY1, panelX2, panelY2, text, size, function):
+        self.x = panelX
+        self.y = panelY
+        self.size = float(size)
+        self.text = text
+        self.length = 0
+        
+        SelectablePanel.panelObject.append(self)
+        SelectablePanel.panels.append([])
+        SelectablePanel.panelSegments.append([])
+        SelectablePanel.panelBounds.append([])
+        SelectablePanel.panelFunctions.append(function)
+
+    def displaypanel(self):
+        pass
+
+    def delete(self): #For updating the screen
+        for i in range(len(SelectablePanel.panels[self.number])):
+            for j in range(len(SelectablePanel.panels[self.number][i])):
+                data.s.delete(SelectablePanel.panels[self.number][i][j])
+
+    def destroy(self):
+        try: #Try to delete everything if it hasn't already been deleted
+            for i in range(len(SelectablePanel.panels[self.number])):
+                for j in range(len(SelectablePanel.panels[self.number][i])):
+                    data.s.delete(SelectablePanel.panels[self.number][i][j])
+        except:
+            pass
+        #Then delete all the data
+        del SelectablePanel.panelBounds[self.number]    #Delete the bounds check
+        del SelectablePanel.panels[self.number]         #Delete the pixels STORER (not the pixels themselves)
+        del SelectablePanel.panelFunctions[self.number] #Delete the function
+        del SelectablePanel.panelObject[self.number]    #Delete the object HOLDER (again, not the class instance itself)
+        del SelectablePanel.panelSegments[self.number]  #Delete the panel segment data (not each segment -- its data)
+        for i in range(self.number, len(SelectablePanel.panelObject)):
+            SelectablePanel.panelObject[i].number -= 1          #Reduce all numbers of following panels by 1 to fill up the gap.

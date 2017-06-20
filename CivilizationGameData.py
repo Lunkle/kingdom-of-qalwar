@@ -9,6 +9,7 @@ import CivilizationGameFont as font
 #Changeable Colours ////////////////////////////////////////////////////////////
 landColour = "#56b000"
 landOutlineColour = "#6bdb00"
+seasonTextHighlightColour = "#128000"
 dirtColour = "#b08257"
 dirtOutlineColour = "#cdaf94"
 enemyLandColour = "#1e2f5f"
@@ -29,7 +30,7 @@ maxTileSize = 250
 dirtThickness = 1.5
 
 notificationPixelSize = 3
-notificationScreenBorderX = 1.0/10.0 #The smaller these are (or bigger the denominator)
+notificationScreenBorderX = 1.0/6.0 #The smaller these are (or bigger the denominator)
 notificationScreenBorderY = 1.0/8.0 #the smaller the border and bigger the notification
 notificationTextSize = 2
 
@@ -72,6 +73,9 @@ gameOver = False
 landPolygon = 0 #Stores land object
 dirtLeft = 0    #Stores left dirt object
 dirtRight = 0   #Stores right dirt object
+
+seasonNumber = 1
+seasonIndicator = 0
 
 notificationOpen = False
 notificationPage = []

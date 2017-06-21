@@ -11,7 +11,7 @@ def showStartPage():
     aboutButton = Button(data.cWidth / 2 - 66, data.cHeight / 2 + 60, "About", data.startScreenButtonSize, startGame)
     title = createText(data.cWidth / 2 - 130, 120, "Kingdom of Qalwar", 2)
 
-def initializeGame():
+def initializeGame():    
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
     townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
@@ -50,6 +50,10 @@ def buyPanelGraphics(x1, y1, x2, y2):
     pixelsArray += [data.s.create_line(x1, y2 + (y1 - y2) / 4, x2, y2 + (y1 - y2) / 4)]
     return pixelsArray
 
+def placeBuilding(building):
+    pass
+    
+
 def showSettings():
     global doneButton
     createNotification(["Much is waiting", "to be done"])
@@ -63,7 +67,7 @@ def showMenu():
     menuButton.destroy()
     nextSeasonButton.destroy()
     for i in range(data.numOfMenuPanels):
-        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 1)]], 3])
+        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 2)]], 3])
     data.menuFeatures.append(redrawMenu(0))
     menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
@@ -196,7 +200,7 @@ def mousePressedDetector(event):
             break
         try: #Same reason as button's -- See above.
             if SelectablePanel.panelBounds[i][0] <= data.clickedXMouse <= SelectablePanel.panelBounds[i][2] and SelectablePanel.panelBounds[i][1] <= data.clickedYMouse <= SelectablePanel.panelBounds[i][3]:
-                SelectablePanel.panelFunctions[i]() #Run whatever it is that is assigned
+                SelectablePanel.panelFunctions[i](*SelectablePanel.panelObject[i].pressedExtraArgs) #Run whatever it is that is assigned
                 alreadyPressedSomething = True
         except:
             pass
@@ -225,7 +229,6 @@ def mouseDragDetector(event):
         scroller.deleteScroller()
         scroller.displayScroller()
         data.s.update()
-##        sleep(0.02)
         data.scrollerUpdated = True
 
 def mouseReleaseDetector(event):
@@ -668,7 +671,7 @@ class Scroller():
 
     def displayScroller(self):
         yIndex = self.scrolledPercentage / 100.0 * self.scrollableLength
-        self.actualDisplayIndex = self.scrolledPercentage / 100 * (self.actualHeight - self.scrollerHeight + 72)
+        self.actualDisplayIndex = self.scrolledPercentage / 100 * (self.actualHeight - self.scrollerHeight + 20)
 
         Scroller.scrollerFunctions[self.number](self.actualDisplayIndex)
 
@@ -716,7 +719,7 @@ class SelectablePanel():
                       #Used in the mouse click function
     panelFunctions = [] #Stores the function called when clicked
 
-    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, graphicsExtraArgs = (), icon = [False, "", 0]):
+    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, pressedExtraArgs = (), graphicsExtraArgs = (), icon = [False, "", 0]):
         self.number = len(SelectablePanel.panelObject)
         self.x1 = panelX1
         self.y1 = panelY1
@@ -729,6 +732,7 @@ class SelectablePanel():
         SelectablePanel.panelPixels.append([])
         SelectablePanel.panelBounds.append([self.x1, self.y1, self.x2, self.y2])
         SelectablePanel.panelFunctions.append(pressedFunction)
+        self.pressedExtraArgs = pressedExtraArgs
         
         SelectablePanel.panelPixels[self.number].append([data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)])
         SelectablePanel.panelPixels[self.number].append(self.graphics(self.x1, self.y1, self.x2, self.y2, *graphicsExtraArgs))

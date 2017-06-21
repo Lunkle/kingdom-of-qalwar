@@ -33,7 +33,7 @@ dirtThickness = 1.5
 
 notificationPixelSize = 3
 notificationScreenBorderX = 1.0/6.0 #The smaller these are (or bigger the denominator)
-notificationScreenBorderY = 1.0/8.0 #the smaller the border and bigger the notification
+notificationScreenBorderY = 1.0/6.0 #the smaller the border and bigger the notification
 notificationTextSize = 2
 
 qalsEconomy = 10    #Economy is the amount of each resource
@@ -141,6 +141,8 @@ ENEMY_BASE_BOTTOM = "EnemyBaseBotttom"
 
 RESIDENCE = "Residence"
 TEEPEE = "Teepee"
+BARRACKS = "Barracks"
+OPEN_LAND = "OpenLand"
 
 root = Tk()
 root.resizable(False, False) #Set resizable to false
@@ -270,11 +272,14 @@ buildingTypeImages = {
     ENEMY_BASE_LEFT:sprites.enemyBaseLeft,
     ENEMY_BASE_RIGHT:sprites.enemyBaseRight,
     ENEMY_BASE_BOTTOM:sprites.enemyBaseBottom,
+    OPEN_LAND:sprites.openLand,
     TEEPEE:sprites.teepee,
-    RESIDENCE:sprites.residence
+    RESIDENCE:sprites.residence,
+    BARRACKS:sprites.barracks
 }
 
 constructableBuildings = [
     RESIDENCE,
-    TEEPEE
+    TEEPEE,
+    BARRACKS
 ]

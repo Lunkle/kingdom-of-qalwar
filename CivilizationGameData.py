@@ -72,6 +72,9 @@ resourceTextSize = 2
 gameStarted = False
 menuOpen = False
 gameOver = False
+placingDownBuilding = True #Should start at False
+temporaryBuilding = 0 #Holds the building class instance
+buildingBeingPlaced = ""
 
 landPolygon = 0 #Stores land object
 dirtLeft = 0    #Stores left dirt object
@@ -142,6 +145,7 @@ ENEMY_BASE_BOTTOM = "EnemyBaseBotttom"
 RESIDENCE = "Residence"
 TEEPEE = "Teepee"
 BARRACKS = "Barracks"
+LUMBER_HOUSE = "LumberHouse"
 OPEN_LAND = "OpenLand"
 
 root = Tk()
@@ -176,7 +180,12 @@ class Building():       #Building is used for the various types of buildings, in
         Building.buildingsY.insert(self.number, self.y)
         for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
             Building.buildingObject[i].number += 1
-        
+    
+    def deleteBuilding(self):
+        for i in range(len(data.Building.buildingObject)):
+            for j in range(len(data.Building.buildingImages[i])):
+                data.s.delete(data.Building.buildingImages[i][j])
+    
     def destroy(self):
         del Building.buildingObject[self.number]  #Delete everything
         del Building.buildingTypes[self.number]
@@ -275,11 +284,13 @@ buildingTypeImages = {
     OPEN_LAND:sprites.openLand,
     TEEPEE:sprites.teepee,
     RESIDENCE:sprites.residence,
-    BARRACKS:sprites.barracks
+    BARRACKS:sprites.barracks,
+    LUMBER_HOUSE:sprites.lumberHouse
 }
 
 constructableBuildings = [
     RESIDENCE,
     TEEPEE,
-    BARRACKS
+    BARRACKS,
+    LUMBER_HOUSE
 ]

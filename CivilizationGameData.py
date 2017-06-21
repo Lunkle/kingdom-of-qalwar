@@ -41,9 +41,6 @@ woodEconomy = 10    #the player gains each week
 goldEconomy = 2     #This can be increaesed through
 manaEconomy = 5     #building and upgrading buildings.
 
-menuFeatures = []
-numOfMenuPanels = 10
-
 #For the Button class ////////////////////////////////////////////////////////////
 startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
@@ -53,6 +50,8 @@ scrollerPixelSize = 3
 scrollerUpdated = True
 
 #Recommended-to-not-Change Variables ////////////////////////////////////////////////////////////
+menuFeatures = []
+numOfMenuPanels = 4
 menuIndex = 0
 menuPanelObjects = [0] * numOfMenuPanels
 
@@ -141,6 +140,7 @@ ENEMY_BASE_RIGHT = "EnemyBaseRight"
 ENEMY_BASE_BOTTOM = "EnemyBaseBotttom"
 
 RESIDENCE = "Residence"
+TEEPEE = "Teepee"
 
 root = Tk()
 root.resizable(False, False) #Set resizable to false
@@ -270,19 +270,11 @@ buildingTypeImages = {
     ENEMY_BASE_LEFT:sprites.enemyBaseLeft,
     ENEMY_BASE_RIGHT:sprites.enemyBaseRight,
     ENEMY_BASE_BOTTOM:sprites.enemyBaseBottom,
+    TEEPEE:sprites.teepee,
     RESIDENCE:sprites.residence
 }
 
-#buildingTypeSizes should always be less than 1 unless special situations occur
-#This is for cosmetics only -- does not affect gameplay
-buildingTypeSizes = {
-    TOWN_HALL_TOP:1,
-    TOWN_HALL_LEFT:1,
-    TOWN_HALL_RIGHT:1,
-    TOWN_HALL_BOTTOM:1,
-    ENEMY_BASE_TOP:1,
-    ENEMY_BASE_LEFT:1,
-    ENEMY_BASE_RIGHT:1,
-    ENEMY_BASE_BOTTOM:1,
-    RESIDENCE:0.8
-}
+constructableBuildings = [
+    RESIDENCE,
+    TEEPEE
+]

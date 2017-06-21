@@ -1,5 +1,5 @@
 from PIL import Image
-im = Image.open("Paper Down.png") #Can be many different formats.
+im = Image.open("Teepee.png") #Can be many different formats.
 pix = im.load()
 xLength, yLength = im.size #Get the width and hight of the image for iterating over
 ##print pix[50, 50] #Get the RGBA Value of the a pixel of an image

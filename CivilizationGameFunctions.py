@@ -63,7 +63,7 @@ def showMenu():
     menuButton.destroy()
     nextSeasonButton.destroy()
     for i in range(data.numOfMenuPanels):
-        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.RESIDENCE], 2])
+        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 1)]], 2])
     data.menuFeatures.append(redrawMenu(0))
     menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
@@ -372,10 +372,9 @@ def updateBuildings():
             buildingX4 = buildingX1 - tileXLength / 2
             buildingY4 = buildingY2
             bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
-            bitmapTileRatio = data.buildingTypeSizes[data.Building.buildingTypes[i]]
-            squareSize = tileXLength/len(bitmapImage[0]) * bitmapTileRatio
+            squareSize = tileXLength/len(bitmapImage[0])
 
-            data.Building.buildingImages[i] = makeBitmap(buildingX4 + tileXLength * (1 - bitmapTileRatio) / 2, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, toBack = True)
+            data.Building.buildingImages[i] = makeBitmap(buildingX4, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, toBack = True)
 
 def updateButtons():
     for i in range(len(Button.buttonObject)):
@@ -391,7 +390,6 @@ def updateResources():
         data.resourceObjects.append([data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, 10 + data.resourceIndicatorLength, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30)])
         resource = data.resourceTypes[i]
         ratioOfResourceToMaximum = float(data.resourceAmounts[resource]) / data.resourceMaximum[resource]
-##        print(ratioOfResourceToMaximum)
         #Top Left x1 y1, Bottom Right x2 y2
         data.resourceObjects.append([data.s.create_rectangle(10, data.cHeight - (len(data.resourceTypes) - i) * 30, 10 + data.resourceIndicatorLength * ratioOfResourceToMaximum, data.cHeight - 10 - (len(data.resourceTypes) - 1 - i) * 30, fill = data.resourceColours[resource])])
         data.resourceObjects.append(makeBitmap(8, data.cHeight - 3 - (len(data.resourceTypes) - i) * 30, 2, data.resourceIcons[resource]))
@@ -657,7 +655,7 @@ class Scroller():
         #The top and bottom segments are additional to the actual scrolling part, which are the middle segments
         Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize, self.pixelSize, Scroller.topBitmapImage))
 
-        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + 2, self.pixelSize, Scroller.bottomBitmapImage))
+        Scroller.scrollerPixels[self.number].append(makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize, self.pixelSize, Scroller.bottomBitmapImage))
 
         #These segments actually show where the thing is
         for i in range(int(self.y), self.y + int(self.scrollerTabSize), int(len(data.scrollerSegments[data.SCROLLER_MIDDLE_0]) * self.pixelSize)):
@@ -676,7 +674,7 @@ class Scroller():
 
         Scroller.scrollerPixels[self.number].append([data.s.create_rectangle(self.x, self.y, self.x + self.scrollerWidth, self.y + self.scrollerHeight, fill = "#7f7f7f", width = 0)])
         Scroller.scrollerPixels[self.number][1] = makeBitmap(self.scrollerXValue, self.y - len(Scroller.topBitmapImage) * self.pixelSize + yIndex, self.pixelSize, Scroller.topBitmapImage)
-        Scroller.scrollerPixels[self.number][2] = makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + yIndex + 2, self.pixelSize, Scroller.bottomBitmapImage)
+        Scroller.scrollerPixels[self.number][2] = makeBitmap(self.scrollerXValue, self.y + self.scrollerTabSize + yIndex, self.pixelSize, Scroller.bottomBitmapImage)
 
         segmentIndex = 0
         for i in range(len(Scroller.scrollerSegments[self.number])):

@@ -45,6 +45,10 @@ def startGame():
     data.seasonIndicator = createText(data.cWidth / 2 - 100, 10, "Season " + str(data.seasonNumber), 2, addColour = [True, data.seasonTextHighlightColour, 50])
     data.gameStarted = True
 
+    ########################################################################################################################
+    data.buildingBeingPlaced = data.RESIDENCE ##############################################################################
+    ########################################################################################################################
+
 def buyPanelGraphics(x1, y1, x2, y2):
     pixelsArray = []
     pixelsArray += [data.s.create_line(x1, y2 + (y1 - y2) / 4, x2, y2 + (y1 - y2) / 4)]
@@ -67,7 +71,7 @@ def showMenu():
     menuButton.destroy()
     nextSeasonButton.destroy()
     for i in range(data.numOfMenuPanels):
-        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 2)]], 3])
+        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 3)]], 3])
     data.menuFeatures.append(redrawMenu(0))
     menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
@@ -205,9 +209,17 @@ def mousePressedDetector(event):
         except:
             pass
 
+def mouseMotionDetector(event):
+    if data.placingDownBuilding == True:
+        tileHoverX, tileHoverY = getTile(event.x, event.y)
+        if data.gameStarted == True and 0 <= tileHoverX < data.xTiles and 0 <= tileHoverY < data.yTiles:
+            updateScreen()
+            data.temporaryBuilding = data.Building(tileHoverX, tileHoverY, data.buildingBeingPlaced)
+            data.temporaryBuilding.add()
+
 def mouseDragDetector(event):
     data.mouseDragged = True
-    if data.gameStarted == True and data.menuOpen == False and data.notificationOpen == False:
+    if data.gameStarted == True and data.clickedButton == False and data.menuOpen == False and data.notificationOpen == False:
         rawCurrentX = data.previousCurrentX + data.clickedXMouse - event.x - data.panSlipX
         rawCurrentY = data.previousCurrentY + data.clickedYMouse - event.y - data.panSlipY
         polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
@@ -250,14 +262,7 @@ def mouseReleaseDetector(event):
         break
     if data.gameStarted == True and data.mouseDragged == False and data.clickedButton == False and data.notificationOpen == False:
         if data.menuOpen == True and event.x < data.cWidth - 199 or data.menuOpen == False:
-            polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
-            tileXLength, tileYLength = getTileXYLength()
-            landClickedX = data.clickedXMouse + data.currentX
-            landClickedY = data.clickedYMouse + data.currentY
-            xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
-            yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
-            tileClickedX = int(xB / tileYLength)
-            tileClickedY = data.yTiles - int(yB / tileYLength) - 1
+            tileClickedX, tileClickedY = getTile(data.clickedXMouse, data.clickedYMouse)
             if 0 <= tileClickedX < data.xTiles and 0 <= tileClickedY < data.yTiles:
                 if data.highlightedTile != [tileClickedX, tileClickedY]:
                     highlightSquare(tileClickedX, tileClickedY)
@@ -326,6 +331,17 @@ def highlightSquare(x, y):
         highlightX4 = highlightX1 - tileXLength / 2
         highlightY4 = highlightY2
         data.highlightedTileObject = data.s.create_polygon(highlightX1, highlightY1, highlightX2, highlightY2, highlightX3, highlightY3, highlightX4, highlightY4, width = 0, fill = "yellow", stipple = "gray50")
+
+def getTile(mouseX, mouseY):
+    polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
+    tileXLength, tileYLength = getTileXYLength()
+    landClickedX = mouseX + data.currentX
+    landClickedY = mouseY + data.currentY
+    xB = landClickedY + landClickedX / 2 - polygonLandYLength / 2
+    yB = -(landClickedY - landClickedX / 2 - polygonLandYLength / 2)
+    tileOnX = int(xB / tileYLength)
+    tileOnY = data.yTiles - int(yB / tileYLength) - 1
+    return tileOnX, tileOnY
 
 def updateLand():
     data.s.delete(data.landPolygon)

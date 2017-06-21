@@ -53,6 +53,8 @@ scrollerPixelSize = 3
 scrollerUpdated = True
 
 #Recommended-to-not-Change Variables ////////////////////////////////////////////////////////////
+menuIndex = 0
+menuPanelObjects = [0] * numOfMenuPanels
 
 startingTileSize = 30
 

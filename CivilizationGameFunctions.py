@@ -12,9 +12,6 @@ def showStartPage():
     title = createText(data.cWidth / 2 - 130, 120, "Kingdom of Qalwar", 2)
 
 def initializeGame():
-    testBuilding = data.Building(10, 10, data.RESIDENCE)
-    testBuilding.add()
-
     townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
     townHallTop.add()
     townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
@@ -48,6 +45,11 @@ def startGame():
     data.seasonIndicator = createText(data.cWidth / 2 - 100, 10, "Season " + str(data.seasonNumber), 2, addColour = [True, data.seasonTextHighlightColour, 50])
     data.gameStarted = True
 
+def buyPanelGraphics(x1, y1, x2, y2):
+    pixelsArray = []
+    pixelsArray += [data.s.create_line(x1, y2 + (y1 - y2) / 4, x2, y2 + (y1 - y2) / 4)]
+    return pixelsArray
+
 def showSettings():
     global doneButton
     createNotification(["Much is waiting", "to be done"])
@@ -60,9 +62,9 @@ def showMenu():
     data.menuOpen = True
     menuButton.destroy()
     nextSeasonButton.destroy()
-##    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+    for i in range(data.numOfMenuPanels):
+        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.RESIDENCE], 2])
     data.menuFeatures.append(redrawMenu(0))
-##    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
     updateButtons()
@@ -80,13 +82,16 @@ def closeMenu():
                     data.s.delete(data.menuFeatures[i][j][k])
             else:
                 data.s.delete(data.menuFeatures[i][j])
+    for i in range(data.numOfMenuPanels):
+        data.menuPanelObjects[i].destroy()
     menuScroller.destroy()
     backButton.destroy()
+    data.menuIndex = 0
     updateButtons()
     data.s.update()
 
 def redrawMenu(index):
-    print("Index is", index)
+    data.menuIndex = index
     for i in range(len(data.menuFeatures)):
         for j in range(len(data.menuFeatures[i])):
             if isinstance(data.menuFeatures[i][j], list):
@@ -97,15 +102,14 @@ def redrawMenu(index):
     data.menuFeatures = []
     data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, 1, data.cWidth + 1, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     for i in range(data.numOfMenuPanels):
-        if i * 100 + 10 - index > data.cHeight - 52:
-            print("outside", i)
+        if i * 100 + 10 - data.menuIndex > data.cHeight - 52:
             break
-        if (i + 1) * 100 - index >= -1:
-            print(i)
-            data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 190, i * 100 + 10 - index, data.cWidth - 17, (i + 1) * 100 - index, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
-    data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+        if (i + 1) * 100 - data.menuIndex >= -1:
+            data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 190, i * 100 + 10 - data.menuIndex, data.cWidth - 17, (i + 1) * 100 - data.menuIndex, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
+            data.menuPanelObjects[i].delete()
+            data.menuPanelObjects[i].displayPanel(data.cWidth - 189, i * 100 + 11 - data.menuIndex, data.cWidth - 18, (i + 1) * 100 - data.menuIndex - 1)
+            data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     updateButtons()
-    print("done")
 
 def doneReading():
     global doneButton
@@ -163,23 +167,39 @@ def keyReleaseDetector(event):
     k = event.keysym
 
 def mousePressedDetector(event):
+    alreadyPressedSomething = False
     data.clickedXMouse = event.x
     data.clickedYMouse = event.y
     data.previousCurrentX = data.currentX
     data.previousCurrentY = data.currentY
     for i in range(len(Button.buttonBounds)):
-        try:
+        if alreadyPressedSomething == True:
+            break
+        try: #This try except is for when a button aside from the one clicked is deleted within its function.
             if Button.buttonBounds[i][0] <= data.clickedXMouse <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= data.clickedYMouse <= Button.buttonBounds[i][3]:
                 data.clickedButton = True
                 Button.buttonFunctions[i]() #This runs the assigned function or procedure call
+                alreadyPressedSomething = True
         except:
             pass
     for i in range(len(Scroller.scrollerBounds)):
+        if alreadyPressedSomething == True:
+            break
         if Scroller.scrollerBounds[i][0] <= data.clickedXMouse <= Scroller.scrollerBounds[i][2] and Scroller.scrollerBounds[i][1] <= data.clickedYMouse <= Scroller.scrollerBounds[i][3]:
             data.clickedScroller = True
             Scroller.scrollerObject[i].clickedScroller = True
             Scroller.scrollerObject[i].scrolledOriginalPercentage = Scroller.scrollerObject[i].scrolledPercentage
             Scroller.scrollerObject[i].clickedY = event.y - Scroller.scrollerObject[i].y
+            alreadyPressedSomething = True
+    for i in range(len(SelectablePanel.panelBounds)):
+        if alreadyPressedSomething == True:
+            break
+        try: #Same reason as button's -- See above.
+            if SelectablePanel.panelBounds[i][0] <= data.clickedXMouse <= SelectablePanel.panelBounds[i][2] and SelectablePanel.panelBounds[i][1] <= data.clickedYMouse <= SelectablePanel.panelBounds[i][3]:
+                SelectablePanel.panelFunctions[i]() #Run whatever it is that is assigned
+                alreadyPressedSomething = True
+        except:
+            pass
 
 def mouseDragDetector(event):
     data.mouseDragged = True
@@ -209,6 +229,7 @@ def mouseDragDetector(event):
         data.scrollerUpdated = True
 
 def mouseReleaseDetector(event):
+    global menuScroller
     currentXLess = False
     currentYLess = False
     currentXMore = False
@@ -237,6 +258,14 @@ def mouseReleaseDetector(event):
             if 0 <= tileClickedX < data.xTiles and 0 <= tileClickedY < data.yTiles:
                 if data.highlightedTile != [tileClickedX, tileClickedY]:
                     highlightSquare(tileClickedX, tileClickedY)
+                    menuOpenOriginal = data.menuOpen
+                    data.menuOpen = False
+                    updateScreen()
+                    if menuOpenOriginal == True:
+                        redrawMenu(data.menuIndex)
+                        menuScroller.deleteScroller()
+                        menuScroller.displayScroller()
+                    data.menuOpen = menuOpenOriginal
 ##        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
     data.mouseDragged = False
     data.clickedButton = False
@@ -370,11 +399,9 @@ def updateResources():
 
 def updateScreen():
     if data.menuOpen == False and data.notificationOpen == False:
+        highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
         updateBuildings()
         updateLand()
-        highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
-    data.s.update()
-    sleep(0.01)
 
 def createNotification(text):
     data.notificationOpen = True
@@ -689,46 +716,58 @@ class SelectablePanel():
                  #         --> the tertiary array stores each pixels of component
     panelBounds = [] #This stores the boudaries of each panel.
                       #Used in the mouse click function
-    panelSegments = [] #2D array that stores each of the panel's segments
     panelFunctions = [] #Stores the function called when clicked
 
-    def __init__(self, panelX1, panelY1, panelX2, panelY2, graphicsFunction):
+    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, graphicsExtraArgs = (), icon = [False, "", 0]):
         self.number = len(SelectablePanel.panelObject)
         self.x1 = panelX1
         self.y1 = panelY1
         self.x2 = panelX2
         self.y2 = panelY2
         self.graphics = graphicsFunction
+        self.hasIcon = False
 
         SelectablePanel.panelObject.append(self)
         SelectablePanel.panelPixels.append([])
-        SelectablePanel.panelSegments.append([])
-        SelectablePanel.panelBounds.append([])
-
-        SelectablePanel.panelPixels[self.number].append([[data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)]])
-        SelectablePanel.panelPixels[self.number].append(self.graphics())
-
-    def displaypanel(self):
+        SelectablePanel.panelBounds.append([self.x1, self.y1, self.x2, self.y2])
+        SelectablePanel.panelFunctions.append(pressedFunction)
+        
+        SelectablePanel.panelPixels[self.number].append([data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)])
+        SelectablePanel.panelPixels[self.number].append(self.graphics(self.x1, self.y1, self.x2, self.y2, *graphicsExtraArgs))
+        if icon[0] == True:
+            self.hasIcon = True
+            self.bitmapImage = icon[1]
+            self.pixelSize = icon[2]
+            SelectablePanel.panelPixels[self.number].append(makeBitmap((self.x2 + self.x1 - len(self.bitmapImage[0]) * self.pixelSize) / 2, self.y1 + 2 * (self.y2 - self.y1) / 5 - len(self.bitmapImage) * self.pixelSize / 2, self.pixelSize, self.bitmapImage))
+        
+    def displayPanel(self, panelX1, panelY1, panelX2, panelY2):
+        self.x1 = panelX1
+        self.y1 = panelY1
+        self.x2 = panelX2
+        self.y2 = panelY2
+        SelectablePanel.panelBounds[self.number] = [self.x1, self.y1, self.x2, self.y2]
         SelectablePanel.panelPixels[self.number][0] = [data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)]
-        SelectablePanel.panelPixels[self.number][1] = self.graphics()
+        SelectablePanel.panelPixels[self.number][1] = self.graphics(self.x1, self.y1, self.x2, self.y2)
+        if self.hasIcon == True:
+            SelectablePanel.panelPixels[self.number][2] = (makeBitmap((self.x2 + self.x1 - len(self.bitmapImage[0]) * self.pixelSize) / 2, self.y1 + 2 * (self.y2 - self.y1) / 5 - len(self.bitmapImage) * self.pixelSize / 2, self.pixelSize, self.bitmapImage))
+
 
     def delete(self): #For updating the screen
-        for i in range(len(SelectablePanel.panels[self.number])):
-            for j in range(len(SelectablePanel.panels[self.number][i])):
-                data.s.delete(SelectablePanel.panels[self.number][i][j])
+        for i in range(len(SelectablePanel.panelPixels[self.number])):
+            for j in range(len(SelectablePanel.panelPixels[self.number][i])):
+                data.s.delete(SelectablePanel.panelPixels[self.number][i][j])
 
     def destroy(self):
         try: #Try to delete everything if it hasn't already been deleted
-            for i in range(len(SelectablePanel.panels[self.number])):
-                for j in range(len(SelectablePanel.panels[self.number][i])):
-                    data.s.delete(SelectablePanel.panels[self.number][i][j])
+            for i in range(len(SelectablePanel.panelPixels[self.number])):
+                for j in range(len(SelectablePanel.panelPixels[self.number][i])):
+                    data.s.delete(SelectablePanel.panelPixels[self.number][i][j])
         except:
             pass
         #Then delete all the data
         del SelectablePanel.panelBounds[self.number]    #Delete the bounds check
-        del SelectablePanel.panels[self.number]         #Delete the pixels STORER (not the pixels themselves)
+        del SelectablePanel.panelPixels[self.number]         #Delete the pixels STORER
         del SelectablePanel.panelFunctions[self.number] #Delete the function
-        del SelectablePanel.panelObject[self.number]    #Delete the object HOLDER (again, not the class instance itself)
-        del SelectablePanel.panelSegments[self.number]  #Delete the panel segment data (not each segment -- its data)
+        del SelectablePanel.panelObject[self.number]    #Delete the object HOLDER
         for i in range(self.number, len(SelectablePanel.panelObject)):
             SelectablePanel.panelObject[i].number -= 1          #Reduce all numbers of following panels by 1 to fill up the gap.

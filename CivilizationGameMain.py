@@ -29,5 +29,7 @@ tutorial() #Currently has nothing, but might be added later
 
 while data.gameOver == False:
     updateScreen() #Updates game screen (land, buildings, higlighted tile, etc.)
+    data.s.update()
+    sleep(0.01)
 
 mainloop()

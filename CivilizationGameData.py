@@ -72,7 +72,7 @@ resourceTextSize = 2
 gameStarted = False
 menuOpen = False
 gameOver = False
-placingDownBuilding = True #Should start at False
+placingDownBuilding = False #Should start at False
 temporaryBuilding = 0 #Holds the building class instance
 buildingBeingPlaced = ""
 
@@ -182,9 +182,9 @@ class Building():       #Building is used for the various types of buildings, in
             Building.buildingObject[i].number += 1
     
     def deleteBuilding(self):
-        for i in range(len(data.Building.buildingObject)):
-            for j in range(len(data.Building.buildingImages[i])):
-                data.s.delete(data.Building.buildingImages[i][j])
+        for i in range(len(Building.buildingObject)):
+            for j in range(len(Building.buildingImages[i])):
+                s.delete(Building.buildingImages[i][j])
     
     def destroy(self):
         del Building.buildingObject[self.number]  #Delete everything

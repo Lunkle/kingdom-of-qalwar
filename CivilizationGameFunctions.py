@@ -45,18 +45,17 @@ def startGame():
     data.seasonIndicator = createText(data.cWidth / 2 - 100, 10, "Season " + str(data.seasonNumber), 2, addColour = [True, data.seasonTextHighlightColour, 50])
     data.gameStarted = True
 
-    ########################################################################################################################
-    data.buildingBeingPlaced = data.RESIDENCE ##############################################################################
-    ########################################################################################################################
-
 def buyPanelGraphics(x1, y1, x2, y2):
     pixelsArray = []
     pixelsArray += [data.s.create_line(x1, y2 + (y1 - y2) / 4, x2, y2 + (y1 - y2) / 4)]
     return pixelsArray
 
-def placeBuilding(building):
-    pass
-    
+def buyPanelFunctions(buildingType):
+    closeMenu()
+    data.placingDownBuilding = True
+    data.buildingBeingPlaced = buildingType
+    data.temporaryBuilding = data.Building(-1000, -1000, data.buildingBeingPlaced)
+    data.temporaryBuilding.add()
 
 def showSettings():
     global doneButton
@@ -71,7 +70,7 @@ def showMenu():
     menuButton.destroy()
     nextSeasonButton.destroy()
     for i in range(data.numOfMenuPanels):
-        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, closeMenu, buyPanelGraphics, icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 3)]], 3])
+        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, buyPanelFunctions, buyPanelGraphics, pressedExtraArgs = (data.constructableBuildings[min(i, 3)],), icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 3)]], 3])
     data.menuFeatures.append(redrawMenu(0))
     menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
@@ -212,10 +211,16 @@ def mousePressedDetector(event):
 def mouseMotionDetector(event):
     if data.placingDownBuilding == True:
         tileHoverX, tileHoverY = getTile(event.x, event.y)
-        if data.gameStarted == True and 0 <= tileHoverX < data.xTiles and 0 <= tileHoverY < data.yTiles:
-            updateScreen()
-            data.temporaryBuilding = data.Building(tileHoverX, tileHoverY, data.buildingBeingPlaced)
+        if data.gameStarted == True and 0 <= tileHoverX < data.xTiles and 0 <= tileHoverY < data.yTiles and data.menuOpen == False:
+            data.temporaryBuilding.x = tileHoverX
+            data.temporaryBuilding.y = tileHoverY
+            data.temporaryBuilding.deleteBuilding()
+            data.temporaryBuilding.destroy()
             data.temporaryBuilding.add()
+            updateScreen()
+            data.highlightedTile = [tileHoverX, tileHoverY]
+            highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
+            print(tileHoverX, data.temporaryBuilding.x, tileHoverY, data.temporaryBuilding.y)
 
 def mouseDragDetector(event):
     data.mouseDragged = True
@@ -275,6 +280,8 @@ def mouseReleaseDetector(event):
                         menuScroller.displayScroller()
                     data.menuOpen = menuOpenOriginal
 ##        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
+    if data.mouseDragged == False:
+        data.placingDownBuilding = False
     data.mouseDragged = False
     data.clickedButton = False
     data.clickedScroller = False
@@ -735,7 +742,7 @@ class SelectablePanel():
                       #Used in the mouse click function
     panelFunctions = [] #Stores the function called when clicked
 
-    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, pressedExtraArgs = (), graphicsExtraArgs = (), icon = [False, "", 0]):
+    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, pressedExtraArgs = [], graphicsExtraArgs = [], icon = [False, "", 0]):
         self.number = len(SelectablePanel.panelObject)
         self.x1 = panelX1
         self.y1 = panelY1
@@ -748,10 +755,11 @@ class SelectablePanel():
         SelectablePanel.panelPixels.append([])
         SelectablePanel.panelBounds.append([self.x1, self.y1, self.x2, self.y2])
         SelectablePanel.panelFunctions.append(pressedFunction)
+        self.graphicsExtraArgs = graphicsExtraArgs
         self.pressedExtraArgs = pressedExtraArgs
         
         SelectablePanel.panelPixels[self.number].append([data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)])
-        SelectablePanel.panelPixels[self.number].append(self.graphics(self.x1, self.y1, self.x2, self.y2, *graphicsExtraArgs))
+        SelectablePanel.panelPixels[self.number].append(self.graphics(self.x1, self.y1, self.x2, self.y2, *self.graphicsExtraArgs))
         if icon[0] == True:
             self.hasIcon = True
             self.bitmapImage = icon[1]
@@ -765,7 +773,7 @@ class SelectablePanel():
         self.y2 = panelY2
         SelectablePanel.panelBounds[self.number] = [self.x1, self.y1, self.x2, self.y2]
         SelectablePanel.panelPixels[self.number][0] = [data.s.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = data.buildingPanelColour)]
-        SelectablePanel.panelPixels[self.number][1] = self.graphics(self.x1, self.y1, self.x2, self.y2)
+        SelectablePanel.panelPixels[self.number][1] = self.graphics(self.x1, self.y1, self.x2, self.y2, *self.graphicsExtraArgs)
         if self.hasIcon == True:
             SelectablePanel.panelPixels[self.number][2] = (makeBitmap((self.x2 + self.x1 - len(self.bitmapImage[0]) * self.pixelSize) / 2, self.y1 + 2 * (self.y2 - self.y1) / 5 - len(self.bitmapImage) * self.pixelSize / 2, self.pixelSize, self.bitmapImage))
 

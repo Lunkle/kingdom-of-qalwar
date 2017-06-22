@@ -45,9 +45,10 @@ def startGame():
     data.seasonIndicator = createText(data.cWidth / 2 - 100, 10, "Season " + str(data.seasonNumber), 2, addColour = [True, data.seasonTextHighlightColour, 50])
     data.gameStarted = True
 
-def buyPanelGraphics(x1, y1, x2, y2):
+def buyPanelGraphics(x1, y1, x2, y2, text, size):
     pixelsArray = []
     pixelsArray += [data.s.create_line(x1, y2 + (y1 - y2) / 4, x2, y2 + (y1 - y2) / 4)]
+    pixelsArray += createText((x1 + x2 - getTextLength(text, size)) / 2, y2 + (y1 - y2) / 4 + 2, text, size)
     return pixelsArray
 
 def buyPanelFunctions(buildingType):
@@ -70,7 +71,7 @@ def showMenu():
     menuButton.destroy()
     nextSeasonButton.destroy()
     for i in range(data.numOfMenuPanels):
-        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, buyPanelFunctions, buyPanelGraphics, pressedExtraArgs = (data.constructableBuildings[min(i, 3)],), icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 3)]], 3])
+        data.menuPanelObjects[i] = SelectablePanel(data.cWidth - 189, i * 100 + 10, data.cWidth - 17, (i + 1) * 100, buyPanelFunctions, buyPanelGraphics, pressedExtraArgs = (data.constructableBuildings[min(i, 3)],), graphicsExtraArgs = (data.constructableBuildings[min(i, 3)], 1.5), icon = [True, data.buildingTypeImages[data.constructableBuildings[min(i, 3)]], 3])
     data.menuFeatures.append(redrawMenu(0))
     menuScroller = Scroller(data.cWidth - 10, 10, 5, data.cHeight - 72, data.numOfMenuPanels * 90 + 20, data.scrollerPixelSize, redrawMenu)
     backButton = Button(data.cWidth - 104, data. cHeight - 42, "Back", 2, closeMenu)
@@ -117,6 +118,9 @@ def redrawMenu(index):
             data.menuPanelObjects[i].displayPanel(data.cWidth - 189, i * 100 + 11 - data.menuIndex, data.cWidth - 18, (i + 1) * 100 - data.menuIndex - 1)
             data.menuFeatures.append([data.s.create_rectangle(data.cWidth - 200, data.cHeight - 52, data.cWidth, data.cHeight + 1, fill = "#d7d7d7", outline = "#7f7f7f", width = 3)])
     updateButtons()
+
+def placeDownBuilding():
+    data.placingDownBuilding = False
 
 def doneReading():
     global doneButton
@@ -279,9 +283,10 @@ def mouseReleaseDetector(event):
                         menuScroller.deleteScroller()
                         menuScroller.displayScroller()
                     data.menuOpen = menuOpenOriginal
-##        print("Clicked at:", int(landClickedX), int(landClickedY), "Intercepts:", int(xB), int(yB), "Tiles:", tileClickedX, tileClickedY, tileYLength)
-    if data.mouseDragged == False:
-        data.placingDownBuilding = False
+                else:
+                    data.highlightedTile = [-1000, -1000]
+    if data.mouseDragged == False and data.clickedButton == False:
+        placeDownBuilding()
     data.mouseDragged = False
     data.clickedButton = False
     data.clickedScroller = False
@@ -328,7 +333,7 @@ def highlightSquare(x, y):
     data.highlightedTile = [x, y]
     landShapeTopX = -data.currentX + polygonLandXLength / 2
     landShapeTopY = -data.currentY #Top boundary
-    highlightX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength
+    highlightX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength #x1 y1 is the top corner
     highlightY1 = landShapeTopY + ((x + y) / 2.0) * tileYLength
     if highlightX1 > -tileXLength * data.loadBuffer and highlightX1 < data.cWidth + tileXLength * data.loadBuffer and highlightY1 > -tileYLength * data.loadBuffer and highlightY1 < data.cHeight + tileYLength * data.loadBuffer:
         highlightX2 = highlightX1 + tileXLength / 2
@@ -742,7 +747,7 @@ class SelectablePanel():
                       #Used in the mouse click function
     panelFunctions = [] #Stores the function called when clicked
 
-    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, pressedExtraArgs = [], graphicsExtraArgs = [], icon = [False, "", 0]):
+    def __init__(self, panelX1, panelY1, panelX2, panelY2, pressedFunction, graphicsFunction, pressedExtraArgs = (), graphicsExtraArgs = (), icon = [False, "", 0]):
         self.number = len(SelectablePanel.panelObject)
         self.x1 = panelX1
         self.y1 = panelY1

@@ -36,10 +36,15 @@ notificationScreenBorderX = 1.0/6.0 #The smaller these are (or bigger the denomi
 notificationScreenBorderY = 1.0/6.0 #the smaller the border and bigger the notification
 notificationTextSize = 2
 
-qalsEconomy = 10    #Economy is the amount of each resource
-woodEconomy = 10    #the player gains each week
-goldEconomy = 2     #This can be increaesed through
-manaEconomy = 5     #building and upgrading buildings.
+startingQalsEconomy = 10    #Economy is the amount of each resource
+startingWoodEconomy = 10    #the player gains each week
+startingGoldEconomy = 2     #This can be increaesed through
+startingManaEconomy = 5     #building and upgrading buildings.
+
+qalsEconomy = startingQalsEconomy
+woodEconomy = startingWoodEconomy
+goldEconomy = startingGoldEconomy
+manaEconomy = startingManaEconomy
 
 #For the Button class ////////////////////////////////////////////////////////////
 startScreenButtonSize = 2.5

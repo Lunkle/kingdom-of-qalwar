@@ -123,6 +123,7 @@ def redrawMenu(index):
 def placeDownBuilding():
     data.placingDownBuilding = False
     if data.temporaryBuilding != 0:
+        buildable = True
         newBuilding = copy(data.temporaryBuilding)
         data.temporaryBuilding.deleteBuilding()
         data.temporaryBuilding.destroy()
@@ -130,16 +131,28 @@ def placeDownBuilding():
         data.temporaryBuilding = 0
         newBuildingType = data.Building.buildingTypes[newBuilding.number]
         if newBuildingType == data.RESIDENCE:
-            removeResource([data.QALS, data.WOOD], [100, 100])
+            buildable = removeResource([data.QALS, data.WOOD], [100, 100])
+            if buildable == False:
+                newBuilding.destroy()
+                return
             data.qalsEconomy += 5
         elif newBuildingType == data.BARRACKS:
-            removeResource([data.QALS, data.WOOD], [300, 50])
+            buildable = removeResource([data.QALS, data.WOOD], [300, 50])
+            if buildable == False:
+                newBuilding.destroy()
+                return
             data.goldEconomy += 1
         elif newBuildingType == data.LUMBER_HOUSE:
-            removeResource([data.QALS, data.WOOD], [50, 300])
+            buildable = removeResource([data.QALS, data.WOOD], [50, 300])
+            if buildable == False:
+                newBuilding.destroy()
+                return
             data.woodEconomy += 5
         elif newBuildingType == data.TEEPEE:
-            removeResource([data.QALS, data.WOOD], [200, 200])
+            buildable = removeResource([data.QALS, data.WOOD], [200, 200])
+            if buildable == False:
+                newBuilding.destroy()
+                return
             data.manaEconomy += 2
 
 def doneReading():

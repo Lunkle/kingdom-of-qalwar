@@ -3,6 +3,7 @@ import random
 import colorsys
 from time import sleep
 from math import sqrt, ceil
+from copy import copy
 import CivilizationGameData as data
 
 def showStartPage():
@@ -121,6 +122,25 @@ def redrawMenu(index):
 
 def placeDownBuilding():
     data.placingDownBuilding = False
+    if data.temporaryBuilding != 0:
+        newBuilding = copy(data.temporaryBuilding)
+        data.temporaryBuilding.deleteBuilding()
+        data.temporaryBuilding.destroy()
+        newBuilding.add()
+        data.temporaryBuilding = 0
+        newBuildingType = data.Building.buildingTypes[newBuilding.number]
+        if newBuildingType == data.RESIDENCE:
+            removeResource([data.QALS, data.WOOD], [100, 100])
+            data.qalsEconomy += 5
+        elif newBuildingType == data.BARRACKS:
+            removeResource([data.QALS, data.WOOD], [300, 50])
+            data.goldEconomy += 1
+        elif newBuildingType == data.LUMBER_HOUSE:
+            removeResource([data.QALS, data.WOOD], [50, 300])
+            data.woodEconomy += 5
+        elif newBuildingType == data.TEEPEE:
+            removeResource([data.QALS, data.WOOD], [200, 200])
+            data.manaEconomy += 2
 
 def doneReading():
     global doneButton

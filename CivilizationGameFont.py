@@ -1298,4 +1298,5 @@ numberDictionary = {
     "9":nine
 }
 
-fontDictionary = dict(letterDictionary.items() + numberDictionary.items())
+fontDictionary = letterDictionary.copy()
+fontDictionary.update(numberDictionary)

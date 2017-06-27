@@ -246,6 +246,17 @@ def mousePressedDetector(event):
             pass
 
 def mouseMotionDetector(event):
+    for i in range(len(Button.buttonObject)):
+        previousState = Button.buttonObject[i].hovered
+        try:
+            if Button.buttonBounds[i][0] <= event.x <= Button.buttonBounds[i][2] and Button.buttonBounds[i][1] <= event.y <= Button.buttonBounds[i][3]:
+                Button.buttonObject[i].hovered = True
+            else:
+                Button.buttonObject[i].hovered = False
+            if previousState != Button.buttonObject[i].hovered:
+                updateButtons()
+        except:
+            pass
     if data.placingDownBuilding == True:
         tileHoverX, tileHoverY = getTile(event.x, event.y)
         if data.gameStarted == True and 0 <= tileHoverX < data.xTiles and 0 <= tileHoverY < data.yTiles and data.menuOpen == False:
@@ -594,6 +605,8 @@ class Button():
         self.size = float(size)
         self.text = text
         self.length = 0
+        self.hovered = False
+        
         for character in self.text:
             if character == " ":
                 textLength = 10
@@ -635,21 +648,25 @@ class Button():
     def displayButton(self):
         xValue = self.x #Index for where to place next segment of button
         remainingLength = self.length #Variable to notify when to stop
+        if self.hovered == True:
+            addedColour = [True, "#dbdb36", 30]
+        else:
+            addedColour = [False, "ffffff", 0]
         #First Left Button Segment
         bitmapImage = data.buttonSegments[data.BUTTON_LEFT]
-        Button.buttons[self.number][0] = makeBitmap(xValue, self.y, self.size, bitmapImage)
+        Button.buttons[self.number][0] = makeBitmap(xValue, self.y, self.size, bitmapImage, colourAdd = addedColour)
         xValue += self.size * len(bitmapImage[0])
         letterIndex = xValue #This is where the letters start showing up
         segmentNumber = 0
         while remainingLength > 0:
             bitmapImage = data.buttonSegments[data.BUTTON_MIDDLE_TEMPLATE + str(Button.buttonSegments[self.number][segmentNumber])]
             segmentNumber += 1
-            Button.buttons[self.number][segmentNumber] = makeBitmap(xValue, self.y, self.size, bitmapImage)
+            Button.buttons[self.number][segmentNumber] = makeBitmap(xValue, self.y, self.size, bitmapImage, colourAdd = addedColour)
             xValue += self.size * len(bitmapImage[0])
             remainingLength -= self.size * len(bitmapImage[0])
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
-        Button.buttons[self.number][segmentNumber + 1] = (makeBitmap(xValue, self.y, self.size, bitmapImage))
-        Button.buttons[self.number][segmentNumber + 2] = createText(letterIndex, self.y, self.text, self.size, onButton = True)
+        Button.buttons[self.number][segmentNumber + 1] = (makeBitmap(xValue, self.y, self.size, bitmapImage, colourAdd = addedColour))
+        Button.buttons[self.number][segmentNumber + 2] = createText(letterIndex, self.y, self.text, self.size, onButton = True, addColour = addedColour)
 
     def delete(self): #For updating the screen
         for i in range(len(Button.buttons[self.number])):

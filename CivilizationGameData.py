@@ -1,6 +1,6 @@
 from Tkinter import *
 
-resolution = 4 #Change to higher for faster game
+resolution = 3 #Change to higher for faster game
                #Must be a whole number
 
 import CivilizationGameSprites as sprites
@@ -175,14 +175,18 @@ class Building():       #Building is used for the various types of buildings, in
     def add(self):
         sumOfCoordinates = self.x + self.y                          #Why use sum of coordinates?
         for i in range(len(Building.buildingObject)):               #In an isometric game the furthest items are drawn first
-            if sumOfCoordinates >= Building.buildingsX[i] + Building.buildingsY[i]  :  #The sum of the coordinates on the grid are coincidentally a good way of sorting them
+            if sumOfCoordinates >= Building.buildingsX[i] + Building.buildingsY[i]:  #The sum of the coordinates on the grid are coincidentally a good way of sorting them
                 self.number = i                                     #The smaller the sum the furthest away, the bigger the sum the closer it is
+                print("sumOfCoordinates: " + str(sumOfCoordinates), str(self.x), str(self.y))
+                print("Next Biggest Coordinate Sum: " + str(Building.buildingsX[i] + Building.buildingsY[i]))
                 break                                               #i.e. furthest one is (0,0) and closest one is (n-1,n-1) for some n tiles on a square grid
         Building.buildingObject.insert(self.number, self)   #This part is just inserting everything into the list
         Building.buildingImages.insert(self.number, [])     #Should not be append because you want the buildings to be in a specific order
         Building.buildingTypes.insert(self.number, self.type)
         Building.buildingsX.insert(self.number, self.x)
         Building.buildingsY.insert(self.number, self.y)
+        print(Building.buildingsX)
+        print(Building.buildingsY)
         for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
             Building.buildingObject[i].number += 1
     

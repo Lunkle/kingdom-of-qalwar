@@ -254,7 +254,8 @@ def mouseMotionDetector(event):
             else:
                 Button.buttonObject[i].hovered = False
             if previousState != Button.buttonObject[i].hovered:
-                updateButtons()
+                Button.buttonObject[i].delete()
+                Button.buttonObject[i].displayButton()
         except:
             pass
     if data.placingDownBuilding == True:
@@ -268,7 +269,6 @@ def mouseMotionDetector(event):
             updateScreen()
             data.highlightedTile = [tileHoverX, tileHoverY]
             highlightSquare(data.highlightedTile[0], data.highlightedTile[1])
-            print(tileHoverX, data.temporaryBuilding.x, tileHoverY, data.temporaryBuilding.y)
 
 def mouseDragDetector(event):
     data.mouseDragged = True

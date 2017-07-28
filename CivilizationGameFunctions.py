@@ -510,6 +510,8 @@ def createNotification(text):
     for i in range(len(text)):
         textLength = getTextLength(text[i], data.notificationTextSize)
         data.notificationPage.append(createText((data.cWidth - textLength) / 2, 2 * data.cHeight / 3 + (i - len(text)) * 30, text[i], data.notificationTextSize))
+    for shownButtonObject in Button.buttonObject:
+        shownButtonObject.disableButton()
 
 def deleteNotification():
     data.notificationOpen = False
@@ -517,6 +519,8 @@ def deleteNotification():
         for j in range(len(data.notificationPage[i])):
             data.s.delete(data.notificationPage[i][j])
     data.notificationPage = []
+    for shownButtonObject in Button.buttonObject:
+        shownButtonObject.enableButton()
 
 def makeBitmap(x, y, squareSize, bitmap, toBack = False, colourAdd = [False, "#ffffff", 50], onlyDarker = False):
     #Try not to use toBack, colourAdd, and onlyDarker all together because that will be very slow.
@@ -667,6 +671,12 @@ class Button():
         bitmapImage = data.buttonSegments[data.BUTTON_RIGHT]
         Button.buttons[self.number][segmentNumber + 1] = (makeBitmap(xValue, self.y, self.size, bitmapImage, colourAdd = addedColour))
         Button.buttons[self.number][segmentNumber + 2] = createText(letterIndex, self.y, self.text, self.size, onButton = True, addColour = addedColour)
+
+    def disableButton(self):
+        Button.buttonBounds[self.number] = []
+
+    def enableButton(self):
+        Button.buttonBounds[self.number] = [self.x, self.y, self.x + self.size * Button.BUTTON_ENDS_WIDTH + Button.BUTTON_MIDDLE_WIDTH * self.numOfMiddleSectionsRequired, self.y + self.size * Button.BUTTON_HEIGHT]
 
     def delete(self): #For updating the screen
         for i in range(len(Button.buttons[self.number])):

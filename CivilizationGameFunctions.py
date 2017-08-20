@@ -13,24 +13,23 @@ def showStartPage():
     title = createText(data.cWidth / 2 - 130, 120, "Kingdom of Qalwar", 2)
 
 def initializeGame():    
-    townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP)
+    townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP, alliance = data.ALLY)
     townHallTop.add()
-    townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT)
+    townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT, alliance = data.ALLY)
     townHallLeft.add()
-    townHallRight = data.Building(data.townHallStartingX + 1, data.townHallStartingY, data.TOWN_HALL_RIGHT)
+    townHallRight = data.Building(data.townHallStartingX + 1, data.townHallStartingY, data.TOWN_HALL_RIGHT, alliance = data.ALLY)
     townHallRight.add()
-    townHallBottom = data.Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM)
+    townHallBottom = data.Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM, alliance = data.ALLY)
     townHallBottom.add()
 
-    enemyBaseTop = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY, data.ENEMY_BASE_TOP)
+    enemyBaseTop = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY, data.ENEMY_BASE_TOP, alliance = data.ENEMY)
     enemyBaseTop.add()
-    enemyBaseLeft = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY + 1, data.ENEMY_BASE_LEFT)
+    enemyBaseLeft = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY + 1, data.ENEMY_BASE_LEFT, alliance = data.ENEMY)
     enemyBaseLeft.add()
-    enemyBaseRight = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY, data.ENEMY_BASE_RIGHT)
+    enemyBaseRight = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY, data.ENEMY_BASE_RIGHT, alliance = data.ENEMY)
     enemyBaseRight.add()
-    enemyBaseBottom = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM)
+    enemyBaseBottom = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM, alliance = data.ENEMY)
     enemyBaseBottom.add()
-
 
 def startGame():
     global title, startButton, aboutButton, nextSeasonButton, menuButton, settingsButton
@@ -524,7 +523,7 @@ def deleteNotification():
 
 def makeBitmap(x, y, squareSize, bitmap, toBack = False, colourAdd = [False, "#ffffff", 50], onlyDarker = False):
     #Try not to use toBack, colourAdd, and onlyDarker all together because that will be very slow.
-    #Actually only darker doesn't take up that much time to process. colourAdd is the real killer.
+    #Actually only darker doesn't take up that much time to process. colourAdd is the real killer. Dun dun duuuunn....
     skip = int(1/squareSize)
     if skip < 1:                #This is is to reduce how many pixels need to be drawn when zoomed out.
         skip = 1                #i.e. when each pixel only takes up half a square, you can skip a pixel every other time
@@ -536,16 +535,21 @@ def makeBitmap(x, y, squareSize, bitmap, toBack = False, colourAdd = [False, "#f
                 colour = colourCode
                 if colourAdd[0] == True:
                     percentage = colourAdd[2] / 100.0
+                    #Get original colour
                     originalColour = colour
+                    #Get hexcode number (remove "#")
                     originalRGB = originalColour.lstrip('#')
+                    #Original red green blue
                     oR, oG, oB = tuple(int(originalRGB[i:i+2], 16) for i in (0, 2 ,4))              #o = Original
                     addColour = colourAdd[1]
                     addRGB = addColour.lstrip('#')
+                    #Added red green blue
                     aR, aG, aB = tuple(int(addRGB[i:i+2], 16) for i in (0, 2 ,4))                   #a = Added
+                    #Delta red green blue
                     dR, dG, dB = aR - oR, aG - oG, aB - oB                                          #d = Difference
                     if onlyDarker == True:
+                        #Getting minimum of the colours
                         dR, dG, dB = [min(w, 0) for w in [dR, dG, dB]]
-##                        print("original colour is darker")
                     nR, nG, nB = oR + dR * percentage, oG + dG * percentage, oB + dG * percentage   #n = New
                     nR, nG, nB = [min(w, 255) for w in [nR, nG, nB]]
                     nR, nG, nB = [max(w, 0) for w in [nR, nG, nB]]

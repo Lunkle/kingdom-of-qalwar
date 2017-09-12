@@ -18,7 +18,6 @@ neutralAreaColour = "#627a4a"
 seasonTextHighlightColour = "#128000"
 dirtColour = "#b08257"
 dirtOutlineColour = "#cdaf94"
-enemyLandColour = "#1e2f5f"
 
 buildingPanelColour = "#e1e7e9"
 
@@ -47,11 +46,6 @@ startingWoodEconomy = 10    #the player gains each week
 startingGoldEconomy = 2     #This can be increaesed through
 startingManaEconomy = 5     #building and upgrading buildings.
 
-qalsEconomy = startingQalsEconomy
-woodEconomy = startingWoodEconomy
-goldEconomy = startingGoldEconomy
-manaEconomy = startingManaEconomy
-
 #For the Button class ////////////////////////////////////////////////////////////
 startScreenButtonSize = 2.5
 buttonLetterSpacing = 0
@@ -74,7 +68,7 @@ townHallStartingY = 3*yTiles/4 - 1
 enemyBaseStartingX = 3 * xTiles/4 - 1
 enemyBaseStartingY = yTiles/4 - 1
 
-loadBuffer = 2 #In tiles
+loadBuffer = 0 #In tiles
 
 resourceIndicatorLength = 2 * cWidth / 5 - 10
 resourceTextSize = 2
@@ -190,6 +184,13 @@ resourceMaximum = {
     MANA:100
 }
 
+economy = {
+    QALS:startingQalsEconomy,
+    WOOD:startingWoodEconomy,
+    GOLD:startingGoldEconomy,
+    MANA:startingManaEconomy
+}
+
 resourceColours = {
     QALS:"#ca5c37",
     WOOD:"#a07b54",
@@ -266,63 +267,25 @@ constructableBuildings = [
     LUMBER_HOUSE
 ]
 
+buildingCosts = {
+    RESIDENCE:[[QALS, WOOD], [100, 100], QALS, 5],
+    BARRACKS:[[QALS, WOOD], [300, 50], GOLD, 1],
+    LUMBER_HOUSE:[[QALS, WOOD], [50, 300], WOOD, 5],
+    TEEPEE:[[QALS, WOOD], [200, 200], MANA, 2]
+}
+
 #Stored Data
 ALLY = "Ally"
 ENEMY = "Enemy"
 NEUTRAL = "Neutral"
-allyBuildingCoordinates = []
-enemyBuildingCoordinates = []
-neutralBuildingCoordinates = []
+
+allianceHighlightObjects = []
+allianceOutlineObjects = [0] * (xTiles * yTiles * 12 / 9)
+
+#Stores each building of each alliance in form of [[gridX1, gridY1], [gridX2, gridY2]]
+allianceDictionary = {ALLY:[], ENEMY:[], NEUTRAL:[]}
+
+#[Area colours, outline colours]
+allianceColours = {ALLY:[allyAreaColour, allyOutlineColour], ENEMY:[enemyAreaColour, enemyOutlineColour], NEUTRAL:[neutralAreaColour, neutralOutlineColour]}
 
 #Coolest stuff ////////////////////////////////////////////////////////////
-class Building():       #Building is used for the various types of buildings, including your own townhall, opponents base, wall, etc.
-    buildingObject = [] #Stores the building class instance itself
-    buildingImages = [] #Stores each pixel of the building
-    buildingTypes = []  #What type of building is it? Residence, townhall, tower?
-    buildingsX = []     #X value on the grid
-    buildingsY = []     #Y value on the grid
-    
-    def __init__(self, gridX, gridY, buildingType, alliance = NEUTRAL):
-        self.x = gridX                              #Set x value
-        self.y = gridY                              #Set y value
-        self.type = buildingType                    #Set building type
-        self.number = len(Building.buildingObject)  #Index number of the building
-        self.alliance = alliance                    #Set alliance (ally, enemy, or neutral)
-        print(self.alliance)
-
-    def add(self):
-        sumOfCoordinates = self.x + self.y                          #Why use sum of coordinates?
-        for i in range(len(Building.buildingObject)):               #In an isometric game the furthest items are drawn first
-            if sumOfCoordinates >= Building.buildingsX[i] + Building.buildingsY[i]:  #The sum of the coordinates on the grid are coincidentally a good way of sorting them
-                self.number = i                                     #The smaller the sum the furthest away, the bigger the sum the closer it is
-                print("sumOfCoordinates: " + str(sumOfCoordinates), str(self.x), str(self.y))
-                print("Next Biggest Coordinate Sum: " + str(Building.buildingsX[i] + Building.buildingsY[i]))
-                break                                               #i.e. furthest one is (0,0) and closest one is (n-1,n-1) for some n tiles on a square grid
-        Building.buildingObject.insert(self.number, self)   #This part is just inserting everything into the list
-        Building.buildingImages.insert(self.number, [])     #Should not be append because you want the buildings to be in a specific order
-        Building.buildingTypes.insert(self.number, self.type)
-        Building.buildingsX.insert(self.number, self.x)
-        Building.buildingsY.insert(self.number, self.y)
-        if self.alliance == ALLY:
-            allyBuildingCoordinates.append([self.x, self.y])
-        elif self.alliance == ENEMY:
-            enemyBuildingCoordinates.append([self.x, self.y])
-        elif self.alliance == NEUTRAL:
-            neutralBuildingCoordinates.append([self.x, self.y])
-        print(Building.buildingsX)
-        print(Building.buildingsY)
-        print neutralBuildingCoordinates
-        for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
-            Building.buildingObject[i].number += 1
-    
-    def deleteBuilding(self):
-        for i in range(len(Building.buildingObject)):
-            for j in range(len(Building.buildingImages[i])):
-                s.delete(Building.buildingImages[i][j])
-    
-    def destroy(self):
-        del Building.buildingObject[self.number]  #Delete everything
-        del Building.buildingTypes[self.number]
-        del Building.buildingImages[self.number]
-        del Building.buildingsX[self.number]
-        del Building.buildingsY[self.number]

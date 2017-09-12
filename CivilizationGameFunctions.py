@@ -13,23 +13,24 @@ def showStartPage():
     title = createText(data.cWidth / 2 - 130, 120, "Kingdom of Qalwar", 2)
 
 def initializeGame():    
-    townHallTop = data.Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP, alliance = data.ALLY)
+    townHallTop = Building(data.townHallStartingX, data.townHallStartingY, data.TOWN_HALL_TOP, alliance = data.ALLY)
     townHallTop.add()
-    townHallLeft = data.Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT, alliance = data.ALLY)
+    townHallLeft = Building(data.townHallStartingX, data.townHallStartingY + 1, data.TOWN_HALL_LEFT, alliance = data.ALLY)
     townHallLeft.add()
-    townHallRight = data.Building(data.townHallStartingX + 1, data.townHallStartingY, data.TOWN_HALL_RIGHT, alliance = data.ALLY)
+    townHallRight = Building(data.townHallStartingX + 1, data.townHallStartingY, data.TOWN_HALL_RIGHT, alliance = data.ALLY)
     townHallRight.add()
-    townHallBottom = data.Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM, alliance = data.ALLY)
+    townHallBottom = Building(data.townHallStartingX + 1, data.townHallStartingY + 1, data.TOWN_HALL_BOTTOM, alliance = data.ALLY)
     townHallBottom.add()
 
-    enemyBaseTop = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY, data.ENEMY_BASE_TOP, alliance = data.ENEMY)
+    enemyBaseTop = Building(data.enemyBaseStartingX, data.enemyBaseStartingY, data.ENEMY_BASE_TOP, alliance = data.ENEMY)
     enemyBaseTop.add()
-    enemyBaseLeft = data.Building(data.enemyBaseStartingX, data.enemyBaseStartingY + 1, data.ENEMY_BASE_LEFT, alliance = data.ENEMY)
+    enemyBaseLeft = Building(data.enemyBaseStartingX, data.enemyBaseStartingY + 1, data.ENEMY_BASE_LEFT, alliance = data.ENEMY)
     enemyBaseLeft.add()
-    enemyBaseRight = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY, data.ENEMY_BASE_RIGHT, alliance = data.ENEMY)
+    enemyBaseRight = Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY, data.ENEMY_BASE_RIGHT, alliance = data.ENEMY)
     enemyBaseRight.add()
-    enemyBaseBottom = data.Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM, alliance = data.ENEMY)
+    enemyBaseBottom = Building(data.enemyBaseStartingX + 1, data.enemyBaseStartingY + 1, data.ENEMY_BASE_BOTTOM, alliance = data.ENEMY)
     enemyBaseBottom.add()
+    print("Done Initial Setup :D :D :D HAHAHHAH")
 
 def startGame():
     global title, startButton, aboutButton, nextSeasonButton, menuButton, settingsButton
@@ -55,7 +56,7 @@ def buyPanelFunctions(buildingType):
     closeMenu()
     data.placingDownBuilding = True
     data.buildingBeingPlaced = buildingType
-    data.temporaryBuilding = data.Building(-1000, -1000, data.buildingBeingPlaced)
+    data.temporaryBuilding = Building(-1000, -1000, data.buildingBeingPlaced)
     data.temporaryBuilding.add()
 
 def showSettings():
@@ -122,37 +123,17 @@ def redrawMenu(index):
 def placeDownBuilding():
     data.placingDownBuilding = False
     if data.temporaryBuilding != 0:
-        buildable = True
-        newBuilding = copy(data.temporaryBuilding)
-        data.temporaryBuilding.deleteBuilding()
-        data.temporaryBuilding.destroy()
-        newBuilding.add()
-        data.temporaryBuilding = 0
-        newBuildingType = data.Building.buildingTypes[newBuilding.number]
-        if newBuildingType == data.RESIDENCE:
-            buildable = removeResource([data.QALS, data.WOOD], [100, 100])
-            if buildable == False:
-                newBuilding.destroy()
-                return
-            data.qalsEconomy += 5
-        elif newBuildingType == data.BARRACKS:
-            buildable = removeResource([data.QALS, data.WOOD], [300, 50])
-            if buildable == False:
-                newBuilding.destroy()
-                return
-            data.goldEconomy += 1
-        elif newBuildingType == data.LUMBER_HOUSE:
-            buildable = removeResource([data.QALS, data.WOOD], [50, 300])
-            if buildable == False:
-                newBuilding.destroy()
-                return
-            data.woodEconomy += 5
-        elif newBuildingType == data.TEEPEE:
-            buildable = removeResource([data.QALS, data.WOOD], [200, 200])
-            if buildable == False:
-                newBuilding.destroy()
-                return
-            data.manaEconomy += 2
+        #Do you have enough resources? (boolean)
+        enoughResources = removeResource(data.buildingCosts[data.temporaryBuilding.type][0], data.buildingCosts[data.temporaryBuilding.type][1])
+        buildable = enoughResources
+        if buildable == True:
+            newBuilding = Building(data.temporaryBuilding.x, data.temporaryBuilding.y, data.temporaryBuilding.type, alliance = data.ALLY)
+            data.temporaryBuilding.deleteBuilding()
+            data.temporaryBuilding.destroy()
+            newBuilding.add()
+            data.temporaryBuilding = 0
+            newBuildingType = Building.buildingTypes[newBuilding.number]
+            data.economy[data.buildingCosts[data.temporaryBuilding.type][2]] += data.buildingCosts[data.temporaryBuilding.type][3]
 
 def doneReading():
     global doneButton
@@ -378,7 +359,8 @@ def highlightSquare(x, y):
     landShapeTopY = -data.currentY #Top boundary
     highlightX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength #x1 y1 is the top corner
     highlightY1 = landShapeTopY + ((x + y) / 2.0) * tileYLength
-    if highlightX1 > -tileXLength * data.loadBuffer and highlightX1 < data.cWidth + tileXLength * data.loadBuffer and highlightY1 > -tileYLength * data.loadBuffer and highlightY1 < data.cHeight + tileYLength * data.loadBuffer:
+    #Check if inside screen, else don't draw it (makes game faster)
+    if highlightX1 > -tileXLength * (data.loadBuffer + 0.5) and highlightX1 < data.cWidth + tileXLength * (data.loadBuffer + 0.5) and highlightY1 > -tileYLength * (data.loadBuffer + 1) and highlightY1 < data.cHeight + tileYLength * data.loadBuffer:
         highlightX2 = highlightX1 + tileXLength / 2
         highlightY2 = highlightY1 + tileYLength / 2
         highlightX3 = highlightX1
@@ -398,9 +380,22 @@ def getTile(mouseX, mouseY):
     tileOnY = data.yTiles - int(yB / tileYLength) - 1
     return tileOnX, tileOnY
 
+def getTileSideNumbers(xPlusValue, yPlusValue):
+    if xPlusValue == 0 and yPlusValue == -1:
+        return 0, 1
+    elif xPlusValue == -1 and yPlusValue == 0:
+        return 0, 3
+    elif xPlusValue == 0 and yPlusValue == 1:
+        return 2, 3
+    elif xPlusValue == 1 and yPlusValue == 0:
+        return 1, 2
+
 def updateLand():
     data.s.delete(data.landPolygon)
     data.s.delete(data.dirtLeft, data.dirtRight)
+
+    for i in range(len(data.allianceOutlineObjects)):
+        data.s.delete(data.allianceOutlineObjects[i])
 
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
@@ -411,11 +406,48 @@ def updateLand():
     landShapeX2 = landShapeX1 + polygonLandXLength / 2
     landShapeY2 = -data.currentY #Top boundary
 
-    landShapeX3 = landShapeX1 + polygonLandXLength
+    landShapeX3  = landShapeX1 + polygonLandXLength
     landShapeY3 = landShapeY1 #Right boundary
 
     landShapeX4 = landShapeX2 #Bottom boundary
     landShapeY4 = landShapeY2 + polygonLandYLength
+
+    allianceOutlineLineNumber = 0
+    for alliance in [data.ENEMY, data.NEUTRAL, data.ALLY]:
+        print(alliance)
+        for i in range(len(data.allianceDictionary[alliance])):
+            allianceTileGridX = data.allianceDictionary[alliance][i][0]
+            allianceTileGridY = data.allianceDictionary[alliance][i][1]
+            data.s.delete(data.allianceHighlightObjects[i])
+            allianceHighlightX1 = landShapeX2 + ((allianceTileGridX - allianceTileGridY) / 2.0) * tileXLength     #x1 y1 is the top corner of
+            allianceHighlightY1 = landShapeY2 + ((allianceTileGridX + allianceTileGridY) / 2.0) * tileYLength     #the diamond shaped tile.
+            allianceHighlightX2 = allianceHighlightX1 + tileXLength / 2
+            allianceHighlightY2 = allianceHighlightY1 + tileYLength / 2
+            allianceHighlightX3 = allianceHighlightX1
+            allianceHighlightY3 = allianceHighlightY2 + tileYLength / 2
+            allianceHighlightX4 = allianceHighlightX1 - tileXLength / 2
+            allianceHighlightY4 = allianceHighlightY2
+            allianceTileCornersX = [allianceHighlightX1, allianceHighlightX2, allianceHighlightX3, allianceHighlightX4]
+            allianceTileCornersY = [allianceHighlightY1, allianceHighlightY2, allianceHighlightY3, allianceHighlightY4]
+            
+            for xPlus in [-1, 0, 1]:
+                for yPlus in [-1, 0, 1]:
+                    if xPlus == 0 and yPlus != 0 or yPlus == 0 and xPlus != 0:
+                        adjacentTileGridX = allianceTileGridX + xPlus
+                        adjacentTileGridY = allianceTileGridY + yPlus
+                        adjacentTileCoordinates = [adjacentTileGridX, adjacentTileGridY]
+                        if adjacentTileCoordinates not in data.allianceDictionary[alliance]:
+                            corner1, corner2 = getTileSideNumbers(xPlus, yPlus)
+                            data.allianceOutlineObjects[allianceOutlineLineNumber] = data.s.create_line(allianceTileCornersX[corner1], allianceTileCornersY[corner1], allianceTileCornersX[corner2], allianceTileCornersY[corner2], fill = data.allianceColours[alliance][1], width = 2)
+                            allianceOutlineLineNumber += 1
+                
+            data.allianceHighlightObjects[i] = data.s.create_polygon(allisanceHighlightX1, allianceHighlightY1, allianceHighlightX2, allianceHighlightY2, allianceHighlightX3, allianceHighlightY3, allianceHighlightX4, allianceHighlightY4, width = 0, stipple = "gray50", fill = data.allianceColours[alliance][0])
+            print("hi")
+            if alliance == data.ENEMY:
+                
+                data.s.create_rectangle(5 * allianceTileGridX, 5 * allianceTileGridY, 5 * allianceTileGridX + 5, 5 * allianceTileGridY + 5, fill = data.allianceColours[data.ENEMY][0])
+##                print(allianceHighlightX1, allianceHighlightY1, allianceHighlightX2, allianceHighlightY2, allianceHighlightX3, allianceHighlightY3, allianceHighlightX4, allianceHighlightY4, data.allianceColours[alliance][0])
+            data.s.tag_lower(data.allianceHighlightObjects[i])
 
     data.landPolygon = data.s.create_polygon(landShapeX1, landShapeY1, landShapeX2, landShapeY2, landShapeX3, landShapeY3, landShapeX4, landShapeY4, fill = data.landColour, outline = data.landOutlineColour, width = 1)
     data.s.tag_lower(data.landPolygon)
@@ -424,18 +456,71 @@ def updateLand():
     data.s.tag_lower(data.dirtLeft)
     data.s.tag_lower(data.dirtRight)
 
+class Building():       #Building is used for the various types of buildings, including your own townhall, opponents base, wall, etc.
+    buildingObject = [] #Stores the building class instance itself
+    buildingImages = [] #Stores each pixel of the building
+    buildingTypes = []  #What type of building is it? Residence, townhall, tower?
+    buildingsX = []     #X value on the grid
+    buildingsY = []     #Y value on the grid
+    
+    def __init__(self, gridX, gridY, buildingType, alliance = data.NEUTRAL):
+        self.x = gridX                              #Set x value
+        self.y = gridY                              #Set y value
+        self.type = buildingType                    #Set building type
+        self.number = len(Building.buildingObject)  #Index number of the building
+        self.alliance = alliance                    #Set alliance (ally, enemy, or neutral)
+        print(self.alliance)
+
+    def add(self):
+        sumOfCoordinates = self.x + self.y                          #Why use sum of coordinates?
+        for i in range(len(Building.buildingObject)):               #In an isometric game the furthest items are drawn first
+            if sumOfCoordinates >= Building.buildingsX[i] + Building.buildingsY[i]:  #The sum of the coordinates on the grid are coincidentally a good way of sorting them
+                self.number = i                                     #The smaller the sum the furthest away, the bigger the sum the closer it is
+                print(i)
+                print("sumOfCoordinates: " + str(sumOfCoordinates), str(self.x), str(self.y))
+                print("Next Biggest Coordinate Sum: " + str(Building.buildingsX[i] + Building.buildingsY[i]))
+                break                                               #i.e. furthest one is (0,0) and closest one is (n-1,n-1) for some n tiles on a square grid
+        Building.buildingObject.insert(self.number, self)   #This part is just inserting everything into the list
+        Building.buildingImages.insert(self.number, [])     #Should not be append because you want the buildings to be in a specific order
+        Building.buildingTypes.insert(self.number, self.type)
+        Building.buildingsX.insert(self.number, self.x)
+        Building.buildingsY.insert(self.number, self.y)
+        surroundingTiles = [[self.x - 1, self.y - 1], [self.x - 1, self.y], [self.x - 1, self.y + 1], [self.x, self.y - 1], [self.x, self.y], [self.x, self.y + 1], [self.x + 1, self.y - 1], [self.x + 1, self.y], [self.x + 1, self.y + 1]]
+        unrepetitiveSurroundingTiles = [adjacentTileCoordinate for adjacentTileCoordinate in surroundingTiles if adjacentTileCoordinate not in data.allianceDictionary[self.alliance]]
+        data.allianceDictionary[self.alliance] += unrepetitiveSurroundingTiles
+        for i in range(len(unrepetitiveSurroundingTiles)):
+            data.allianceHighlightObjects.append([0])
+        print(data.allianceDictionary[self.alliance])
+        print("X:", Building.buildingsX)
+        print("Y:", Building.buildingsY)
+        for i in range(self.number + 1, len(Building.buildingObject)): #After inserting, shift the index number of each following building
+            Building.buildingObject[i].number += 1
+    
+    def deleteBuilding(self):
+        for i in range(len(Building.buildingObject)):
+            for j in range(len(Building.buildingImages[i])):
+                data.s.delete(Building.buildingImages[i][j])
+    
+    def destroy(self):
+        del Building.buildingObject[self.number]  #Delete everything
+        del Building.buildingTypes[self.number]
+        del Building.buildingImages[self.number]
+        del Building.buildingsX[self.number]
+        del Building.buildingsY[self.number]
+
+
 def updateBuildings():
-    for i in range(len(data.Building.buildingObject)):
-        for j in range(len(data.Building.buildingImages[i])):
-            data.s.delete(data.Building.buildingImages[i][j])
+    for i in range(len(Building.buildingObject)):
+        for j in range(len(Building.buildingImages[i])):
+            data.s.delete(Building.buildingImages[i][j])
 
     polygonLandXLength, polygonLandYLength = getLandPolygonXYLength()
     tileXLength, tileYLength = getTileXYLength()
     landShapeTopX = -data.currentX + polygonLandXLength / 2
     landShapeTopY = -data.currentY
-    for i in range(len(data.Building.buildingObject)):
-        x = data.Building.buildingsX[i]
-        y = data.Building.buildingsY[i]
+    for i in range(len(Building.buildingObject)):
+        x = Building.buildingsX[i]
+        y = Building.buildingsY[i]
         buildingX1 = landShapeTopX + ((x - y) / 2.0) * tileXLength # Top corner of
         buildingY1 = landShapeTopY + ((x + y) / 2.0) * tileYLength # quadrilateral
         if buildingX1 > -tileXLength * data.loadBuffer and buildingX1 < data.cWidth + tileXLength * data.loadBuffer and buildingY1 > -tileYLength * data.loadBuffer and buildingY1 < data.cHeight + tileYLength * data.loadBuffer:
@@ -445,10 +530,10 @@ def updateBuildings():
             buildingY3 = buildingY2 + tileYLength / 2
             buildingX4 = buildingX1 - tileXLength / 2
             buildingY4 = buildingY2
-            bitmapImage = data.buildingTypeImages[data.Building.buildingTypes[i]]
+            bitmapImage = data.buildingTypeImages[Building.buildingTypes[i]]
             squareSize = tileXLength/len(bitmapImage[0])
 
-            data.Building.buildingImages[i] = makeBitmap(buildingX4, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, toBack = True)
+            Building.buildingImages[i] = makeBitmap(buildingX4, buildingY3 - squareSize*len(bitmapImage), squareSize, bitmapImage, toBack = True)
 
 def updateButtons():
     for i in range(len(Button.buttonObject)):

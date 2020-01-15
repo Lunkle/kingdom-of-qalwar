@@ -414,7 +414,7 @@ def updateLand():
 
     allianceOutlineLineNumber = 0
     for alliance in [data.ENEMY, data.NEUTRAL, data.ALLY]:
-        print(alliance)
+        #print(alliance)
         for i in range(len(data.allianceDictionary[alliance])):
             allianceTileGridX = data.allianceDictionary[alliance][i][0]
             allianceTileGridY = data.allianceDictionary[alliance][i][1]
@@ -441,8 +441,8 @@ def updateLand():
                             data.allianceOutlineObjects[allianceOutlineLineNumber] = data.s.create_line(allianceTileCornersX[corner1], allianceTileCornersY[corner1], allianceTileCornersX[corner2], allianceTileCornersY[corner2], fill = data.allianceColours[alliance][1], width = 2)
                             allianceOutlineLineNumber += 1
                 
-            data.allianceHighlightObjects[i] = data.s.create_polygon(allisanceHighlightX1, allianceHighlightY1, allianceHighlightX2, allianceHighlightY2, allianceHighlightX3, allianceHighlightY3, allianceHighlightX4, allianceHighlightY4, width = 0, stipple = "gray50", fill = data.allianceColours[alliance][0])
-            print("hi")
+            data.allianceHighlightObjects[i] = data.s.create_polygon(allianceHighlightX1, allianceHighlightY1, allianceHighlightX2, allianceHighlightY2, allianceHighlightX3, allianceHighlightY3, allianceHighlightX4, allianceHighlightY4, width = 0, stipple = "gray50", fill = data.allianceColours[alliance][0])
+            #print("hi")
             if alliance == data.ENEMY:
                 
                 data.s.create_rectangle(5 * allianceTileGridX, 5 * allianceTileGridY, 5 * allianceTileGridX + 5, 5 * allianceTileGridY + 5, fill = data.allianceColours[data.ENEMY][0])
